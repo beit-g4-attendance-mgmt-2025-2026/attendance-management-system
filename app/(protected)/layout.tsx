@@ -1,20 +1,49 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import ClientProtected from "./ClientProtected";
-import Nav from "../component/Nav";
-import SideBar from "../component/SideBar";
+import { SidebarInset, SidebarProvider } from "../components/ui/sidebar";
+import { AppSidebar } from "../components/app-sidebar";
+import Nav from "../components/Nav";
+import { useTheme } from "next-themes";
 
 export default function ProtectedLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { theme, systemTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
+  const currentTheme = theme === "system" ? systemTheme : theme;
+
   return (
     <ClientProtected>
-      <div className="min-h-screen flex linear-gradient-to-br from-slate-100 to-slate-200">
-        <Nav />
-        <SideBar />
-        <div className="flex-1 p-6">{children}</div>
-      </div>
+      <SidebarProvider>
+        <AppSidebar />
+
+        <SidebarInset>
+          <Nav />
+          <div
+            className={`${
+              currentTheme === "light" ? "bg-stone-200" : "primary-foreground"
+            } p-4 pt-18`}>
+            <main
+              className={`flex-1 min-h-screen rounded-xl p-4 ${
+                currentTheme === "light" ? "bg-white" : "bg-black"
+              }`}>
+              {children}
+            </main>
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
     </ClientProtected>
   );
 }
