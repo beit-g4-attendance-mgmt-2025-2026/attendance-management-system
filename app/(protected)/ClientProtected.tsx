@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Cookies from "js-cookie";
 
 type Role = "admin" | "department" | "teacher";
 
@@ -27,7 +28,7 @@ export default function ClientProtected({
   const pathname = usePathname();
   const router = useRouter();
 
-  const role: Role = "admin";
+  const role: Role = Cookies.get("role") as Role;
 
   useEffect(() => {
     if (!role) {
