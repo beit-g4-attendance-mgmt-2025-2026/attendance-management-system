@@ -20,8 +20,9 @@ export default function RootLayout({
           attribute="class"
           defaultTheme="system"
           enableSystem
-          disableTransitionOnChange>
-          <main>{children}</main>
+          disableTransitionOnChange
+        >
+          <main className="dark:bg-[#0B1120]">{children}</main>
         </ThemeProvider>
       </body>
     </html>

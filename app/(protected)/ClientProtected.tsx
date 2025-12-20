@@ -28,7 +28,7 @@ export default function ClientProtected({
   const pathname = usePathname();
   const router = useRouter();
 
-  const role: Role = Cookies.get("role") as Role;
+  const role: Role = "department"; //Cookies.get("role") as Role;
 
   useEffect(() => {
     if (!role) {
