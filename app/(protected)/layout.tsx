@@ -34,11 +34,13 @@ export default function ProtectedLayout({
           <div
             className={`${
               currentTheme === "light" ? "bg-stone-200" : "primary-foreground"
-            } p-4 pt-18`}>
+            } p-4 pt-18`}
+          >
             <main
               className={`flex-1 min-h-screen rounded-xl p-4 ${
-                currentTheme === "light" ? "bg-white" : "bg-black"
-              }`}>
+                currentTheme === "light" ? "bg-white" : "bg-[#0B1120]"
+              }`}
+            >
               {children}
             </main>
           </div>
