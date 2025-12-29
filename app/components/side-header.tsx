@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { SidebarTrigger, useSidebar } from "./ui/sidebar";
 import { useState } from "react";
 
@@ -14,22 +15,12 @@ export default function Header() {
         onMouseLeave={() => setHover(false)}>
         {/* Sidebar CLOSED */}
         {!open && !hover && (
-          <img
-            src="https://tumeiktila.edu.mm/wp-content/uploads/2020/01/TU_logo.jpg"
-            alt=""
-            className="w-6 h-8"
-          />
+          <Image src="/TU_logo.jpg" alt="logo" width={24} height={24} />
         )}
 
         {!open && hover && <SidebarTrigger />}
 
-        {open && (
-          <img
-            src="https://tumeiktila.edu.mm/wp-content/uploads/2020/01/TU_logo.jpg"
-            alt=""
-            className="w-6 h-8"
-          />
-        )}
+        {open && <Image src="/TU_logo.jpg" alt="logo" width={24} height={24} />}
       </span>
 
       {open && <SidebarTrigger />}

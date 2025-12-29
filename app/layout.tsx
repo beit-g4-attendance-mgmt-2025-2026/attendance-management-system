@@ -4,14 +4,14 @@ import "./globals.css";
 import { ThemeProvider } from "./components/theme-provider";
 
 export const metadata: Metadata = {
-  title: "Attendance Management System",
-  description: "Home Page",
+	title: "Attendance Management System",
+	description: "Home Page",
 };
 
 export default function RootLayout({
-  children,
+	children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
   return (
     <html lang="en">
