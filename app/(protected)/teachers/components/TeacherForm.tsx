@@ -58,27 +58,14 @@ const TeacherForm = () => {
 						placeholder="Enter username"
 					/>
 
-					<div className="flex gap-6">
-						<div className=" w-8/12">
-							<FormInput
-								form={form}
-								name="email"
-								label="Email address"
-								placeholder="Enter email address"
-								className="w-full"
-							/>
-						</div>
-						<div className="rounded-md w-4/12 mt-5">
-							<FormSelect
-								form={form}
-								name="gender"
-								placeholder="Gender"
-								options={genders as any}
-								id="form-rhf-select-gender"
-								triggerClassName="min-w-[120px]"
-							/>
-						</div>
-					</div>
+					<FormInput
+						form={form}
+						name="email"
+						label="Email address"
+						placeholder="Enter email address"
+						className="w-full"
+					/>
+
 					<div className="flex gap-6">
 						<div className=" w-8/12">
 							<FormInput
@@ -92,11 +79,11 @@ const TeacherForm = () => {
 						<div className="rounded-md w-4/12 mt-5">
 							<FormSelect
 								form={form}
-								name="department"
-								placeholder="Department"
-								options={departments as any}
-								id="form-rhf-select-department"
-								triggerClassName="min-w-[120px]"
+								name="gender"
+								placeholder="Gender"
+								options={genders as any}
+								id="form-rhf-select-gender"
+								triggerClassName="min-w-[120px] cursor-pointer"
 							/>
 						</div>
 					</div>
@@ -113,11 +100,11 @@ const TeacherForm = () => {
 						<div className="rounded-md w-4/12 mt-5">
 							<FormSelect
 								form={form}
-								name="role"
-								placeholder="Role"
-								options={roles as any}
-								id="form-rhf-select-role"
-								triggerClassName="min-w-[120px]"
+								name="department"
+								placeholder="Department"
+								options={departments as any}
+								id="form-rhf-select-department"
+								triggerClassName="min-w-[120px] cursor-pointer"
 							/>
 						</div>
 					</div>
