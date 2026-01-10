@@ -3,32 +3,38 @@
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FormInput } from "@/components/inputs/FormInput";
-import { TeacherSchema } from "@/schema/index.schema";
+import { StudentSchema } from "@/schema/index.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import z from "zod";
 import FormSelect from "@/components/inputs/FormSelect";
-import { departments, genders, roles } from "@/constants/index.constants";
+import {
+	acedamicYears,
+	departments,
+	genders,
+	roles,
+	semesters,
+} from "@/constants/index.constants";
 
-const TeacherForm = () => {
+const StudentForm = () => {
 	const router = useRouter();
 
-	const form = useForm<z.infer<typeof TeacherSchema>>({
-		resolver: zodResolver(TeacherSchema),
+	const form = useForm<z.infer<typeof StudentSchema>>({
+		resolver: zodResolver(StudentSchema),
 		defaultValues: {
-			full_name: "",
-			username: "",
-			email: "",
-			password: "",
+			name: "",
 			phone: "",
+			email: "",
+			role_no: "",
 			gender: undefined as any,
-			role: undefined as any,
 			department: undefined as any,
+			acedamic_year: undefined as any,
+			semester: undefined as any,
 		},
 	});
 
-	function onSubmit(values: z.infer<typeof TeacherSchema>) {
+	function onSubmit(values: z.infer<typeof StudentSchema>) {
 		// Do something with the form values.
 		console.log("Form submitted:");
 		console.log(values);
@@ -46,18 +52,11 @@ const TeacherForm = () => {
 				>
 					<FormInput
 						form={form}
-						name="full_name"
-						label="Full Name"
-						placeholder="Enter full name"
+						name="name"
+						label="Name"
+						placeholder="Enter student name"
+						className="w-full"
 					/>
-
-					<FormInput
-						form={form}
-						name="username"
-						label="Username"
-						placeholder="Enter username"
-					/>
-
 					<FormInput
 						form={form}
 						name="email"
@@ -67,13 +66,13 @@ const TeacherForm = () => {
 					/>
 
 					<div className="flex gap-6">
-						<div className=" w-8/12">
+						<div className=" w-8/16">
 							<FormInput
 								form={form}
-								name="password"
-								label="Password"
-								placeholder="Enter password"
-								className="w-full"
+								name="role_no"
+								label="Role No."
+								placeholder="Enter role number"
+								className="w-full min-w-[140px]"
 							/>
 						</div>
 						<div className="rounded-md w-4/12 mt-5">
@@ -84,17 +83,6 @@ const TeacherForm = () => {
 								options={genders as any}
 								id="form-rhf-select-gender"
 								triggerClassName="min-w-[120px] cursor-pointer"
-							/>
-						</div>
-					</div>
-					<div className="flex gap-6">
-						<div className=" w-8/12">
-							<FormInput
-								form={form}
-								name="phone"
-								label="Phone number"
-								placeholder="Enter phone number"
-								className="w-full"
 							/>
 						</div>
 						<div className="rounded-md w-4/12 mt-5">
@@ -108,7 +96,38 @@ const TeacherForm = () => {
 							/>
 						</div>
 					</div>
-
+					<div className="flex gap-6">
+						<div className=" w-8/16">
+							<FormInput
+								form={form}
+								name="phone"
+								label="Phone number"
+								placeholder="Enter phone number"
+								className="w-full"
+							/>
+						</div>
+						<div className="rounded-md w-4/12 mt-5">
+							<FormSelect
+								form={form}
+								name="acedamic_year"
+								placeholder="Acedamic"
+								options={acedamicYears as any}
+								id="form-rhf-select-acedamic"
+								triggerClassName="min-w-[120px] cursor-pointer"
+							/>
+						</div>
+						<div className="rounded-md w-4/12 mt-5">
+							<FormSelect
+								form={form}
+								name="semester"
+								placeholder="Semester"
+								options={semesters as any}
+								id="form-rhf-select-semester"
+								triggerClassName="min-w-[120px] cursor-pointer"
+							/>
+						</div>
+					</div>
+					{/* btn */}
 					<div className="flex gap-3 items-center justify-end mt-10">
 						<Button
 							type="button"
@@ -117,12 +136,12 @@ const TeacherForm = () => {
 							onClick={handleCancel}
 						>
 							Cancel
-						</Button>{" "}
+						</Button>
 						<Button
 							type="submit"
 							className="cursor-pointer min-w-36"
 						>
-							Add Teacher
+							Add Student
 						</Button>
 					</div>
 				</form>
@@ -131,4 +150,4 @@ const TeacherForm = () => {
 	);
 };
 
-export default TeacherForm;
+export default StudentForm;

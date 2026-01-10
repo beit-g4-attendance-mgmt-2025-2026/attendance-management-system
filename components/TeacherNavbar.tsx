@@ -15,7 +15,9 @@ const TeacherNavbar = () => {
 				<Button variant={"link"} className="cursor-pointer">
 					Export CSV
 				</Button>
-				<Button className="cursor-pointer">Add Teachers</Button>
+				<Button className="cursor-pointer text-white ">
+					Add Teachers
+				</Button>
 			</div>
 		</nav>
 	);

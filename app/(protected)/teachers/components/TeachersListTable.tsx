@@ -48,15 +48,15 @@ const TeachersListTable = ({
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{teachers?.map((teacher) => (
+				{teachers?.map((teacher, index) => (
 					<TableRow
 						key={teacher.id}
 						onClick={() => onSelectTeacher(teacher)}
 						className={`cursor-pointer transition-colors ${
 							selectedTeacher?.id === teacher.id
-								? "bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800"
-								: "hover:bg-gray-50 dark:hover:bg-gray-800"
-						}`}
+								? "bg-blue-300 dark:bg-blue-500 "
+								: ""
+						} `}
 					>
 						<TableCell>{teacher.name}</TableCell>
 						<TableCell>{teacher.username}</TableCell>

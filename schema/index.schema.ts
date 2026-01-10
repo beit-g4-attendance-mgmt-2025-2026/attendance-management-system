@@ -40,5 +40,42 @@ export const TeacherSchema = z.object({
 	}),
 });
 
+export const StudentSchema = z.object({
+	name: z.string().min(2, {
+		message: "Name must be at least 2 characters",
+	}),
+	phone: z.string().min(6, {
+		message: "Phone number must be at least 6 characters",
+	}),
+	email: z.string().email({
+		message: "Invalid email address",
+	}),
+	gender: z.enum(["male", "female", "other"], {
+		message: "Gender must be male, female, or other",
+	}),
+	department: z.enum(["Civil", "CEIT", "EC", "MP", "EP"], {
+		message: "Please choice department",
+	}),
+	role_no: z.string().min(2, { message: "Please enter role number" }),
+
+	acedamic_year: z.enum(
+		[
+			"first year",
+			"second year",
+			"third year",
+			"fourth year",
+			"fifth year",
+			"sixth year",
+		],
+		{
+			message: "Please choice acedamic year",
+		}
+	),
+	semester: z.enum(["first semester", "second semester"], {
+		message: "Please choice semester",
+	}),
+});
+
 export type LoginSchemaType = z.infer<typeof LoginSchema>;
 export type TeacherSchemaType = z.infer<typeof TeacherSchema>;
+export type StudentSchemaType = z.infer<typeof StudentSchema>;

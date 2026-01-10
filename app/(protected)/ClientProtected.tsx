@@ -7,13 +7,14 @@ import Cookies from "js-cookie";
 type Role = "admin" | "department" | "teacher";
 
 const ROLE_ACCESS: Record<Role, string[]> = {
-	admin: ["dashboard", "department-list", "teachers", "student-list"],
+	admin: ["dashboard", "department-list", "teachers", "students"],
 	department: [
 		"dashboard",
 		"all-classes",
 		"teachers",
 		"teachers/add",
-		"student-list",
+		"students",
+		"students/add",
 		"report",
 		"my-class",
 		"subjects",

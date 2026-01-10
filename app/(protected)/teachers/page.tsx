@@ -52,6 +52,17 @@ const teachers: Teacher[] = [
 		dateOfBirth: "22/8/1990",
 		phone: "+1-234-567-8902",
 	},
+	{
+		id: "4",
+		name: "Sarah Smith",
+		username: "sarah.smith",
+		email: "sarah@email.com",
+		gender: "Female",
+		department: "IT",
+		role: "Teacher",
+		dateOfBirth: "22/8/1990",
+		phone: "+1-234-567-8902",
+	},
 ];
 
 const page = () => {
