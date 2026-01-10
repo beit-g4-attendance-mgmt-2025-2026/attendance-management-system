@@ -6,7 +6,7 @@ import SearchInput from "./inputs/SearchInput";
 
 const TeacherNavbar = () => {
 	return (
-		<main className="flex justify-between items-center mb-10">
+		<nav className="flex justify-between items-center mb-10 mx-auto w-auto">
 			<div className="flex items-center px-4 py-1 rounded-md gap-4 shadow-sm border border-muted/50 w-2xl">
 				<Filter filterName={departmentNames} />
 				<SearchInput placeholder="Search for a teacher by name or email" />
@@ -17,7 +17,7 @@ const TeacherNavbar = () => {
 				</Button>
 				<Button className="cursor-pointer">Add Teachers</Button>
 			</div>
-		</main>
+		</nav>
 	);
 };
 
