@@ -120,7 +120,7 @@ const TeacherForm = () => {
 						</Button>{" "}
 						<Button
 							type="submit"
-							className="cursor-pointer min-w-36"
+							className="cursor-pointer min-w-36 text-white"
 						>
 							Add Teacher
 						</Button>

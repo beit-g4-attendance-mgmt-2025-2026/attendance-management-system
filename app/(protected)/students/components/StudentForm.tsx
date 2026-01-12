@@ -13,7 +13,6 @@ import {
 	acedamicYears,
 	departments,
 	genders,
-	roles,
 	semesters,
 } from "@/constants/index.constants";
 
@@ -139,7 +138,7 @@ const StudentForm = () => {
 						</Button>
 						<Button
 							type="submit"
-							className="cursor-pointer min-w-36"
+							className="cursor-pointer min-w-36 text-white"
 						>
 							Add Student
 						</Button>

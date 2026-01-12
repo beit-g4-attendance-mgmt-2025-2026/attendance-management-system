@@ -76,6 +76,17 @@ export const StudentSchema = z.object({
 	}),
 });
 
+export const DepartmentSchema = z.object({
+	name: z.string().min(2, {
+		message: "Please enter department name",
+	}),
+	short_term: z.string().min(2, {
+		message: "Please enter department short term",
+	}),
+	image: z.string().url(),
+});
+
 export type LoginSchemaType = z.infer<typeof LoginSchema>;
 export type TeacherSchemaType = z.infer<typeof TeacherSchema>;
 export type StudentSchemaType = z.infer<typeof StudentSchema>;
+export type DepartmentSchemaType = z.infer<typeof DepartmentSchema>;

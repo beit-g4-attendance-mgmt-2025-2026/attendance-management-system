@@ -8,7 +8,13 @@ import { SearchIcon } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Input } from "../ui/input";
 
-const SearchInput = ({ placeholder }: { placeholder: string }) => {
+const SearchInput = ({
+	placeholder,
+	className,
+}: {
+	placeholder: string;
+	className?: string;
+}) => {
 	const router = useRouter(); // get the current url
 	const searchParams = useSearchParams();
 	const [search, setSearch] = useState(searchParams.get("search") || "");
@@ -29,7 +35,7 @@ const SearchInput = ({ placeholder }: { placeholder: string }) => {
 		router.push(url);
 	}, [debouncedSearch, router]);
 	return (
-		<div className="relative group ">
+		<div className={`relative group ` + className}>
 			<span className="absolute group-focus-within:text-primary inset-y-0 left-3 flex items-center pointer-events-none text-muted-foreground ">
 				<SearchIcon size={21} />
 			</span>
