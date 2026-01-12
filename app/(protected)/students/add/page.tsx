@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import TeacherForm from "../../teachers/components/TeacherForm";
 import StudentForm from "../components/StudentForm";
 
 const page = () => {

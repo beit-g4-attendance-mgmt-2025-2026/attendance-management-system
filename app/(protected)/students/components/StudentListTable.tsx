@@ -7,52 +7,51 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { TeachersListTableProps } from "@/types/index.types";
+import { StudentsListTableProps } from "@/types/index.types";
 import { Edit2Icon, TrashIcon } from "lucide-react";
 import Link from "next/link";
 
-const TeachersListTable = ({
-	teachers,
-	selectedTeacher,
-	onSelectTeacher,
-}: TeachersListTableProps) => {
+const StudentsListTable = ({
+	students,
+	selectedStudent,
+	onSelectStudent,
+}: StudentsListTableProps) => {
 	return (
 		<Table className="max-w-[100px]">
-			{/* <TableCaption className="text-blue-400">Teachers List</TableCaption> */}
 			<TableHeader>
 				<TableRow>
 					<TableHead className="w-[100px]">Name</TableHead>
-					<TableHead>Username</TableHead>
-					<TableHead>email</TableHead>
+					<TableHead>Student ID</TableHead>
+					<TableHead>Email address</TableHead>
 					<TableHead>Gender</TableHead>
 					<TableHead>Department</TableHead>
-					<TableHead>Role</TableHead>
+					<TableHead>Semester</TableHead>
 					<TableHead>Action</TableHead>
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{teachers?.map((teacher, index) => (
+				{students?.map((student, index) => (
 					<TableRow
-						key={teacher.id}
-						onClick={() => onSelectTeacher(teacher)}
+						key={student.id}
+						onClick={() => onSelectStudent(student)}
 						className={`cursor-pointer transition-colors ${
-							selectedTeacher?.id === teacher.id
+							selectedStudent?.id === student.id
 								? "bg-blue-300 dark:bg-blue-500 "
 								: ""
 						} `}
 					>
-						<TableCell>{teacher.name}</TableCell>
-						<TableCell>{teacher.username}</TableCell>
-						<TableCell>{teacher.email}</TableCell>
-						<TableCell>{teacher.gender}</TableCell>
-						<TableCell>{teacher.department}</TableCell>
-						<TableCell>{teacher.role}</TableCell>
+						<TableCell>{student.name}</TableCell>
+						<TableCell>{student.student_id}</TableCell>
+						<TableCell>{student.email}</TableCell>
+						<TableCell>{student.gender}</TableCell>
+						<TableCell>{student.department}</TableCell>
+						<TableCell>{student.semester}</TableCell>
 						<TableCell
 							className="flex items-center gap-1"
 							onClick={(e) => e.stopPropagation()} // Prevent row selection on action click
 						>
 							<Link
-								href={"/teacher/edit"}
+								href={"/students/edit"}
 								className="text-blue-500"
 							>
 								<Edit2Icon size={16} />
@@ -71,4 +70,4 @@ const TeachersListTable = ({
 	);
 };
 
-export default TeachersListTable;
+export default StudentsListTable;

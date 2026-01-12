@@ -46,7 +46,7 @@ export function Filter({ filterName }: { filterName: string[] }) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<span>Add filter</span>
+				<span>Department</span>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent className="w-56">
 				<DropdownMenuLabel>Filter</DropdownMenuLabel>

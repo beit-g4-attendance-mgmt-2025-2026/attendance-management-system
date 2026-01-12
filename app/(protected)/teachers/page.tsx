@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import TeacherNavbar from "@/components/TeacherNavbar";
 import TeacherListTable from "./components/TeachersListTable";
 import { Paginationn } from "@/components/Pagination";
 import { TeacherProfileCard } from "./components/TeacherProfileCard";
+import SubHeader from "@/components/sub-header";
 
 interface Teacher {
 	id: string;
@@ -72,7 +72,7 @@ const page = () => {
 
 	return (
 		<main>
-			<TeacherNavbar />
+			<SubHeader isTeacher={true} />
 
 			<div className="flex justify-between">
 				<div className="max-w-8/12">
