@@ -84,6 +84,12 @@ export const DepartmentSchema = z.object({
 		message: "Please enter department short term",
 	}),
 	image: z.string().url(),
+	email: z.string().email({
+		message: "Invalid email address",
+	}),
+	phone: z.string().min(6, {
+		message: "Enter phone number",
+	}),
 });
 
 export type LoginSchemaType = z.infer<typeof LoginSchema>;

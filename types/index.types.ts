@@ -10,16 +10,6 @@ export interface Teacher {
 	phone: string;
 }
 
-export interface TeachersListTableProps {
-	teachers: Teacher[];
-	selectedTeacher: Teacher | null;
-	onSelectTeacher: (teacher: Teacher) => void;
-}
-
-export interface TeacherProfileCardProps {
-	teacher: Teacher | null;
-}
-
 export interface Student {
 	id: string;
 	name: string;
@@ -31,7 +21,19 @@ export interface Student {
 	dateOfBirth: string;
 	phone: string;
 }
+export interface Department {
+	id: string;
+	name: string;
+	head_of_department: string;
+	email: string;
+	phone: string;
+	teachers: number | string;
+	students: number | string;
+}
 
+export interface TeacherProfileCardProps {
+	teacher: Teacher | null;
+}
 export interface StudentProfileCardProps {
 	student: Student | null;
 }
@@ -40,4 +42,14 @@ export interface StudentsListTableProps {
 	students: Student[];
 	selectedStudent: Student | null;
 	onSelectStudent: (student: Student) => void;
+}
+
+export interface TeachersListTableProps {
+	teachers: Teacher[];
+	selectedTeacher: Teacher | null;
+	onSelectTeacher: (teacher: Teacher) => void;
+}
+
+export interface DepartmentsListTableProps {
+	departments: Department[];
 }

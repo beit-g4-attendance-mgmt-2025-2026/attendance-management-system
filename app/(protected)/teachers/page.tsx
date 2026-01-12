@@ -5,65 +5,8 @@ import TeacherListTable from "./components/TeachersListTable";
 import { Paginationn } from "@/components/Pagination";
 import { TeacherProfileCard } from "./components/TeacherProfileCard";
 import SubHeader from "@/components/sub-header";
-
-interface Teacher {
-	id: string;
-	name: string;
-	username: string;
-	email: string;
-	gender: string;
-	department: string;
-	role: string;
-	dateOfBirth: string;
-	phone: string;
-}
-
-const teachers: Teacher[] = [
-	{
-		id: "1",
-		name: "Jhon Doe",
-		username: "john123",
-		email: "john@email.com",
-		gender: "Male",
-		department: "IT",
-		role: "Head of Department",
-		dateOfBirth: "19/1/1992",
-		phone: "+1-234-567-8900",
-	},
-	{
-		id: "2",
-		name: "Cody Fisher",
-		username: "codyfisher001",
-		email: "cody.fisher@email.com",
-		gender: "Female",
-		department: "Computer Engineering & Information ",
-		role: "Teacher",
-		dateOfBirth: "15/5/1988",
-		phone: "+1-234-567-8901",
-	},
-	{
-		id: "3",
-		name: "Sarah Smith",
-		username: "sarah.smith",
-		email: "sarah@email.com",
-		gender: "Female",
-		department: "IT",
-		role: "Teacher",
-		dateOfBirth: "22/8/1990",
-		phone: "+1-234-567-8902",
-	},
-	{
-		id: "4",
-		name: "Sarah Smith",
-		username: "sarah.smith",
-		email: "sarah@email.com",
-		gender: "Female",
-		department: "IT",
-		role: "Teacher",
-		dateOfBirth: "22/8/1990",
-		phone: "+1-234-567-8902",
-	},
-];
+import { TEACHERS } from "@/constants/index.constants";
+import { Teacher } from "@/types/index.types";
 
 const page = () => {
 	const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(
@@ -77,7 +20,7 @@ const page = () => {
 			<div className="flex justify-between">
 				<div className="max-w-8/12">
 					<TeacherListTable
-						teachers={teachers}
+						teachers={TEACHERS}
 						selectedTeacher={selectedTeacher}
 						onSelectTeacher={setSelectedTeacher}
 					/>
