@@ -130,7 +130,7 @@ const StudentForm = () => {
 					<div className="flex gap-3 items-center justify-end mt-10">
 						<Button
 							type="button"
-							variant="outline"
+							variant="destructive"
 							className="cursor-pointer min-w-36"
 							onClick={handleCancel}
 						>
@@ -138,7 +138,7 @@ const StudentForm = () => {
 						</Button>
 						<Button
 							type="submit"
-							className="cursor-pointer min-w-36 text-white"
+							className="cursor-pointer min-w-36 text-white bg-sky-600 hover:bg-sky-700 hover:text-white"
 						>
 							Add Student
 						</Button>

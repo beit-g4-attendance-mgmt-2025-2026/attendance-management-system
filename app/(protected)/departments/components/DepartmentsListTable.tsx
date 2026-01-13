@@ -33,10 +33,10 @@ const DepartmentsListTable = ({ departments }: DepartmentsListTableProps) => {
 				{departments?.map((department, index) => (
 					<TableRow
 						key={department.id}
-						className={`cursor-pointer transition-colors border-none ${
+						className={`cursor-pointer transition-colors border-none  ${
 							index % 2 === 0
 								? ""
-								: "bg-gray-200 dark:bg-gray-800"
+								: "bg-gray-200 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-800 "
 						}`}
 					>
 						<TableCell>{department.name}</TableCell>
@@ -53,8 +53,8 @@ const DepartmentsListTable = ({ departments }: DepartmentsListTableProps) => {
 								<Edit2Icon size={16} />
 							</Link>
 							<Button
-								variant={"destructive"}
-								className="text-red-500 cursor-pointer"
+								variant={"ghost"}
+								className="text-red-500 hover:text-red-700 cursor-pointer"
 							>
 								<TrashIcon />
 							</Button>

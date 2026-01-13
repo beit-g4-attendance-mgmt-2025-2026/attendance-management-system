@@ -34,7 +34,7 @@ const StudentsListTable = ({
 					<TableRow
 						key={student.id}
 						onClick={() => onSelectStudent(student)}
-						className={`cursor-pointer transition-colors ${
+						className={`cursor-pointer transition-colors hover:bg-blue-300 ${
 							selectedStudent?.id === student.id
 								? "bg-blue-300 dark:bg-blue-500 "
 								: ""
@@ -57,8 +57,8 @@ const StudentsListTable = ({
 								<Edit2Icon size={16} />
 							</Link>
 							<Button
-								variant={"destructive"}
-								className="text-red-500 cursor-pointer"
+								variant={"ghost"}
+								className="text-red-500 cursor-pointer hover:text-red-700"
 							>
 								<TrashIcon />
 							</Button>

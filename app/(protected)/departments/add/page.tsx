@@ -6,7 +6,9 @@ const page = () => {
 		<div>
 			<header className="flex justify-between items-center">
 				<h1 className="text-2xl font-bold">Add Department</h1>
-				<Button variant={"link"}>Import CSV</Button>
+				<Button variant={"link"} className="text-sky-600">
+					Import CSV
+				</Button>
 			</header>
 			<main className="mt-6">
 				<DepartmentForm />

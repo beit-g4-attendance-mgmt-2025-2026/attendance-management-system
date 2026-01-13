@@ -8,7 +8,7 @@ import Link from "next/link";
 const SubHeader = ({ isTeacher }: { isTeacher: boolean }) => {
 	return (
 		<nav className="flex justify-between items-center mb-10 mx-auto w-auto">
-			<div className="flex items-center px-4 py-1 rounded-md gap-4 shadow-sm border border-muted/50 w-2xl">
+			<div className="flex items-center px-4 py-1  gap-4 shadow-sm border border-muted/50 dark:bg-[#172139] bg-gray-200 rounded-2xl">
 				<Filter filterName={departmentNames} />
 				<SearchInput
 					placeholder={`${
@@ -19,10 +19,13 @@ const SubHeader = ({ isTeacher }: { isTeacher: boolean }) => {
 				/>
 			</div>
 			<div className="flex gap-4">
-				<Button variant={"link"} className="cursor-pointer">
+				<Button
+					variant={"link"}
+					className="cursor-pointer text-sky-600"
+				>
 					Export CSV
 				</Button>
-				<Button className="cursor-pointer text-white ">
+				<Button className="cursor-pointer text-white bg-sky-600 hover:bg-sky-700 hover:text-white">
 					<Link
 						href={`${isTeacher ? "teachers/add" : "students/add"}`}
 					>

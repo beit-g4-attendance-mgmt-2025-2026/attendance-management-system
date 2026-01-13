@@ -40,7 +40,7 @@ const SearchInput = ({
 				<SearchIcon size={21} />
 			</span>
 			<Input
-				className="pl-10 bg-transparent border-transparent shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-transparent w-[300px]"
+				className="pl-10 border-none bg-none shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-transparent w-[300px] active:ring-0 active:ring-offset-0 active:border-transparent"
 				value={search}
 				onChange={(e: any) => setSearch(e.target.value)}
 				placeholder={placeholder}
