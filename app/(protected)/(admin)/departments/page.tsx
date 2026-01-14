@@ -23,7 +23,7 @@ const page = () => {
 				</div>
 			</header>
 
-			<main className="flex items-center mx-10 p-5 ">
+			<main className="flex items-center justify-center max-w-5xl mx-auto">
 				<DepartmentsListTable departments={DEPARTMENTS} />
 			</main>
 		</div>

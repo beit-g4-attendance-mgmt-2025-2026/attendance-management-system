@@ -174,6 +174,41 @@ const DEPARTMENTS: Department[] = [
 	},
 ];
 
+const SUBJECTS = [
+	{
+		id: "1",
+		name: "Operating System",
+		code: "IT-42033",
+		year: "1",
+		semester: "1",
+		teacher_name: "John Doe",
+	},
+	{
+		id: "2",
+		name: "Data Structure",
+		code: "IT-42034",
+		year: "1",
+		semester: "2",
+		teacher_name: "Jane Smith",
+	},
+	{
+		id: "3",
+		name: "Database Management System",
+		code: "IT-42035",
+		year: "2",
+		semester: "1",
+		teacher_name: "Alice Johnson",
+	},
+	{
+		id: "4",
+		name: "Computer Networks",
+		code: "IT-42036",
+		year: "2",
+		semester: "2",
+		teacher_name: "Bob Brown",
+	},
+];
+
 export {
 	genders,
 	departments,
@@ -184,4 +219,5 @@ export {
 	TEACHERS,
 	STUDENTS,
 	DEPARTMENTS,
+	SUBJECTS,
 };

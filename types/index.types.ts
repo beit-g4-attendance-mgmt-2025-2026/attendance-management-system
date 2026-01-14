@@ -31,6 +31,15 @@ export interface Department {
 	students: number | string;
 }
 
+export interface Subject {
+	id: string;
+	name: string;
+	code: string;
+	year: string;
+	semester: string;
+	teacher_name: string;
+}
+
 export interface TeacherProfileCardProps {
 	teacher: Teacher | null;
 }
@@ -52,4 +61,8 @@ export interface TeachersListTableProps {
 
 export interface DepartmentsListTableProps {
 	departments: Department[];
+}
+
+export interface SubjectListTableProps {
+	subjects: Subject[];
 }

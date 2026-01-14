@@ -15,7 +15,11 @@ const page = () => {
 
 	return (
 		<main>
-			<SubHeader isTeacher={false} />
+			<SubHeader
+				placeholder="Search for s student by name or email"
+				href="/students/add"
+				name="Add Student"
+			/>
 
 			<div className="flex justify-between">
 				<div className="max-w-8/12">
