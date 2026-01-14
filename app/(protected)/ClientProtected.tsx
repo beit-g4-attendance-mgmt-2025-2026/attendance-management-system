@@ -21,7 +21,6 @@ const ROLE_ACCESS: Record<Role, string[]> = {
     "students",
     "classes",
     "subjects",
-    "manage-reports",
     "my-class",
     "my-subjects",
   ],

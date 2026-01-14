@@ -6,7 +6,6 @@ import { IoMdSettings } from "react-icons/io";
 import { BsBook } from "react-icons/bs";
 import { SiGoogleclassroom } from "react-icons/si";
 import { LuBook } from "react-icons/lu";
-import { TbReportAnalytics } from "react-icons/tb";
 
 import {
   Sidebar,
@@ -80,19 +79,14 @@ export function AppSidebar() {
         icon: PiStudentFill,
       },
       {
-        title: "Classes",
+        title: "Manage Classes",
         url: "/classes",
         icon: SiGoogleclassroom,
       },
       {
-        title: "Subjects",
+        title: "Manage Subjects",
         url: "/subjects",
         icon: BsBook,
-      },
-      {
-        title: "Report",
-        url: "/manage-reports",
-        icon: TbReportAnalytics,
       },
       {
         title: "My Class",
@@ -139,7 +133,9 @@ export function AppSidebar() {
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       className={`link ${
-                        pathname === item.url ? "bg-sidebar-primary" : ""
+                        pathname.startsWith(item.url)
+                          ? "bg-sidebar-primary"
+                          : ""
                       }`}
                       tooltip={item.title}
                       asChild>
