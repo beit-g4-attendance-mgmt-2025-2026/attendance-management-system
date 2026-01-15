@@ -76,7 +76,7 @@ const page = () => {
 	];
 
 	return (
-		<main>
+		<div>
 			<header className="flex justify-between items-center mb-6">
 				<SearchInput
 					placeholder="Search class by name"
@@ -84,7 +84,8 @@ const page = () => {
 				/>
 				<div className="flex gap-3">
 					<DialogCardBtn triggerName="Add Class" title="Add Class">
-						<SubjectForm isEdit={false} />
+						Change class form
+						{/* <SubjectForm isEdit={false} /> */}
 					</DialogCardBtn>
 				</div>
 			</header>
@@ -97,7 +98,7 @@ const page = () => {
 					/>
 				))}
 			</div>
-		</main>
+		</div>
 	);
 };
 
