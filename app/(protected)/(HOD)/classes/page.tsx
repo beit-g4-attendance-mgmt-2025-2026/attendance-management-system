@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import React from "react";
 import SubjectForm from "../(subject)/components/SubjectForm";
+import ClassForm from "@/components/ClassForm";
 
 export interface ClassItem {
 	id: string;
@@ -84,8 +85,7 @@ const page = () => {
 				/>
 				<div className="flex gap-3">
 					<DialogCardBtn triggerName="Add Class" title="Add Class">
-						Change class form
-						{/* <SubjectForm isEdit={false} /> */}
+						<ClassForm isEdit={false} />
 					</DialogCardBtn>
 				</div>
 			</header>

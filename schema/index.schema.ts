@@ -54,7 +54,7 @@ export const StudentSchema = z.object({
 		message: "Gender must be male, female, or other",
 	}),
 	department: z.enum(["Civil", "CEIT", "EC", "MP", "EP"], {
-		message: "Please choice department",
+		message: "Please choose department",
 	}),
 	role_no: z.string().min(2, { message: "Please enter role number" }),
 
@@ -68,11 +68,11 @@ export const StudentSchema = z.object({
 			"sixth year",
 		],
 		{
-			message: "Please choice acedamic year",
+			message: "Please choose acedamic year",
 		}
 	),
 	semester: z.enum(["first semester", "second semester"], {
-		message: "Please choice semester",
+		message: "Please choose semester",
 	}),
 });
 
@@ -100,10 +100,10 @@ export const SubjectSchema = z.object({
 		message: "Please enter subject code",
 	}),
 	teacher_name: z.string().min(2, {
-		message: "Please enter teacher name",
+		message: "Please enter username of teacher",
 	}),
 	semester: z.enum(["first semester", "second semester"], {
-		message: "Please choice semester",
+		message: "Please choose semester",
 	}),
 	acedamic_year: z.enum(
 		[
@@ -115,7 +115,32 @@ export const SubjectSchema = z.object({
 			"sixth year",
 		],
 		{
-			message: "Please choice acedamic year",
+			message: "Please choose year",
+		}
+	),
+});
+
+export const ClassSchema = z.object({
+	name: z.string().min(2, {
+		message: "Please enter class name",
+	}),
+	teacher_name: z.string().min(2, {
+		message: "Please enter username of teacher",
+	}),
+	semester: z.enum(["first semester", "second semester"], {
+		message: "Please choose semester",
+	}),
+	acedamic_year: z.enum(
+		[
+			"first year",
+			"second year",
+			"third year",
+			"fourth year",
+			"fifth year",
+			"sixth year",
+		],
+		{
+			message: "Please choose year",
 		}
 	),
 });
@@ -124,3 +149,4 @@ export type LoginSchemaType = z.infer<typeof LoginSchema>;
 export type TeacherSchemaType = z.infer<typeof TeacherSchema>;
 export type StudentSchemaType = z.infer<typeof StudentSchema>;
 export type DepartmentSchemaType = z.infer<typeof DepartmentSchema>;
+export type ClassSchemaType = z.infer<typeof ClassSchema>;

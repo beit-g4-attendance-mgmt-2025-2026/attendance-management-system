@@ -3,6 +3,7 @@ import { DialogCardBtn } from "@/components/DialogCardBtn";
 import SearchInput from "@/components/inputs/SearchInput";
 import React from "react";
 import SubjectForm from "../../(HOD)/(subject)/components/SubjectForm";
+import ClassForm from "@/components/ClassForm";
 
 export interface ClassItem {
 	id: string;
@@ -31,8 +32,7 @@ const page = () => {
 				/>
 				<div className="flex gap-3">
 					<DialogCardBtn triggerName="Add Class" title="Add Class">
-						change to class form
-						{/* <SubjectForm isEdit={false} /> */}
+						<ClassForm isEdit={false} />
 					</DialogCardBtn>
 				</div>
 			</header>
