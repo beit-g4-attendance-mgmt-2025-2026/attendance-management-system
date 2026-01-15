@@ -7,6 +7,8 @@ import SubHeader from "@/components/sub-header";
 import { StudentProfileCard } from "./components/StudentProfileCard";
 import { Student } from "@/types/index.types";
 import { STUDENTS } from "@/constants/index.constants";
+import { DialogCardBtn } from "@/components/DialogCardBtn";
+import StudentForm from "./components/StudentForm";
 
 const page = () => {
 	const [selectedStudent, setSelectedStudent] = useState<Student | null>(
@@ -15,7 +17,18 @@ const page = () => {
 
 	return (
 		<main>
-			<SubHeader isTeacher={false} />
+			<SubHeader
+				placeholder="Search for a student by name or email"
+				dialogButton={
+					<DialogCardBtn
+						triggerName="Add Student"
+						title="Add Student"
+						description="Enter student details"
+					>
+						<StudentForm isEdit={false} />
+					</DialogCardBtn>
+				}
+			/>
 
 			<div className="flex justify-between">
 				<div className="max-w-8/12">

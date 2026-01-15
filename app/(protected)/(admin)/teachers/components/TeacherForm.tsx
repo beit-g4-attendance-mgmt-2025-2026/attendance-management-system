@@ -11,7 +11,7 @@ import z from "zod";
 import FormSelect from "@/components/inputs/FormSelect";
 import { departments, genders, roles } from "@/constants/index.constants";
 
-const TeacherForm = () => {
+const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 	const router = useRouter();
 
 	const form = useForm<z.infer<typeof TeacherSchema>>({
@@ -42,7 +42,7 @@ const TeacherForm = () => {
 			<Form {...form}>
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}
-					className="space-y-5 w-2xl"
+					className="space-y-5 w-full"
 				>
 					<FormInput
 						form={form}
@@ -122,7 +122,7 @@ const TeacherForm = () => {
 							type="submit"
 							className="cursor-pointer min-w-36 text-white bg-sky-600 hover:bg-sky-700 hover:text-white"
 						>
-							Add Teacher
+							{isEdit ? "Save Changes" : "Add Teacher"}
 						</Button>
 					</div>
 				</form>

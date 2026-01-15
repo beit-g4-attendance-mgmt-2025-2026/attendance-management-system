@@ -92,6 +92,34 @@ export const DepartmentSchema = z.object({
 	}),
 });
 
+export const SubjectSchema = z.object({
+	name: z.string().min(2, {
+		message: "Please enter subject name",
+	}),
+	code: z.string().min(2, {
+		message: "Please enter subject code",
+	}),
+	teacher_name: z.string().min(2, {
+		message: "Please enter teacher name",
+	}),
+	semester: z.enum(["first semester", "second semester"], {
+		message: "Please choice semester",
+	}),
+	acedamic_year: z.enum(
+		[
+			"first year",
+			"second year",
+			"third year",
+			"fourth year",
+			"fifth year",
+			"sixth year",
+		],
+		{
+			message: "Please choice acedamic year",
+		}
+	),
+});
+
 export type LoginSchemaType = z.infer<typeof LoginSchema>;
 export type TeacherSchemaType = z.infer<typeof TeacherSchema>;
 export type StudentSchemaType = z.infer<typeof StudentSchema>;
