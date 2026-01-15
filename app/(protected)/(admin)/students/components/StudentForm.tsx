@@ -15,8 +15,9 @@ import {
 	genders,
 	semesters,
 } from "@/constants/index.constants";
+import { is } from "zod/v4/locales";
 
-const StudentForm = () => {
+const StudentForm = ({ isEdit = false }: { isEdit: boolean }) => {
 	const router = useRouter();
 
 	const form = useForm<z.infer<typeof StudentSchema>>({
@@ -47,7 +48,7 @@ const StudentForm = () => {
 			<Form {...form}>
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}
-					className="space-y-5 w-2xl"
+					className="space-y-5 w-full"
 				>
 					<FormInput
 						form={form}
@@ -64,17 +65,24 @@ const StudentForm = () => {
 						className="w-full"
 					/>
 
-					<div className="flex gap-6">
-						<div className=" w-8/16">
-							<FormInput
-								form={form}
-								name="role_no"
-								label="Role No."
-								placeholder="Enter role number"
-								className="w-full min-w-[140px]"
-							/>
-						</div>
-						<div className="rounded-md w-4/12 mt-5">
+					<FormInput
+						form={form}
+						name="phone"
+						label="Phone number"
+						placeholder="Enter phone number"
+						className="w-full"
+					/>
+
+					<FormInput
+						form={form}
+						name="role_no"
+						label="Role No."
+						placeholder="Enter role number"
+						className="w-full min-w-[140px]"
+					/>
+
+					<div className="flex gap-2">
+						<div className="rounded-md w-6/12 mt-5">
 							<FormSelect
 								form={form}
 								name="gender"
@@ -84,7 +92,7 @@ const StudentForm = () => {
 								triggerClassName="min-w-[120px] cursor-pointer"
 							/>
 						</div>
-						<div className="rounded-md w-4/12 mt-5">
+						<div className="rounded-md w-6/12 mt-5">
 							<FormSelect
 								form={form}
 								name="department"
@@ -96,16 +104,7 @@ const StudentForm = () => {
 						</div>
 					</div>
 					<div className="flex gap-6">
-						<div className=" w-8/16">
-							<FormInput
-								form={form}
-								name="phone"
-								label="Phone number"
-								placeholder="Enter phone number"
-								className="w-full"
-							/>
-						</div>
-						<div className="rounded-md w-4/12 mt-5">
+						<div className="rounded-md w-6/12 mt-5">
 							<FormSelect
 								form={form}
 								name="acedamic_year"
@@ -115,7 +114,7 @@ const StudentForm = () => {
 								triggerClassName="min-w-[120px] cursor-pointer"
 							/>
 						</div>
-						<div className="rounded-md w-4/12 mt-5">
+						<div className="rounded-md w-6/12 mt-5">
 							<FormSelect
 								form={form}
 								name="semester"
@@ -140,7 +139,7 @@ const StudentForm = () => {
 							type="submit"
 							className="cursor-pointer min-w-36 text-white bg-sky-600 hover:bg-sky-700 hover:text-white"
 						>
-							Add Student
+							{isEdit ? "Save Changes" : "Add Student"}
 						</Button>
 					</div>
 				</form>

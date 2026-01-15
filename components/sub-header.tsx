@@ -1,18 +1,14 @@
 import { departmentNames } from "@/constants/index.constants";
 import { Filter } from "./Filter";
-
 import { Button } from "./ui/button";
 import SearchInput from "./inputs/SearchInput";
-import Link from "next/link";
 
 const SubHeader = ({
 	placeholder,
-	href,
-	name,
+	dialogButton,
 }: {
 	placeholder: string;
-	href: string;
-	name: string;
+	dialogButton: React.ReactNode;
 }) => {
 	return (
 		<nav className="flex justify-between items-center mb-10 mx-auto w-auto">
@@ -27,9 +23,8 @@ const SubHeader = ({
 				>
 					Export CSV
 				</Button>
-				<Button className="cursor-pointer text-white bg-sky-600 hover:bg-sky-700 hover:text-white">
-					<Link href={href}>{name}</Link>
-				</Button>
+
+				{dialogButton}
 			</div>
 		</nav>
 	);

@@ -209,6 +209,13 @@ const SUBJECTS = [
 	},
 ];
 
+const teacher_name_for_form_select = [
+	{ label: "John Doe", value: "John Doe" },
+	{ label: "Jane Smith", value: "Jane Smith" },
+	{ label: "Alice Johnson", value: "Alice Johnson" },
+	{ label: "Bob Brown", value: "Bob Brown" },
+];
+
 export {
 	genders,
 	departments,
@@ -220,4 +227,5 @@ export {
 	STUDENTS,
 	DEPARTMENTS,
 	SUBJECTS,
+	teacher_name_for_form_select,
 };
