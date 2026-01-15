@@ -1,3 +1,7 @@
+"use server";
+import ClassDetailsTable from "@/components/ClassDetailsTable";
+import { STUDENTS } from "@/constants/index.constants";
+
 const page = async ({
 	params,
 }: {
@@ -5,7 +9,11 @@ const page = async ({
 	params: Promise<{ id: string }>;
 }) => {
 	const { id } = await params;
-	return <div>{id}</div>;
+	return (
+		<div className="flex justify-between w-full">
+			<ClassDetailsTable students={STUDENTS} />
+		</div>
+	);
 };
 
 export default page;

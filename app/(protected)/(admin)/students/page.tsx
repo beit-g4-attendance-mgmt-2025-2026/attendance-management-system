@@ -41,11 +41,8 @@ const page = () => {
 						<Paginationn />
 					</div>
 				</div>
-				{/* <div className=""> */}
 
 				<StudentProfileCard student={selectedStudent} />
-
-				{/* </div> */}
 			</div>
 		</main>
 	);
