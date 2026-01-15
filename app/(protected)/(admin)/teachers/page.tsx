@@ -30,20 +30,20 @@ const page = () => {
 				}
 			/>
 
-			<div className="flex justify-between">
-				<div className="max-w-8/12">
+			<div className="flex justify-between w-full">
+				<div className=" flex flex-col justify-between">
 					<TeacherListTable
 						teachers={TEACHERS}
 						selectedTeacher={selectedTeacher}
 						onSelectTeacher={setSelectedTeacher}
 					/>
-					<div className="mt-6">
+					<div>
 						<Paginationn />
 					</div>
 				</div>
-				<div className="w-4/12 sticky top-0  h-svh  ">
-					<TeacherProfileCard teacher={selectedTeacher} />
-				</div>
+				{/* <div className="w-4/12 sticky top-0  h-svh  "> */}
+				<TeacherProfileCard teacher={selectedTeacher} />
+				{/* </div> */}
 			</div>
 		</main>
 	);

@@ -36,7 +36,7 @@ const DepartmentsListTable = ({ departments }: DepartmentsListTableProps) => {
 						className={`cursor-pointer transition-colors border-none  ${
 							index % 2 === 0
 								? ""
-								: "bg-gray-200 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-800 "
+								: "bg-blue-50 dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-50 "
 						}`}
 					>
 						<TableCell>{department.name}</TableCell>

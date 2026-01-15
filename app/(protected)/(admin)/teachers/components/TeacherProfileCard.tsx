@@ -11,19 +11,11 @@ import {
 
 export function TeacherProfileCard({ teacher }: TeacherProfileCardProps) {
 	if (!teacher) {
-		return (
-			<div className="w-full">
-				<div className="flex flex-col items-center space-y-3 p-4 border rounded-lg border-gray-200 dark:border-gray-700">
-					<p className="text-gray-400 text-center">
-						Select a teacher to view profile
-					</p>
-				</div>
-			</div>
-		);
+		return;
 	}
 
 	return (
-		<div className="w-full">
+		<div className="w-4/12 sticky top-0  h-[400px]  shadow-2xl rounded-2xl">
 			<div className="flex flex-col items-center space-y-3">
 				<h1 className="font-semibold text-sm">{teacher.username}</h1>
 

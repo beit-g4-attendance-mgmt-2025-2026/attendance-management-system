@@ -1,5 +1,3 @@
-import { LoginForm } from "@/app/(auth)/components/LoginForm";
-import StudentForm from "@/app/(protected)/(admin)/students/components/StudentForm";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,

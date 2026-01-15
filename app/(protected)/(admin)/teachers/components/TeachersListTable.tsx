@@ -17,7 +17,7 @@ const TeachersListTable = ({
 	onSelectTeacher,
 }: TeachersListTableProps) => {
 	return (
-		<Table className="max-w-[100px]">
+		<Table className="w-full">
 			{/* <TableCaption className="text-blue-400">Teachers List</TableCaption> */}
 			<TableHeader>
 				<TableRow>
@@ -26,7 +26,7 @@ const TeachersListTable = ({
 					<TableHead>email</TableHead>
 					<TableHead>Gender</TableHead>
 					<TableHead>Department</TableHead>
-					<TableHead>Role</TableHead>
+					<TableHead>Position</TableHead>
 					<TableHead>Action</TableHead>
 				</TableRow>
 			</TableHeader>
@@ -35,7 +35,7 @@ const TeachersListTable = ({
 					<TableRow
 						key={teacher.id}
 						onClick={() => onSelectTeacher(teacher)}
-						className={`cursor-pointer transition-colors ${
+						className={`cursor-pointer transition-colors hover:bg-blue-300  ${
 							selectedTeacher?.id === teacher.id
 								? "bg-blue-300 dark:bg-blue-500 "
 								: ""
@@ -45,8 +45,10 @@ const TeachersListTable = ({
 						<TableCell>{teacher.username}</TableCell>
 						<TableCell>{teacher.email}</TableCell>
 						<TableCell>{teacher.gender}</TableCell>
-						<TableCell>{teacher.department}</TableCell>
-						<TableCell>{teacher.role}</TableCell>
+						<TableCell className="text-center">
+							{teacher.department}
+						</TableCell>
+						<TableCell>{teacher.position}</TableCell>
 						<TableCell
 							className="flex items-center gap-1"
 							onClick={(e) => e.stopPropagation()} // Prevent row selection on action click

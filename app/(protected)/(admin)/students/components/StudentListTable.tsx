@@ -17,7 +17,7 @@ const StudentsListTable = ({
 	onSelectStudent,
 }: StudentsListTableProps) => {
 	return (
-		<Table className="max-w-[100px]">
+		<Table className="w-full">
 			<TableHeader>
 				<TableRow>
 					<TableHead className="w-[100px]">Name</TableHead>

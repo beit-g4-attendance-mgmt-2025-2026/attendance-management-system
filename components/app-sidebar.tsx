@@ -47,7 +47,7 @@ export function AppSidebar() {
 				icon: FaWarehouse,
 			},
 			{
-				title: "Teacher",
+				title: "Teachers",
 				url: "/teachers",
 				icon: PiChalkboardTeacherFill,
 			},

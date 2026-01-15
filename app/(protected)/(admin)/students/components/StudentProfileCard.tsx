@@ -10,30 +10,18 @@ import {
 } from "lucide-react";
 
 export function StudentProfileCard({ student }: StudentProfileCardProps) {
-	if (!student) {
-		return (
-			<div className="w-full">
-				<div className="flex flex-col items-center space-y-3 p-4 border rounded-lg border-gray-200 dark:border-gray-700">
-					<p className="text-gray-400 text-center">
-						Select a student to view profile
-					</p>
-				</div>
-			</div>
-		);
-	}
-
 	return (
-		<div className="w-full">
+		<div className="w-4/12 sticky top-0  h-[400px]  shadow-2xl rounded-2xl">
 			<div className="flex flex-col items-center space-y-3">
-				<h1 className="font-semibold text-sm">{student.student_id}</h1>
+				<h1 className="font-semibold text-sm">{student?.student_id}</h1>
 
 				<div>
 					<CircleUserIcon size={160} />
 				</div>
 
-				<h1 className="font-bold">{student.name}</h1>
+				<h1 className="font-bold">{student?.name}</h1>
 				<h2 className="text-gray-400 text-center">
-					{student.department}
+					{student?.department}
 				</h2>
 
 				<div className="flex gap-3 items-center">
@@ -52,13 +40,13 @@ export function StudentProfileCard({ student }: StudentProfileCardProps) {
 					<div className="flex flex-col">
 						<span>Date of Birth</span>
 						<span className="text-gray-400 text-sm">
-							{student.dateOfBirth || "N/A"}
+							{student?.dateOfBirth || "N/A"}
 						</span>
 					</div>
 					<div className="flex flex-col">
 						<span>Gender</span>
 						<span className="text-gray-400 text-sm">
-							{student.gender}
+							{student?.gender}
 						</span>
 					</div>
 				</div>

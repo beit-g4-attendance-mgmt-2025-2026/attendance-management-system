@@ -5,7 +5,7 @@ export interface Teacher {
 	email: string;
 	gender: string;
 	department: string;
-	role: string;
+	position: string;
 	dateOfBirth: string;
 	phone: string;
 }
