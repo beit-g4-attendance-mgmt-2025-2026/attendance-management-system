@@ -24,7 +24,7 @@ const page = () => {
         </Button>
       </div>
 
-      <TeacherForm />
+      <TeacherForm isEdit={false} />
     </div>
   );
 };
