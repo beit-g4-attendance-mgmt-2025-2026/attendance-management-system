@@ -1,11 +1,11 @@
 const page = async ({
-	params,
+  params,
 }: {
-	children: React.ReactNode;
-	params: Promise<{ id: string }>;
+  children: React.ReactNode;
+  params: Promise<{ id: string }>;
 }) => {
-	const { id } = await params;
-	return <div>{id}</div>;
+  const { id } = await params;
+  return <div>{id}</div>;
 };
 
 export default page;
