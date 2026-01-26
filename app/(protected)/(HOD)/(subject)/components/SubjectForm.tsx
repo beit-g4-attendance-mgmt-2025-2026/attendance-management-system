@@ -61,6 +61,13 @@ const SubjectForm = ({ isEdit = false }: { isEdit: boolean }) => {
 						placeholder="Enter subject code"
 						className="w-full"
 					/>
+					<FormInput
+						form={form}
+						name="teacher_name"
+						label="Teacher Name"
+						placeholder="Enter teacher's username"
+						className="w-full"
+					/>
 					<FormSelect
 						form={form}
 						name="semester"
@@ -75,14 +82,6 @@ const SubjectForm = ({ isEdit = false }: { isEdit: boolean }) => {
 						placeholder="Year"
 						options={acedamicYears as any}
 						id="form-rhf-select-acedamic-year"
-						triggerClassName="min-w-[120px] cursor-pointer"
-					/>
-					<FormSelect
-						form={form}
-						name="teacher_name"
-						placeholder="Teacher"
-						options={teacher_name_for_form_select as any}
-						id="form-rhf-select-semester"
 						triggerClassName="min-w-[120px] cursor-pointer"
 					/>
 

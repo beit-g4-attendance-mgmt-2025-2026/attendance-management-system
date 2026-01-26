@@ -1,7 +1,12 @@
-import React from "react";
+import ClassAttendanceTable from "@/components/ClassAttendanceTable";
 
 const page = () => {
-  return <div>my report</div>;
+	return (
+		<div>
+			my report page
+			<ClassAttendanceTable />
+		</div>
+	);
 };
 
 export default page;
