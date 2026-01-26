@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
-// @ts-expect-error - allow importing global CSS without type declarations
 import "./globals.css";
+import { ThemeProvider } from "../components/theme-provider";
 
 export const metadata: Metadata = {
 	title: "Attendance Management System",
@@ -14,9 +14,16 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
-			<body className={` antialiased`}>
-				<main>{children}</main>
+		<html lang="en" suppressHydrationWarning>
+			<body className={` antialiased`} cz-shortcut-listen="true">
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+					enableSystem
+					disableTransitionOnChange
+				>
+					<main className="dark:bg-[#0B1120]">{children}</main>
+				</ThemeProvider>
 			</body>
 		</html>
 	);
