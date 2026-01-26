@@ -17,7 +17,13 @@ import {
 import { Form } from "@/components/ui/form";
 import FormSelect from "@/components/inputs/FormSelect";
 import { IoChevronBackSharp } from "react-icons/io5";
-import { days, months, times, STUDENTS } from "@/constants/index.constants";
+import {
+  days,
+  months,
+  times,
+  STUDENTS,
+  totalTimes,
+} from "@/constants/index.constants";
 import { TakeAttendanceSchema } from "@/schema/index.schema";
 
 interface PageProps {
@@ -34,7 +40,7 @@ const Page = ({ params }: PageProps) => {
       SubjectId: "",
       Day: today.getDate().toString(),
       Month: months[today.getMonth()].value,
-      TotalTimes: "0",
+      TotalTimes: "",
       Times: {},
     },
   });
@@ -43,21 +49,21 @@ const Page = ({ params }: PageProps) => {
     form.setValue("SubjectId", paramData.code);
   }, [paramData.code, form]);
 
-  const totalTimes = form.watch("TotalTimes");
+  const totalTimesValue = form.watch("TotalTimes");
   React.useEffect(() => {
-    if (!totalTimes) return;
+    if (!totalTimesValue) return;
 
     const newTimes: Record<string, string> = {};
 
     STUDENTS.forEach((student) => {
-      newTimes[student.student_id] = totalTimes;
+      newTimes[student.student_id] = totalTimesValue;
     });
 
     form.setValue("Times", newTimes);
-  }, [totalTimes, form]);
+  }, [totalTimesValue, form]);
 
   function onSubmit(values: z.infer<typeof TakeAttendanceSchema>) {
-    console.log("Submitted values 👉", values);
+    console.log("Submitted values", values);
   }
 
   return (
@@ -95,7 +101,7 @@ const Page = ({ params }: PageProps) => {
               form={form}
               name="TotalTimes"
               placeholder="Total Times"
-              options={times as any}
+              options={totalTimes as any}
             />
           </div>
           <Button
@@ -125,7 +131,6 @@ const Page = ({ params }: PageProps) => {
               const studentTimes = useWatch({
                 control: form.control,
                 name: `Times.${student.student_id}`,
-                defaultValue: "0",
               });
               return (
                 <TableRow

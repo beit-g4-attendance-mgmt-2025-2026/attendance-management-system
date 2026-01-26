@@ -1,4 +1,4 @@
-import { days, months, times } from "@/constants/index.constants";
+import { days, months, times, totalTimes } from "@/constants/index.constants";
 import { z } from "zod";
 
 export const LoginSchema = z.object({
@@ -149,6 +149,7 @@ export const ClassSchema = z.object({
 const dayValues = days.map((d) => d.value) as [string, ...string[]];
 const monthValues = months.map((m) => m.value) as [string, ...string[]];
 const timeValues = times.map((m) => m.value) as [string, ...string[]];
+const totalTimeValues = totalTimes.map((m) => m.value) as [string, ...string[]];
 export const TakeAttendanceSchema = z.object({
   SubjectId: z.string(),
   Day: z.enum(dayValues, {
@@ -158,10 +159,15 @@ export const TakeAttendanceSchema = z.object({
     message: "Please choose a month",
   }),
 
-  TotalTimes: z.enum(timeValues, {
-    message: "Please choose total time",
+  TotalTimes: z.enum(totalTimeValues, {
+    message: "Please choose total times",
   }),
-  Times: z.record(z.string(), z.enum(timeValues)),
+  Times: z.record(
+    z.string(),
+    z.enum(timeValues, {
+      message: "Please choose times for this student",
+    })
+  ),
 });
 
 export type TakeAttendanceSchemaType = z.infer<typeof TakeAttendanceSchema>;
