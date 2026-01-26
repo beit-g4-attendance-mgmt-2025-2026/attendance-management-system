@@ -78,7 +78,7 @@ const page = () => {
 
 	return (
 		<div>
-			<header className="flex justify-between items-center mb-6">
+			{/* <header className="flex justify-between items-center mb-6">
 				<SearchInput
 					placeholder="Search class by name"
 					className="bg-gray-200 rounded-2xl  dark:bg-[#172139]"
@@ -88,7 +88,7 @@ const page = () => {
 						<ClassForm isEdit={false} />
 					</DialogCardBtn>
 				</div>
-			</header>
+			</header> */}
 			<div className="grid md:grid-cols-3 gap-10">
 				{classes.map((classItem, index) => (
 					<ClassCard

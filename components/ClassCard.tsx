@@ -11,7 +11,7 @@ const ClassCard = ({ classItem, variant }: CardProps) => {
 	const reportHref =
 		variant === "classes"
 			? `/classes/${classItem.name}/report`
-			: `/my-class/report`;
+			: `/my-class/${classItem.name}/report`;
 
 	const studentsHref =
 		variant === "classes"

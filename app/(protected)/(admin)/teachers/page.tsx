@@ -12,7 +12,7 @@ import TeacherForm from "./components/TeacherForm";
 
 const page = () => {
 	const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(
-		null
+		null,
 	);
 
 	return (
@@ -30,7 +30,7 @@ const page = () => {
 				}
 			/>
 
-			<div className="flex justify-between w-full">
+			<div className="flex gap-5 w-full">
 				<div className=" flex flex-col justify-between">
 					<TeacherListTable
 						teachers={TEACHERS}

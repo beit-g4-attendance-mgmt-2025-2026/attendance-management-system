@@ -1,5 +1,8 @@
+import { DialogCardBtn } from "@/components/DialogCardBtn";
+import SubHeader from "@/components/sub-header";
 import SubjectCard from "@/components/SubjectCard";
 import React from "react";
+import SubjectForm from "../../(HOD)/(subject)/components/SubjectForm";
 
 export interface Subject {
 	name: string;
@@ -60,13 +63,25 @@ const page = () => {
 	];
 
 	return (
-		<main>
+		<div>
+			<SubHeader
+				placeholder="Search for a subject by name or code"
+				dialogButton={
+					<DialogCardBtn
+						triggerName="Add Subject"
+						title="Add Subject"
+						description="Enter subject details"
+					>
+						<SubjectForm isEdit={false} />
+					</DialogCardBtn>
+				}
+			/>
 			<div className="grid md:grid-cols-3 gap-10">
 				{subjects.map((subject, index) => (
 					<SubjectCard key={index} subject={subject} />
 				))}
 			</div>
-		</main>
+		</div>
 	);
 };
 
