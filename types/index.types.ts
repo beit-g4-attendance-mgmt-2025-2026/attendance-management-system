@@ -49,8 +49,8 @@ export interface StudentProfileCardProps {
 
 export interface StudentsListTableProps {
 	students: Student[];
-	selectedStudent: Student | null;
-	onSelectStudent: (student: Student) => void;
+	selectedStudent?: Student | null;
+	onSelectStudent?: (student: Student) => void;
 }
 
 export interface TeachersListTableProps {
