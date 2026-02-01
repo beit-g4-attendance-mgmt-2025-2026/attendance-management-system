@@ -12,8 +12,8 @@ const ClassAttendanceTable = () => {
 		));
 
 	return (
-		<div className="overflow-x-auto">
-			<table className="w-full border-collapse border border-black text-center">
+		<div className="overflow-x-auto mt-6">
+			<table className="w-full border-collapse border border-black dark:border-gray-300 text-center">
 				{/* HEADER */}
 				<thead>
 					<tr>

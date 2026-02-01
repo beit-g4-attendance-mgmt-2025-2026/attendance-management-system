@@ -18,7 +18,7 @@ export interface AttendanceTableProps {
 }
 export default function SubjectAttendanceTable({ data }: AttendanceTableProps) {
 	return (
-		<div className="overflow-x-auto">
+		<div className="overflow-x-auto mt-6">
 			<table className="w-full border-collapse border border-black text-center">
 				{/* HEADER */}
 				<thead>
