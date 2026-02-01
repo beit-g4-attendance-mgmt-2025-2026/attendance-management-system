@@ -1,5 +1,6 @@
 import ClassCard from "@/components/ClassCard";
 import React from "react";
+import ClassForm from "@/components/ClassForm";
 
 export interface ClassItem {
 	id: string;
@@ -20,9 +21,22 @@ const page = () => {
 	};
 
 	return (
-		<div className="grid md:grid-cols-3 gap-10">
-			<ClassCard classItem={myclass} variant="my-class" />
-		</div>
+		<>
+			<header className="flex justify-between items-center mb-6">
+				<SearchInput
+					placeholder="Search for a class by name"
+					className="bg-gray-200 rounded-2xl  dark:bg-[#172139]"
+				/>
+				<div className="flex gap-3">
+					<DialogCardBtn triggerName="Add Class" title="Add Class">
+						<ClassForm isEdit={false} />
+					</DialogCardBtn>
+				</div>
+			</header>
+			<div className="grid md:grid-cols-3 gap-10">
+				<ClassCard classItem={myclass} variant="my-class" />
+			</div>
+		</>
 	);
 };
 
