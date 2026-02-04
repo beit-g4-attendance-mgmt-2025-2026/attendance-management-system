@@ -1,22 +1,16 @@
-// "use client";
+import BackBtn from "@/components/BackBtn";
 import SubjectAttendanceTable from "@/components/SubjectAttendanceTable";
 import { Button } from "@/components/ui/button";
 import { attendanceReportData } from "@/constants/index.constants";
-import { useRouter } from "next/navigation";
-import { IoChevronBackSharp } from "react-icons/io5";
 
 const page = async ({ params }: { params: Promise<{ id: string }> }) => {
 	const { id } = await params;
 	const decodedCode = decodeURIComponent(id);
-	// const router = useRouter();
 	return (
 		<main>
 			<nav className="flex justify-between items-center">
 				<div className="flex items-center gap-5">
-					<IoChevronBackSharp
-						className="size-6 mt-1 cursor-pointer"
-						// onClick={() => router.back()}
-					/>
+					<BackBtn />
 					<span className="text-xl font-semibold">{decodedCode}</span>
 				</div>
 				<div className="flex gap-3">

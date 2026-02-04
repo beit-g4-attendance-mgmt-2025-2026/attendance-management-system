@@ -1,3 +1,4 @@
+import BackBtn from "@/components/BackBtn";
 import ClassAttendanceTable from "@/components/ClassAttendanceTable";
 import { Button } from "@/components/ui/button";
 import { IoChevronBackSharp } from "react-icons/io5";
@@ -9,10 +10,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
 		<div>
 			<nav className="flex justify-between items-center">
 				<div className="flex items-center gap-5">
-					<IoChevronBackSharp
-						className="size-6 mt-1 cursor-pointer"
-						// onClick={() => router.back()}
-					/>
+					<BackBtn />
 
 					<span className="text-xl font-semibold">{decodedCode}</span>
 				</div>
