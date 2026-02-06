@@ -15,7 +15,7 @@ const ClassCard = ({ classItem, variant }: CardProps) => {
 
 	const studentsHref =
 		variant === "classes"
-			? `/classes/${classItem.name}`
+			? `/classes/${classItem.id}`
 			: `/my-class/${classItem.id}`;
 	return (
 		<div className="w-full p-4 flex flex-col  space-y-5  rounded-2xl border-gray-300 border  shadow-lg">
@@ -42,14 +42,14 @@ const ClassCard = ({ classItem, variant }: CardProps) => {
 					<p className="text-sm">{classItem.total}</p>
 				</div>
 			</div>
-			<div className="flex justify-between px-1">
+			<div className="flex justify-center space-x-3 px-1 mt-5">
 				<Link href={reportHref}>
-					<Button className="cursor-pointer text-white rounded-full bg-sky-600 hover:bg-sky-700 hover:text-white">
+					<Button className="cursor-pointer w-34  text-white rounded-full bg-sky-600 hover:bg-sky-700 hover:text-white">
 						View Report
 					</Button>
 				</Link>
 				<Link href={studentsHref}>
-					<Button className="cursor-pointer text-white rounded-full bg-sky-600 hover:bg-sky-700 hover:text-white">
+					<Button className="cursor-pointer w-34 text-white rounded-full bg-sky-600 hover:bg-sky-700 hover:text-white">
 						View Class
 					</Button>
 				</Link>

@@ -1,8 +1,8 @@
 import ClassCard from "@/components/ClassCard";
-import { DialogCardBtn } from "@/components/DialogCardBtn";
-import SearchInput from "@/components/inputs/SearchInput";
 import React from "react";
 import ClassForm from "@/components/ClassForm";
+import SearchInput from "@/components/inputs/SearchInput";
+import { DialogCardBtn } from "@/components/DialogCardBtn";
 
 export interface ClassItem {
 	id: string;

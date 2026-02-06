@@ -14,18 +14,191 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+// ENUM
+enum Role {
+  ADMIN
+  HOD
+  TEACHER
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  authorId  Int
-  author    User    @relation(fields: [authorId], references: [id])
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum Semester {
+  SEM_1
+  SEM_2
+}
+
+enum Year {
+  FIRST
+  SECOND
+  THIRD
+  FOURTH
+}
+
+enum Day {
+  MON
+  TUE
+  WED
+  THU
+  FRI
+}
+
+enum Month {
+  JAN
+  FEB
+  MAR
+  APR
+  MAY
+  JUN
+  JUL
+  AUG
+  SEP
+  OCT
+  NOV
+  DEC
+}
+
+model Admin {
+  id       String @id @default(uuid()) @db.Uuid
+  username String @unique
+  password String
+  role     Role
+}
+
+model User {
+  id           String      @id @default(uuid()) @db.Uuid
+  username     String      @unique
+  password     String
+  fullName     String
+  role         Role
+  gender       Gender
+  email        String
+  phoneNumber  String
+  departmentId String?     @db.Uuid
+  department   Department? @relation(fields: [departmentId], references: [id])
+  classId      String?     @db.Uuid
+  class        Class?      @relation(fields: [classId], references: [id])
+  subjects     Subject[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model Department {
+  id       String @id @default(uuid()) @db.Uuid
+  name     String
+  symbol   String
+  teachers Int
+  students Int
+
+  userId String @db.Uuid
+
+  classes      Class[]
+  studentsList Student[]
+  subjects     Subject[]
+
+  createdAt DateTime @default(now())
+
+  users User[]
+}
+
+model AcademicYear {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  startDate DateTime @db.Date
+  endDate   DateTime @db.Date
+  isActive  Boolean
+
+  classes Class[]
+}
+
+model Class {
+  id       String   @id @default(uuid()) @db.Uuid
+  name     String
+  semester Semester
+  year     Year
+
+  userId         String @db.Uuid
+  departmentId   String @db.Uuid
+  academicYearId String @db.Uuid
+
+  department   Department   @relation(fields: [departmentId], references: [id])
+  academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
+
+  students Student[]
+  subjects Subject[]
+  users    User[]
+}
+
+model Student {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  rollNo      String
+  phoneNumber Int
+  gender      Gender
+  email       String
+  year        Year
+  semester    Semester
+
+  departmentId String @db.Uuid
+  classId      String @db.Uuid
+
+  department Department @relation(fields: [departmentId], references: [id])
+  class      Class      @relation(fields: [classId], references: [id])
+
+  attendance DailyAttendance[]
+}
+
+model Subject {
+  id      String @id @default(uuid()) @db.Uuid
+  name    String
+  subCode String
+
+  departmentId String @db.Uuid
+  userId       String @db.Uuid
+  classId      String @db.Uuid
+
+  department Department @relation(fields: [departmentId], references: [id])
+  user       User       @relation(fields: [userId], references: [id])
+  class      Class      @relation(fields: [classId], references: [id])
+
+  attendance DailyAttendance[]
+}
+
+model DailyAttendance {
+  id        String @id @default(uuid()) @db.Uuid
+  studentId String @db.Uuid
+  subjectId String @db.Uuid
+
+  day        Day
+  month      Month
+  times      Int
+  totalTimes Int
+
+  student Student @relation(fields: [studentId], references: [id])
+  subject Subject @relation(fields: [subjectId], references: [id])
+
+  monthlySub MonthlySubAttendance[]
+}
+
+model MonthlySubAttendance {
+  id                String  @id @default(uuid()) @db.Uuid
+  dailyAttendanceId String? @db.Uuid
+  totalTimes        Int
+  status            Boolean
+
+  dailyAttendance DailyAttendance?         @relation(fields: [dailyAttendanceId], references: [id])
+  monthlyClass    MonthlyClassAttendance[]
+}
+
+model MonthlyClassAttendance {
+  id                     String  @id @default(uuid()) @db.Uuid
+  monthlySubAttendanceId String? @db.Uuid
+  totalTimes             Int
+  status                 Boolean
+
+  monthlySubAttendance MonthlySubAttendance? @relation(fields: [monthlySubAttendanceId], references: [id])
 }
