@@ -39,9 +39,17 @@ const handleActionErrorResponse = (err: unknown) => {
 		details,
 	};
 };
+const unauthorized = (message = "Unauthorized") => {
+	return NextResponse.json({ error: message }, { status: 401 });
+};
+const forbidden = (message = "Forbidden") => {
+	return NextResponse.json({ error: message }, { status: 403 });
+};
 
 export {
 	handleSuccessResponse,
 	handleErrorResponse,
 	handleActionErrorResponse,
+	unauthorized,
+	forbidden,
 };
