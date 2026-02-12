@@ -27,8 +27,8 @@ enum Gender {
 }
 
 enum Semester {
-  SEM_1
-  SEM_2
+  first_semester
+  second_semester
 }
 
 enum Year {
@@ -36,29 +36,24 @@ enum Year {
   SECOND
   THIRD
   FOURTH
+  FIFTH
+  FINAL
 }
 
-enum Day {
-  MON
-  TUE
-  WED
-  THU
-  FRI
-}
 
 enum Month {
-  JAN
-  FEB
-  MAR
-  APR
+  JANUARY
+  FEBRUARY
+  MARCH
+  APRIL
   MAY
-  JUN
-  JUL
-  AUG
-  SEP
-  OCT
-  NOV
-  DEC
+  JUNE
+  JULY
+  AUGUST
+  SEPTEMBER
+  OCTOBER
+  NOVEMBER
+  DECEMBER
 }
 
 model Admin {
@@ -73,37 +68,55 @@ model User {
   username     String      @unique
   password     String
   resetPasswordToken  String
-  resetPasswordExpireAt   String
+  resetPasswordExpireAt   DateTime
   fullName     String
   role         Role
   gender       Gender
-  email        String
+  email        String   @unique
   phoneNumber  String
-  departmentId String?     @db.Uuid
-  department   Department? @relation(fields: [departmentId], references: [id])
-  classId      String?     @db.Uuid
-  class        Class?      @relation(fields: [classId], references: [id])
+
+  departmentId String     @unique @db.Uuid
+  department   Department @relation(fields: [departmentId], references: [id])
+
+  class        Class?
+
   subjects     Subject[]
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
+}
+
+model Class {
+  id       String   @id @default(uuid()) @db.Uuid
+  name     String
+  semester Semester
+  year     Year
+
+  userId  String  @unique
+  user    User  @relation(fields: [userId], references: [id])
+  
+  departmentId   String @db.Uuid
+  department   Department   @relation(fields: [departmentId], references: [id])
+
+  academicYearId String? @db.Uuid
+  academicYear AcademicYear? @relation(fields: [academicYearId], references: [id])
+
+  students Student[]
+  subjects Subject[]
+  monthlyClassAttendance  MonthlyClassAttendance[]
 }
 
 model Department {
   id       String @id @default(uuid()) @db.Uuid
   name     String
   symbol   String
-  teachers Int
-  students Int
 
-  userId String @db.Uuid
-
+  users User[]
   classes      Class[]
-  studentsList Student[]
+  students Student[]
   subjects     Subject[]
 
   createdAt DateTime @default(now())
 
-  users User[]
 }
 
 model AcademicYear {
@@ -116,41 +129,26 @@ model AcademicYear {
   classes Class[]
 }
 
-model Class {
-  id       String   @id @default(uuid()) @db.Uuid
-  name     String
-  semester Semester
-  year     Year
 
-  userId         String @db.Uuid
-  departmentId   String @db.Uuid
-  academicYearId String @db.Uuid
-
-  department   Department   @relation(fields: [departmentId], references: [id])
-  academicYear AcademicYear @relation(fields: [academicYearId], references: [id])
-
-  students Student[]
-  subjects Subject[]
-  users    User[]
-}
 
 model Student {
   id          String   @id @default(uuid()) @db.Uuid
   name        String
-  rollNo      String
+  rollNo      String  @unique
   phoneNumber Int
   gender      Gender
-  email       String
+  email       String  @unique
   year        Year
   semester    Semester
 
   departmentId String @db.Uuid
-  classId      String @db.Uuid
-
   department Department @relation(fields: [departmentId], references: [id])
+
+  classId      String @db.Uuid
   class      Class      @relation(fields: [classId], references: [id])
 
-  attendance DailyAttendance[]
+  dailyAttendance   DailyAttendance[]
+  monthlySubAttendance    MonthlySubAttendance[]
 }
 
 model Subject {
@@ -159,47 +157,59 @@ model Subject {
   subCode String
 
   departmentId String @db.Uuid
-  userId       String @db.Uuid
-  classId      String @db.Uuid
-
   department Department @relation(fields: [departmentId], references: [id])
+
+  userId       String @db.Uuid
   user       User       @relation(fields: [userId], references: [id])
+
+  classId      String @db.Uuid
   class      Class      @relation(fields: [classId], references: [id])
 
-  attendance DailyAttendance[]
+  dailyAttendance   DailyAttendance[]
+  monthlySubAttendance MonthlySubAttendance[]
 }
 
 model DailyAttendance {
   id        String @id @default(uuid()) @db.Uuid
-  studentId String @db.Uuid
-  subjectId String @db.Uuid
 
-  day        Day
+  day        Int
   month      Month
   times      Int
-  totalTimes Int
+  totalTimes Int  
 
+  studentId String @db.Uuid
   student Student @relation(fields: [studentId], references: [id])
+
+  subjectId String @db.Uuid
   subject Subject @relation(fields: [subjectId], references: [id])
 
-  monthlySub MonthlySubAttendance[]
+  @@unique([studentId, subjectId, day, month])
 }
 
 model MonthlySubAttendance {
   id                String  @id @default(uuid()) @db.Uuid
-  dailyAttendanceId String? @db.Uuid
+  times              Int
   totalTimes        Int
   status            Boolean
 
-  dailyAttendance DailyAttendance?         @relation(fields: [dailyAttendanceId], references: [id])
-  monthlyClass    MonthlyClassAttendance[]
+  student   Student? @relation(fields: [studentId], references: [id])
+  studentId   String
+  subject    Subject @relation(fields: [subjectId], references: [id])
+  subjectId   String
+
+  monthlyClassAttendance MonthlyClassAttendance? @relation(fields: [monthlyClassAttendanceId], references: [id])
+  monthlyClassAttendanceId  String
+
 }
 
 model MonthlyClassAttendance {
   id                     String  @id @default(uuid()) @db.Uuid
-  monthlySubAttendanceId String? @db.Uuid
+  monthlySubAttendanceId String[] @db.Uuid
   totalTimes             Int
   status                 Boolean
 
-  monthlySubAttendance MonthlySubAttendance? @relation(fields: [monthlySubAttendanceId], references: [id])
+  class Class? @relation(fields: [classId], references: [id])
+  classId   String
+  
+  monthlySubAttendance  MonthlySubAttendance[]
 }
