@@ -13,20 +13,22 @@ import { setAuthCookie, signAuthToken } from "@/lib/jwt";
 export async function POST(request: NextRequest) {
 	const body = await request.json();
 
-	const validatedData = validateBody(body, RegisterSchema);
-	const {
-		fullName,
-		username,
-		email,
-		password,
-		phoneNumber,
-		gender,
-		role,
-		departmentId,
-		resetPasswordToken,
-		resetPasswordExpireAt,
-	} = validatedData.data;
 	try {
+		const validatedData = validateBody(body, RegisterSchema);
+
+		const {
+			fullName,
+			username,
+			email,
+			password,
+			phoneNumber,
+			gender,
+			role,
+			departmentId,
+			resetPasswordToken,
+			resetPasswordExpireAt,
+		} = validatedData.data;
+
 		const existingUsername = await prisma.user.findUnique({
 			where: {
 				username,
