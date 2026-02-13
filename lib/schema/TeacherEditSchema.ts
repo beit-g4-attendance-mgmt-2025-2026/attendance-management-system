@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { Role, Gender } from "../../generated/prisma/enums";
 
-const RegisterSchema = z.object({
+const UserEditSchema = z.object({
 	fullName: z
 		.string()
 		.min(1, { message: "Full name is required" })
@@ -9,7 +9,8 @@ const RegisterSchema = z.object({
 		.max(50, { message: "Full name must be less than 50 characters" })
 		.regex(/^[a-zA-Z\s]+$/, {
 			message: "Full name can only contain letters and spaces",
-		}),
+		})
+		.optional(),
 
 	username: z
 		.string()
@@ -19,38 +20,30 @@ const RegisterSchema = z.object({
 			message:
 				"Username can only contain letters, numbers, and underscores",
 		})
-		.toLowerCase(),
+		.toLowerCase()
+		.optional(),
 
 	email: z
 		.string()
 		.min(1, { message: "Email is required" })
 		.email({ message: "Please provide a valid email address" })
-		.toLowerCase(),
+		.toLowerCase()
+		.optional(),
 
-	password: z
-		.string()
-		.min(8, { message: "Password must be at least 8 characters" })
-		.max(128, { message: "Password must be less than 128 characters" })
-		.regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, {
-			message:
-				"Password must contain at least one lowercase letter, one uppercase letter, and one number",
-		}),
-
-	role: z.nativeEnum(Role),
-	gender: z.nativeEnum(Gender),
+	role: z.nativeEnum(Role).optional(),
+	gender: z.nativeEnum(Gender).optional(),
 
 	phoneNumber: z
 		.string()
 		.min(7, { message: "Phone number is too short" })
 		.max(20, { message: "Phone number is too long" })
-		.regex(/^\+?[0-9\s-]+$/, { message: "Invalid phone number" }),
-	departmentName: z.enum(["Civil", "CEIT", "EC", "MP", "EP"], {
-		message: "Department must be a valid option",
-	}),
-	resetPasswordToken: z.string().nullable(),
-	resetPasswordExpireAt: z.coerce.date().nullable(),
+		.regex(/^\+?[0-9\s-]+$/, { message: "Invalid phone number" })
+		.optional(),
+
+	resetPasswordToken: z.string().nullable().optional(),
+	resetPasswordExpireAt: z.date().nullable().optional(),
 });
 
-export type RegisterInput = z.infer<typeof RegisterSchema>;
+export type TeacherEditInput = z.infer<typeof UserEditSchema>;
 
-export default RegisterSchema;
+export default UserEditSchema;

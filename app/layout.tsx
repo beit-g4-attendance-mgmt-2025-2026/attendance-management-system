@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import "./globals.css";
 import { ThemeProvider } from "../components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
 	title: "Attendance Management System",
@@ -23,6 +24,7 @@ export default function RootLayout({
 					disableTransitionOnChange
 				>
 					<main className="dark:bg-[#0B1120]">{children}</main>
+					<Toaster />
 				</ThemeProvider>
 			</body>
 		</html>

@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { Role, Gender } from "../../generated/prisma/enums";
 
 const LoginSchema = z.object({
 	username: z

@@ -3,13 +3,15 @@
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FormInput } from "@/components/inputs/FormInput";
-import { TeacherSchema } from "@/schema/index.schema";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import z from "zod";
 import FormSelect from "@/components/inputs/FormSelect";
 import { departments, genders, roles } from "@/constants/index.constants";
+import fetchHandler from "@/lib/fetchHandler";
+import { TeacherSchema } from "@/schema/index.schema";
 
 const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 	const router = useRouter();
@@ -17,21 +19,44 @@ const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 	const form = useForm<z.infer<typeof TeacherSchema>>({
 		resolver: zodResolver(TeacherSchema),
 		defaultValues: {
-			full_name: "",
+			fullName: "",
 			username: "",
 			email: "",
 			password: "",
-			phone: "",
-			gender: undefined as any,
-			role: undefined as any,
-			department: undefined as any,
+			phoneNumber: "",
+			gender: genders[0].value,
+			role: roles[2].value,
+			departmentName: undefined as any,
 		},
 	});
 
-	function onSubmit(values: z.infer<typeof TeacherSchema>) {
+	async function onSubmit(values: z.infer<typeof TeacherSchema>) {
 		// Do something with the form values.
 		console.log("Form submitted:");
 		console.log(values);
+		try {
+			const res = await fetchHandler(
+				"http://localhost:3000/api/teachers",
+				{
+					method: "POST",
+					body: JSON.stringify({
+						fullName: values.fullName,
+						username: values.username,
+						email: values.email,
+						password: values.password,
+						phoneNumber: values.phoneNumber,
+						gender: values.gender,
+						role: values.role,
+						departmentName: values.departmentName,
+						resetPasswordToken: "",
+						resetPasswordExpireAt: null,
+					}),
+				},
+			);
+			console.log("create user: ", res);
+		} catch (error: unknown) {
+			console.log(error);
+		}
 	}
 
 	const handleCancel = () => {
@@ -46,7 +71,7 @@ const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 				>
 					<FormInput
 						form={form}
-						name="full_name"
+						name="fullName"
 						label="Full Name"
 						placeholder="Enter full name"
 					/>
@@ -91,7 +116,7 @@ const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 						<div className=" w-8/12">
 							<FormInput
 								form={form}
-								name="phone"
+								name="phoneNumber"
 								label="Phone number"
 								placeholder="Enter phone number"
 								className="w-full"
@@ -100,7 +125,7 @@ const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 						<div className="rounded-md w-4/12 mt-5">
 							<FormSelect
 								form={form}
-								name="department"
+								name="departmentName"
 								placeholder="Department"
 								options={departments as any}
 								id="form-rhf-select-department"

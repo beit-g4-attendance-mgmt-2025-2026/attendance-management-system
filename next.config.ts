@@ -10,9 +10,16 @@ const nextConfig: NextConfig = {
 			},
 		];
 	},
-	// images: {
-	// 	remotePatterns: [{ hostname: "img.clerk.com" }],
-	// },
+	images: {
+		remotePatterns: [
+			{
+				protocol: "http",
+				hostname: "localhost",
+				port: "3000",
+			},
+			// { protocol: "https", hostname: "img.clerk.com" },
+		],
+	},
 };
 
 export default nextConfig;

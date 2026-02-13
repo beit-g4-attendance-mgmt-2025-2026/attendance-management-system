@@ -75,7 +75,7 @@ model User {
   email        String   @unique
   phoneNumber  String
 
-  departmentId String     @unique @db.Uuid
+  departmentId String      @db.Uuid
   department   Department @relation(fields: [departmentId], references: [id])
 
   class        Class?

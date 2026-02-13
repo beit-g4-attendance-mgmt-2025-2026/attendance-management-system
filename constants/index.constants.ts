@@ -2,21 +2,21 @@ import { Department, Student, Teacher } from "@/types/index.types";
 import { Label } from "recharts";
 
 const genders = [
-	{ label: "Male", value: "male" },
-	{ label: "Female", value: "female" },
-	{ label: "Other", value: "other" },
+	{ label: "MALE", value: "MALE" },
+	{ label: "FEMALE", value: "FEMALE" },
+	{ label: "OTHER", value: "OTHER" },
 ] as const;
 const departments = [
-	{ label: "Civil", value: "Civil" },
+	{ label: "CIVIL", value: "CIVIL" },
 	{ label: "CEIT", value: "CEIT" },
 	{ label: "EC", value: "EC" },
 	{ label: "MP", value: "MP" },
 	{ label: "EP", value: "EP" },
 ] as const;
 const roles = [
-	{ label: "Admin", value: "admin" },
-	{ label: "Department", value: "department" },
-	{ label: "Teacher", value: "teacher" },
+	{ label: "ADMIN", value: "ADMIN" },
+	{ label: "HOD", value: "HOD" },
+	{ label: "TEACHER", value: "TEACHER" },
 ] as const;
 const acedamicYears = [
 	{ label: "First Year", value: "first year" },

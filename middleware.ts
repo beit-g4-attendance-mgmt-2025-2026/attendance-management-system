@@ -41,11 +41,11 @@ export function middleware(request: NextRequest) {
 	return NextResponse.next();
 }
 
-export const config = {
-	/*
+/*
 	 * left  static files (images, css, favicon) and
 	 *pass all other requests through the middleware
 
 	 */
-	matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+export const config = {
+	matcher: ["/((?!api|_next|.*\\..*).*)"],
 };

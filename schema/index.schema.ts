@@ -1,4 +1,5 @@
 import { days, months, times, totalTimes } from "@/constants/index.constants";
+import { Gender, Role } from "@/generated/prisma/enums";
 import { z } from "zod";
 
 export const LoginSchema = z.object({
@@ -11,35 +12,89 @@ export const LoginSchema = z.object({
 				"Username can only contain letters, numbers, and underscores",
 		})
 		.toLowerCase(),
-});
-
-export const TeacherSchema = z.object({
-	full_name: z.string().min(2, {
-		message: "Name must be at least 2 characters",
-	}),
-	username: z.string().min(4, {
-		message: "Username must be at least 4 characters",
-	}),
-	email: z.string().email({
-		message: "Invalid email address",
-	}),
 	password: z
 		.string()
-		.min(6, { message: "Password must be at least 6 characters" }),
-	phone: z.string().min(6, {
-		message: "Phone number must be at least 6 characters",
-	}),
-	gender: z.enum(["male", "female", "other"], {
+		.min(8, { message: "Password must be at least 8 characters" }),
+});
+
+// export const TeacherSchema = z.object({
+// 	full_name: z.string().min(2, {
+// 		message: "Name must be at least 2 characters",
+// 	}),
+// 	username: z.string().min(4, {
+// 		message: "Username must be at least 4 characters",
+// 	}),
+// 	email: z.string().email({
+// 		message: "Invalid email address",
+// 	}),
+// 	password: z
+// 		.string()
+// 		.min(6, { message: "Password must be at least 6 characters" }),
+// 	phone: z.string().min(6, {
+// 		message: "Phone number must be at least 6 characters",
+// 	}),
+// 	gender: z.enum(["male", "female", "other"], {
+// 		message: "Gender must be male, female, or other",
+// 	}),
+// 	// .refine((val) => val == "Gender", {
+// 	// 	message:
+// 	// 		"Auto-detection is not allowed. Please select male, female or other.",
+// 	// }),
+// 	role: z.enum(["admin", "department", "teacher"], {
+// 		message: "Role must be a valid option",
+// 	}),
+// 	department: z.enum(["Civil", "CEIT", "EC", "MP", "EP"], {
+// 		message: "Department must be a valid option",
+// 	}),
+// });
+export const TeacherSchema = z.object({
+	fullName: z
+		.string()
+		.min(1, { message: "Full name is required" })
+		.min(2, { message: "Full name must be at least 2 characters" })
+		.max(50, { message: "Full name must be less than 50 characters" })
+		.regex(/^[a-zA-Z\s]+$/, {
+			message: "Full name can only contain letters and spaces",
+		}),
+
+	username: z
+		.string()
+		.min(3, { message: "Username must be at least 3 characters" })
+		.max(30, { message: "Username must be less than 30 characters" })
+		.regex(/^[a-zA-Z0-9_]+$/, {
+			message:
+				"Username can only contain letters, numbers, and underscores",
+		})
+		.toLowerCase(),
+
+	email: z
+		.string()
+		.min(1, { message: "Email is required" })
+		.email({ message: "Please provide a valid email address" })
+		.toLowerCase(),
+
+	password: z
+		.string()
+		.min(8, { message: "Password must be at least 8 characters" })
+		.max(128, { message: "Password must be less than 128 characters" })
+		.regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, {
+			message:
+				"Password must contain at least one lowercase letter, one uppercase letter, and one number",
+		}),
+
+	gender: z.enum(["MALE", "FEMALE", "OTHER"], {
 		message: "Gender must be male, female, or other",
 	}),
-	// .refine((val) => val == "Gender", {
-	// 	message:
-	// 		"Auto-detection is not allowed. Please select male, female or other.",
-	// }),
-	role: z.enum(["admin", "department", "teacher"], {
+	role: z.enum(["ADMIN", "DEPARTMENT", "TEACHER"], {
 		message: "Role must be a valid option",
 	}),
-	department: z.enum(["Civil", "CEIT", "EC", "MP", "EP"], {
+
+	phoneNumber: z
+		.string()
+		.min(7, { message: "Phone number is too short" })
+		.max(20, { message: "Phone number is too long" })
+		.regex(/^\+?[0-9\s-]+$/, { message: "Invalid phone number" }),
+	departmentName: z.enum(["Civil", "CEIT", "EC", "MP", "EP"], {
 		message: "Department must be a valid option",
 	}),
 });
