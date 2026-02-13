@@ -67,8 +67,8 @@ model User {
   id           String      @id @default(uuid()) @db.Uuid
   username     String      @unique
   password     String
-  resetPasswordToken  String
-  resetPasswordExpireAt   DateTime
+  resetPasswordToken  String?
+  resetPasswordExpireAt   DateTime?
   fullName     String
   role         Role
   gender       Gender
@@ -91,7 +91,7 @@ model Class {
   semester Semester
   year     Year
 
-  userId  String  @unique
+  userId  String  @unique @db.Uuid
   user    User  @relation(fields: [userId], references: [id])
   
   departmentId   String @db.Uuid

@@ -28,6 +28,11 @@ export type Admin = Prisma.AdminModel
  */
 export type User = Prisma.UserModel
 /**
+ * Model Class
+ * 
+ */
+export type Class = Prisma.ClassModel
+/**
  * Model Department
  * 
  */
@@ -37,11 +42,6 @@ export type Department = Prisma.DepartmentModel
  * 
  */
 export type AcademicYear = Prisma.AcademicYearModel
-/**
- * Model Class
- * 
- */
-export type Class = Prisma.ClassModel
 /**
  * Model Student
  * 

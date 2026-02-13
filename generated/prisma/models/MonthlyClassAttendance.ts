@@ -36,16 +36,16 @@ export type MonthlyClassAttendanceSumAggregateOutputType = {
 
 export type MonthlyClassAttendanceMinAggregateOutputType = {
   id: string | null
-  monthlySubAttendanceId: string | null
   totalTimes: number | null
   status: boolean | null
+  classId: string | null
 }
 
 export type MonthlyClassAttendanceMaxAggregateOutputType = {
   id: string | null
-  monthlySubAttendanceId: string | null
   totalTimes: number | null
   status: boolean | null
+  classId: string | null
 }
 
 export type MonthlyClassAttendanceCountAggregateOutputType = {
@@ -53,6 +53,7 @@ export type MonthlyClassAttendanceCountAggregateOutputType = {
   monthlySubAttendanceId: number
   totalTimes: number
   status: number
+  classId: number
   _all: number
 }
 
@@ -67,16 +68,16 @@ export type MonthlyClassAttendanceSumAggregateInputType = {
 
 export type MonthlyClassAttendanceMinAggregateInputType = {
   id?: true
-  monthlySubAttendanceId?: true
   totalTimes?: true
   status?: true
+  classId?: true
 }
 
 export type MonthlyClassAttendanceMaxAggregateInputType = {
   id?: true
-  monthlySubAttendanceId?: true
   totalTimes?: true
   status?: true
+  classId?: true
 }
 
 export type MonthlyClassAttendanceCountAggregateInputType = {
@@ -84,6 +85,7 @@ export type MonthlyClassAttendanceCountAggregateInputType = {
   monthlySubAttendanceId?: true
   totalTimes?: true
   status?: true
+  classId?: true
   _all?: true
 }
 
@@ -175,9 +177,10 @@ export type MonthlyClassAttendanceGroupByArgs<ExtArgs extends runtime.Types.Exte
 
 export type MonthlyClassAttendanceGroupByOutputType = {
   id: string
-  monthlySubAttendanceId: string | null
+  monthlySubAttendanceId: string[]
   totalTimes: number
   status: boolean
+  classId: string
   _count: MonthlyClassAttendanceCountAggregateOutputType | null
   _avg: MonthlyClassAttendanceAvgAggregateOutputType | null
   _sum: MonthlyClassAttendanceSumAggregateOutputType | null
@@ -205,18 +208,22 @@ export type MonthlyClassAttendanceWhereInput = {
   OR?: Prisma.MonthlyClassAttendanceWhereInput[]
   NOT?: Prisma.MonthlyClassAttendanceWhereInput | Prisma.MonthlyClassAttendanceWhereInput[]
   id?: Prisma.UuidFilter<"MonthlyClassAttendance"> | string
-  monthlySubAttendanceId?: Prisma.UuidNullableFilter<"MonthlyClassAttendance"> | string | null
+  monthlySubAttendanceId?: Prisma.StringNullableListFilter<"MonthlyClassAttendance">
   totalTimes?: Prisma.IntFilter<"MonthlyClassAttendance"> | number
   status?: Prisma.BoolFilter<"MonthlyClassAttendance"> | boolean
-  monthlySubAttendance?: Prisma.XOR<Prisma.MonthlySubAttendanceNullableScalarRelationFilter, Prisma.MonthlySubAttendanceWhereInput> | null
+  classId?: Prisma.StringFilter<"MonthlyClassAttendance"> | string
+  class?: Prisma.XOR<Prisma.ClassNullableScalarRelationFilter, Prisma.ClassWhereInput> | null
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceListRelationFilter
 }
 
 export type MonthlyClassAttendanceOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  monthlySubAttendanceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  monthlySubAttendanceId?: Prisma.SortOrder
   totalTimes?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  monthlySubAttendance?: Prisma.MonthlySubAttendanceOrderByWithRelationInput
+  classId?: Prisma.SortOrder
+  class?: Prisma.ClassOrderByWithRelationInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceOrderByRelationAggregateInput
 }
 
 export type MonthlyClassAttendanceWhereUniqueInput = Prisma.AtLeast<{
@@ -224,17 +231,20 @@ export type MonthlyClassAttendanceWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.MonthlyClassAttendanceWhereInput | Prisma.MonthlyClassAttendanceWhereInput[]
   OR?: Prisma.MonthlyClassAttendanceWhereInput[]
   NOT?: Prisma.MonthlyClassAttendanceWhereInput | Prisma.MonthlyClassAttendanceWhereInput[]
-  monthlySubAttendanceId?: Prisma.UuidNullableFilter<"MonthlyClassAttendance"> | string | null
+  monthlySubAttendanceId?: Prisma.StringNullableListFilter<"MonthlyClassAttendance">
   totalTimes?: Prisma.IntFilter<"MonthlyClassAttendance"> | number
   status?: Prisma.BoolFilter<"MonthlyClassAttendance"> | boolean
-  monthlySubAttendance?: Prisma.XOR<Prisma.MonthlySubAttendanceNullableScalarRelationFilter, Prisma.MonthlySubAttendanceWhereInput> | null
+  classId?: Prisma.StringFilter<"MonthlyClassAttendance"> | string
+  class?: Prisma.XOR<Prisma.ClassNullableScalarRelationFilter, Prisma.ClassWhereInput> | null
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceListRelationFilter
 }, "id">
 
 export type MonthlyClassAttendanceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  monthlySubAttendanceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  monthlySubAttendanceId?: Prisma.SortOrder
   totalTimes?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  classId?: Prisma.SortOrder
   _count?: Prisma.MonthlyClassAttendanceCountOrderByAggregateInput
   _avg?: Prisma.MonthlyClassAttendanceAvgOrderByAggregateInput
   _max?: Prisma.MonthlyClassAttendanceMaxOrderByAggregateInput
@@ -247,57 +257,69 @@ export type MonthlyClassAttendanceScalarWhereWithAggregatesInput = {
   OR?: Prisma.MonthlyClassAttendanceScalarWhereWithAggregatesInput[]
   NOT?: Prisma.MonthlyClassAttendanceScalarWhereWithAggregatesInput | Prisma.MonthlyClassAttendanceScalarWhereWithAggregatesInput[]
   id?: Prisma.UuidWithAggregatesFilter<"MonthlyClassAttendance"> | string
-  monthlySubAttendanceId?: Prisma.UuidNullableWithAggregatesFilter<"MonthlyClassAttendance"> | string | null
+  monthlySubAttendanceId?: Prisma.StringNullableListFilter<"MonthlyClassAttendance">
   totalTimes?: Prisma.IntWithAggregatesFilter<"MonthlyClassAttendance"> | number
   status?: Prisma.BoolWithAggregatesFilter<"MonthlyClassAttendance"> | boolean
+  classId?: Prisma.StringWithAggregatesFilter<"MonthlyClassAttendance"> | string
 }
 
 export type MonthlyClassAttendanceCreateInput = {
   id?: string
+  monthlySubAttendanceId?: Prisma.MonthlyClassAttendanceCreatemonthlySubAttendanceIdInput | string[]
   totalTimes: number
   status: boolean
-  monthlySubAttendance?: Prisma.MonthlySubAttendanceCreateNestedOneWithoutMonthlyClassInput
+  class?: Prisma.ClassCreateNestedOneWithoutMonthlyClassAttendanceInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceCreateNestedManyWithoutMonthlyClassAttendanceInput
 }
 
 export type MonthlyClassAttendanceUncheckedCreateInput = {
   id?: string
-  monthlySubAttendanceId?: string | null
+  monthlySubAttendanceId?: Prisma.MonthlyClassAttendanceCreatemonthlySubAttendanceIdInput | string[]
   totalTimes: number
   status: boolean
+  classId: string
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUncheckedCreateNestedManyWithoutMonthlyClassAttendanceInput
 }
 
 export type MonthlyClassAttendanceUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  monthlySubAttendanceId?: Prisma.MonthlyClassAttendanceUpdatemonthlySubAttendanceIdInput | string[]
   totalTimes?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  monthlySubAttendance?: Prisma.MonthlySubAttendanceUpdateOneWithoutMonthlyClassNestedInput
+  class?: Prisma.ClassUpdateOneWithoutMonthlyClassAttendanceNestedInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUpdateManyWithoutMonthlyClassAttendanceNestedInput
 }
 
 export type MonthlyClassAttendanceUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  monthlySubAttendanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  monthlySubAttendanceId?: Prisma.MonthlyClassAttendanceUpdatemonthlySubAttendanceIdInput | string[]
   totalTimes?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  classId?: Prisma.StringFieldUpdateOperationsInput | string
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUncheckedUpdateManyWithoutMonthlyClassAttendanceNestedInput
 }
 
 export type MonthlyClassAttendanceCreateManyInput = {
   id?: string
-  monthlySubAttendanceId?: string | null
+  monthlySubAttendanceId?: Prisma.MonthlyClassAttendanceCreatemonthlySubAttendanceIdInput | string[]
   totalTimes: number
   status: boolean
+  classId: string
 }
 
 export type MonthlyClassAttendanceUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  monthlySubAttendanceId?: Prisma.MonthlyClassAttendanceUpdatemonthlySubAttendanceIdInput | string[]
   totalTimes?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type MonthlyClassAttendanceUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  monthlySubAttendanceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  monthlySubAttendanceId?: Prisma.MonthlyClassAttendanceUpdatemonthlySubAttendanceIdInput | string[]
   totalTimes?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  classId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type MonthlyClassAttendanceListRelationFilter = {
@@ -310,11 +332,25 @@ export type MonthlyClassAttendanceOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type MonthlyClassAttendanceNullableScalarRelationFilter = {
+  is?: Prisma.MonthlyClassAttendanceWhereInput | null
+  isNot?: Prisma.MonthlyClassAttendanceWhereInput | null
+}
+
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
+}
+
 export type MonthlyClassAttendanceCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   monthlySubAttendanceId?: Prisma.SortOrder
   totalTimes?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  classId?: Prisma.SortOrder
 }
 
 export type MonthlyClassAttendanceAvgOrderByAggregateInput = {
@@ -323,100 +359,129 @@ export type MonthlyClassAttendanceAvgOrderByAggregateInput = {
 
 export type MonthlyClassAttendanceMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  monthlySubAttendanceId?: Prisma.SortOrder
   totalTimes?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  classId?: Prisma.SortOrder
 }
 
 export type MonthlyClassAttendanceMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  monthlySubAttendanceId?: Prisma.SortOrder
   totalTimes?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  classId?: Prisma.SortOrder
 }
 
 export type MonthlyClassAttendanceSumOrderByAggregateInput = {
   totalTimes?: Prisma.SortOrder
 }
 
-export type MonthlyClassAttendanceCreateNestedManyWithoutMonthlySubAttendanceInput = {
-  create?: Prisma.XOR<Prisma.MonthlyClassAttendanceCreateWithoutMonthlySubAttendanceInput, Prisma.MonthlyClassAttendanceUncheckedCreateWithoutMonthlySubAttendanceInput> | Prisma.MonthlyClassAttendanceCreateWithoutMonthlySubAttendanceInput[] | Prisma.MonthlyClassAttendanceUncheckedCreateWithoutMonthlySubAttendanceInput[]
-  connectOrCreate?: Prisma.MonthlyClassAttendanceCreateOrConnectWithoutMonthlySubAttendanceInput | Prisma.MonthlyClassAttendanceCreateOrConnectWithoutMonthlySubAttendanceInput[]
-  createMany?: Prisma.MonthlyClassAttendanceCreateManyMonthlySubAttendanceInputEnvelope
+export type MonthlyClassAttendanceCreateNestedManyWithoutClassInput = {
+  create?: Prisma.XOR<Prisma.MonthlyClassAttendanceCreateWithoutClassInput, Prisma.MonthlyClassAttendanceUncheckedCreateWithoutClassInput> | Prisma.MonthlyClassAttendanceCreateWithoutClassInput[] | Prisma.MonthlyClassAttendanceUncheckedCreateWithoutClassInput[]
+  connectOrCreate?: Prisma.MonthlyClassAttendanceCreateOrConnectWithoutClassInput | Prisma.MonthlyClassAttendanceCreateOrConnectWithoutClassInput[]
+  createMany?: Prisma.MonthlyClassAttendanceCreateManyClassInputEnvelope
   connect?: Prisma.MonthlyClassAttendanceWhereUniqueInput | Prisma.MonthlyClassAttendanceWhereUniqueInput[]
 }
 
-export type MonthlyClassAttendanceUncheckedCreateNestedManyWithoutMonthlySubAttendanceInput = {
-  create?: Prisma.XOR<Prisma.MonthlyClassAttendanceCreateWithoutMonthlySubAttendanceInput, Prisma.MonthlyClassAttendanceUncheckedCreateWithoutMonthlySubAttendanceInput> | Prisma.MonthlyClassAttendanceCreateWithoutMonthlySubAttendanceInput[] | Prisma.MonthlyClassAttendanceUncheckedCreateWithoutMonthlySubAttendanceInput[]
-  connectOrCreate?: Prisma.MonthlyClassAttendanceCreateOrConnectWithoutMonthlySubAttendanceInput | Prisma.MonthlyClassAttendanceCreateOrConnectWithoutMonthlySubAttendanceInput[]
-  createMany?: Prisma.MonthlyClassAttendanceCreateManyMonthlySubAttendanceInputEnvelope
+export type MonthlyClassAttendanceUncheckedCreateNestedManyWithoutClassInput = {
+  create?: Prisma.XOR<Prisma.MonthlyClassAttendanceCreateWithoutClassInput, Prisma.MonthlyClassAttendanceUncheckedCreateWithoutClassInput> | Prisma.MonthlyClassAttendanceCreateWithoutClassInput[] | Prisma.MonthlyClassAttendanceUncheckedCreateWithoutClassInput[]
+  connectOrCreate?: Prisma.MonthlyClassAttendanceCreateOrConnectWithoutClassInput | Prisma.MonthlyClassAttendanceCreateOrConnectWithoutClassInput[]
+  createMany?: Prisma.MonthlyClassAttendanceCreateManyClassInputEnvelope
   connect?: Prisma.MonthlyClassAttendanceWhereUniqueInput | Prisma.MonthlyClassAttendanceWhereUniqueInput[]
 }
 
-export type MonthlyClassAttendanceUpdateManyWithoutMonthlySubAttendanceNestedInput = {
-  create?: Prisma.XOR<Prisma.MonthlyClassAttendanceCreateWithoutMonthlySubAttendanceInput, Prisma.MonthlyClassAttendanceUncheckedCreateWithoutMonthlySubAttendanceInput> | Prisma.MonthlyClassAttendanceCreateWithoutMonthlySubAttendanceInput[] | Prisma.MonthlyClassAttendanceUncheckedCreateWithoutMonthlySubAttendanceInput[]
-  connectOrCreate?: Prisma.MonthlyClassAttendanceCreateOrConnectWithoutMonthlySubAttendanceInput | Prisma.MonthlyClassAttendanceCreateOrConnectWithoutMonthlySubAttendanceInput[]
-  upsert?: Prisma.MonthlyClassAttendanceUpsertWithWhereUniqueWithoutMonthlySubAttendanceInput | Prisma.MonthlyClassAttendanceUpsertWithWhereUniqueWithoutMonthlySubAttendanceInput[]
-  createMany?: Prisma.MonthlyClassAttendanceCreateManyMonthlySubAttendanceInputEnvelope
+export type MonthlyClassAttendanceUpdateManyWithoutClassNestedInput = {
+  create?: Prisma.XOR<Prisma.MonthlyClassAttendanceCreateWithoutClassInput, Prisma.MonthlyClassAttendanceUncheckedCreateWithoutClassInput> | Prisma.MonthlyClassAttendanceCreateWithoutClassInput[] | Prisma.MonthlyClassAttendanceUncheckedCreateWithoutClassInput[]
+  connectOrCreate?: Prisma.MonthlyClassAttendanceCreateOrConnectWithoutClassInput | Prisma.MonthlyClassAttendanceCreateOrConnectWithoutClassInput[]
+  upsert?: Prisma.MonthlyClassAttendanceUpsertWithWhereUniqueWithoutClassInput | Prisma.MonthlyClassAttendanceUpsertWithWhereUniqueWithoutClassInput[]
+  createMany?: Prisma.MonthlyClassAttendanceCreateManyClassInputEnvelope
   set?: Prisma.MonthlyClassAttendanceWhereUniqueInput | Prisma.MonthlyClassAttendanceWhereUniqueInput[]
   disconnect?: Prisma.MonthlyClassAttendanceWhereUniqueInput | Prisma.MonthlyClassAttendanceWhereUniqueInput[]
   delete?: Prisma.MonthlyClassAttendanceWhereUniqueInput | Prisma.MonthlyClassAttendanceWhereUniqueInput[]
   connect?: Prisma.MonthlyClassAttendanceWhereUniqueInput | Prisma.MonthlyClassAttendanceWhereUniqueInput[]
-  update?: Prisma.MonthlyClassAttendanceUpdateWithWhereUniqueWithoutMonthlySubAttendanceInput | Prisma.MonthlyClassAttendanceUpdateWithWhereUniqueWithoutMonthlySubAttendanceInput[]
-  updateMany?: Prisma.MonthlyClassAttendanceUpdateManyWithWhereWithoutMonthlySubAttendanceInput | Prisma.MonthlyClassAttendanceUpdateManyWithWhereWithoutMonthlySubAttendanceInput[]
+  update?: Prisma.MonthlyClassAttendanceUpdateWithWhereUniqueWithoutClassInput | Prisma.MonthlyClassAttendanceUpdateWithWhereUniqueWithoutClassInput[]
+  updateMany?: Prisma.MonthlyClassAttendanceUpdateManyWithWhereWithoutClassInput | Prisma.MonthlyClassAttendanceUpdateManyWithWhereWithoutClassInput[]
   deleteMany?: Prisma.MonthlyClassAttendanceScalarWhereInput | Prisma.MonthlyClassAttendanceScalarWhereInput[]
 }
 
-export type MonthlyClassAttendanceUncheckedUpdateManyWithoutMonthlySubAttendanceNestedInput = {
-  create?: Prisma.XOR<Prisma.MonthlyClassAttendanceCreateWithoutMonthlySubAttendanceInput, Prisma.MonthlyClassAttendanceUncheckedCreateWithoutMonthlySubAttendanceInput> | Prisma.MonthlyClassAttendanceCreateWithoutMonthlySubAttendanceInput[] | Prisma.MonthlyClassAttendanceUncheckedCreateWithoutMonthlySubAttendanceInput[]
-  connectOrCreate?: Prisma.MonthlyClassAttendanceCreateOrConnectWithoutMonthlySubAttendanceInput | Prisma.MonthlyClassAttendanceCreateOrConnectWithoutMonthlySubAttendanceInput[]
-  upsert?: Prisma.MonthlyClassAttendanceUpsertWithWhereUniqueWithoutMonthlySubAttendanceInput | Prisma.MonthlyClassAttendanceUpsertWithWhereUniqueWithoutMonthlySubAttendanceInput[]
-  createMany?: Prisma.MonthlyClassAttendanceCreateManyMonthlySubAttendanceInputEnvelope
+export type MonthlyClassAttendanceUncheckedUpdateManyWithoutClassNestedInput = {
+  create?: Prisma.XOR<Prisma.MonthlyClassAttendanceCreateWithoutClassInput, Prisma.MonthlyClassAttendanceUncheckedCreateWithoutClassInput> | Prisma.MonthlyClassAttendanceCreateWithoutClassInput[] | Prisma.MonthlyClassAttendanceUncheckedCreateWithoutClassInput[]
+  connectOrCreate?: Prisma.MonthlyClassAttendanceCreateOrConnectWithoutClassInput | Prisma.MonthlyClassAttendanceCreateOrConnectWithoutClassInput[]
+  upsert?: Prisma.MonthlyClassAttendanceUpsertWithWhereUniqueWithoutClassInput | Prisma.MonthlyClassAttendanceUpsertWithWhereUniqueWithoutClassInput[]
+  createMany?: Prisma.MonthlyClassAttendanceCreateManyClassInputEnvelope
   set?: Prisma.MonthlyClassAttendanceWhereUniqueInput | Prisma.MonthlyClassAttendanceWhereUniqueInput[]
   disconnect?: Prisma.MonthlyClassAttendanceWhereUniqueInput | Prisma.MonthlyClassAttendanceWhereUniqueInput[]
   delete?: Prisma.MonthlyClassAttendanceWhereUniqueInput | Prisma.MonthlyClassAttendanceWhereUniqueInput[]
   connect?: Prisma.MonthlyClassAttendanceWhereUniqueInput | Prisma.MonthlyClassAttendanceWhereUniqueInput[]
-  update?: Prisma.MonthlyClassAttendanceUpdateWithWhereUniqueWithoutMonthlySubAttendanceInput | Prisma.MonthlyClassAttendanceUpdateWithWhereUniqueWithoutMonthlySubAttendanceInput[]
-  updateMany?: Prisma.MonthlyClassAttendanceUpdateManyWithWhereWithoutMonthlySubAttendanceInput | Prisma.MonthlyClassAttendanceUpdateManyWithWhereWithoutMonthlySubAttendanceInput[]
+  update?: Prisma.MonthlyClassAttendanceUpdateWithWhereUniqueWithoutClassInput | Prisma.MonthlyClassAttendanceUpdateWithWhereUniqueWithoutClassInput[]
+  updateMany?: Prisma.MonthlyClassAttendanceUpdateManyWithWhereWithoutClassInput | Prisma.MonthlyClassAttendanceUpdateManyWithWhereWithoutClassInput[]
   deleteMany?: Prisma.MonthlyClassAttendanceScalarWhereInput | Prisma.MonthlyClassAttendanceScalarWhereInput[]
 }
 
-export type MonthlyClassAttendanceCreateWithoutMonthlySubAttendanceInput = {
-  id?: string
-  totalTimes: number
-  status: boolean
+export type MonthlyClassAttendanceCreateNestedOneWithoutMonthlySubAttendanceInput = {
+  create?: Prisma.XOR<Prisma.MonthlyClassAttendanceCreateWithoutMonthlySubAttendanceInput, Prisma.MonthlyClassAttendanceUncheckedCreateWithoutMonthlySubAttendanceInput>
+  connectOrCreate?: Prisma.MonthlyClassAttendanceCreateOrConnectWithoutMonthlySubAttendanceInput
+  connect?: Prisma.MonthlyClassAttendanceWhereUniqueInput
 }
 
-export type MonthlyClassAttendanceUncheckedCreateWithoutMonthlySubAttendanceInput = {
-  id?: string
-  totalTimes: number
-  status: boolean
+export type MonthlyClassAttendanceUpdateOneWithoutMonthlySubAttendanceNestedInput = {
+  create?: Prisma.XOR<Prisma.MonthlyClassAttendanceCreateWithoutMonthlySubAttendanceInput, Prisma.MonthlyClassAttendanceUncheckedCreateWithoutMonthlySubAttendanceInput>
+  connectOrCreate?: Prisma.MonthlyClassAttendanceCreateOrConnectWithoutMonthlySubAttendanceInput
+  upsert?: Prisma.MonthlyClassAttendanceUpsertWithoutMonthlySubAttendanceInput
+  disconnect?: Prisma.MonthlyClassAttendanceWhereInput | boolean
+  delete?: Prisma.MonthlyClassAttendanceWhereInput | boolean
+  connect?: Prisma.MonthlyClassAttendanceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MonthlyClassAttendanceUpdateToOneWithWhereWithoutMonthlySubAttendanceInput, Prisma.MonthlyClassAttendanceUpdateWithoutMonthlySubAttendanceInput>, Prisma.MonthlyClassAttendanceUncheckedUpdateWithoutMonthlySubAttendanceInput>
 }
 
-export type MonthlyClassAttendanceCreateOrConnectWithoutMonthlySubAttendanceInput = {
+export type MonthlyClassAttendanceCreatemonthlySubAttendanceIdInput = {
+  set: string[]
+}
+
+export type MonthlyClassAttendanceUpdatemonthlySubAttendanceIdInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type MonthlyClassAttendanceCreateWithoutClassInput = {
+  id?: string
+  monthlySubAttendanceId?: Prisma.MonthlyClassAttendanceCreatemonthlySubAttendanceIdInput | string[]
+  totalTimes: number
+  status: boolean
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceCreateNestedManyWithoutMonthlyClassAttendanceInput
+}
+
+export type MonthlyClassAttendanceUncheckedCreateWithoutClassInput = {
+  id?: string
+  monthlySubAttendanceId?: Prisma.MonthlyClassAttendanceCreatemonthlySubAttendanceIdInput | string[]
+  totalTimes: number
+  status: boolean
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUncheckedCreateNestedManyWithoutMonthlyClassAttendanceInput
+}
+
+export type MonthlyClassAttendanceCreateOrConnectWithoutClassInput = {
   where: Prisma.MonthlyClassAttendanceWhereUniqueInput
-  create: Prisma.XOR<Prisma.MonthlyClassAttendanceCreateWithoutMonthlySubAttendanceInput, Prisma.MonthlyClassAttendanceUncheckedCreateWithoutMonthlySubAttendanceInput>
+  create: Prisma.XOR<Prisma.MonthlyClassAttendanceCreateWithoutClassInput, Prisma.MonthlyClassAttendanceUncheckedCreateWithoutClassInput>
 }
 
-export type MonthlyClassAttendanceCreateManyMonthlySubAttendanceInputEnvelope = {
-  data: Prisma.MonthlyClassAttendanceCreateManyMonthlySubAttendanceInput | Prisma.MonthlyClassAttendanceCreateManyMonthlySubAttendanceInput[]
+export type MonthlyClassAttendanceCreateManyClassInputEnvelope = {
+  data: Prisma.MonthlyClassAttendanceCreateManyClassInput | Prisma.MonthlyClassAttendanceCreateManyClassInput[]
   skipDuplicates?: boolean
 }
 
-export type MonthlyClassAttendanceUpsertWithWhereUniqueWithoutMonthlySubAttendanceInput = {
+export type MonthlyClassAttendanceUpsertWithWhereUniqueWithoutClassInput = {
   where: Prisma.MonthlyClassAttendanceWhereUniqueInput
-  update: Prisma.XOR<Prisma.MonthlyClassAttendanceUpdateWithoutMonthlySubAttendanceInput, Prisma.MonthlyClassAttendanceUncheckedUpdateWithoutMonthlySubAttendanceInput>
-  create: Prisma.XOR<Prisma.MonthlyClassAttendanceCreateWithoutMonthlySubAttendanceInput, Prisma.MonthlyClassAttendanceUncheckedCreateWithoutMonthlySubAttendanceInput>
+  update: Prisma.XOR<Prisma.MonthlyClassAttendanceUpdateWithoutClassInput, Prisma.MonthlyClassAttendanceUncheckedUpdateWithoutClassInput>
+  create: Prisma.XOR<Prisma.MonthlyClassAttendanceCreateWithoutClassInput, Prisma.MonthlyClassAttendanceUncheckedCreateWithoutClassInput>
 }
 
-export type MonthlyClassAttendanceUpdateWithWhereUniqueWithoutMonthlySubAttendanceInput = {
+export type MonthlyClassAttendanceUpdateWithWhereUniqueWithoutClassInput = {
   where: Prisma.MonthlyClassAttendanceWhereUniqueInput
-  data: Prisma.XOR<Prisma.MonthlyClassAttendanceUpdateWithoutMonthlySubAttendanceInput, Prisma.MonthlyClassAttendanceUncheckedUpdateWithoutMonthlySubAttendanceInput>
+  data: Prisma.XOR<Prisma.MonthlyClassAttendanceUpdateWithoutClassInput, Prisma.MonthlyClassAttendanceUncheckedUpdateWithoutClassInput>
 }
 
-export type MonthlyClassAttendanceUpdateManyWithWhereWithoutMonthlySubAttendanceInput = {
+export type MonthlyClassAttendanceUpdateManyWithWhereWithoutClassInput = {
   where: Prisma.MonthlyClassAttendanceScalarWhereInput
-  data: Prisma.XOR<Prisma.MonthlyClassAttendanceUpdateManyMutationInput, Prisma.MonthlyClassAttendanceUncheckedUpdateManyWithoutMonthlySubAttendanceInput>
+  data: Prisma.XOR<Prisma.MonthlyClassAttendanceUpdateManyMutationInput, Prisma.MonthlyClassAttendanceUncheckedUpdateManyWithoutClassInput>
 }
 
 export type MonthlyClassAttendanceScalarWhereInput = {
@@ -424,35 +489,119 @@ export type MonthlyClassAttendanceScalarWhereInput = {
   OR?: Prisma.MonthlyClassAttendanceScalarWhereInput[]
   NOT?: Prisma.MonthlyClassAttendanceScalarWhereInput | Prisma.MonthlyClassAttendanceScalarWhereInput[]
   id?: Prisma.UuidFilter<"MonthlyClassAttendance"> | string
-  monthlySubAttendanceId?: Prisma.UuidNullableFilter<"MonthlyClassAttendance"> | string | null
+  monthlySubAttendanceId?: Prisma.StringNullableListFilter<"MonthlyClassAttendance">
   totalTimes?: Prisma.IntFilter<"MonthlyClassAttendance"> | number
   status?: Prisma.BoolFilter<"MonthlyClassAttendance"> | boolean
+  classId?: Prisma.StringFilter<"MonthlyClassAttendance"> | string
 }
 
-export type MonthlyClassAttendanceCreateManyMonthlySubAttendanceInput = {
+export type MonthlyClassAttendanceCreateWithoutMonthlySubAttendanceInput = {
   id?: string
+  monthlySubAttendanceId?: Prisma.MonthlyClassAttendanceCreatemonthlySubAttendanceIdInput | string[]
   totalTimes: number
   status: boolean
+  class?: Prisma.ClassCreateNestedOneWithoutMonthlyClassAttendanceInput
+}
+
+export type MonthlyClassAttendanceUncheckedCreateWithoutMonthlySubAttendanceInput = {
+  id?: string
+  monthlySubAttendanceId?: Prisma.MonthlyClassAttendanceCreatemonthlySubAttendanceIdInput | string[]
+  totalTimes: number
+  status: boolean
+  classId: string
+}
+
+export type MonthlyClassAttendanceCreateOrConnectWithoutMonthlySubAttendanceInput = {
+  where: Prisma.MonthlyClassAttendanceWhereUniqueInput
+  create: Prisma.XOR<Prisma.MonthlyClassAttendanceCreateWithoutMonthlySubAttendanceInput, Prisma.MonthlyClassAttendanceUncheckedCreateWithoutMonthlySubAttendanceInput>
+}
+
+export type MonthlyClassAttendanceUpsertWithoutMonthlySubAttendanceInput = {
+  update: Prisma.XOR<Prisma.MonthlyClassAttendanceUpdateWithoutMonthlySubAttendanceInput, Prisma.MonthlyClassAttendanceUncheckedUpdateWithoutMonthlySubAttendanceInput>
+  create: Prisma.XOR<Prisma.MonthlyClassAttendanceCreateWithoutMonthlySubAttendanceInput, Prisma.MonthlyClassAttendanceUncheckedCreateWithoutMonthlySubAttendanceInput>
+  where?: Prisma.MonthlyClassAttendanceWhereInput
+}
+
+export type MonthlyClassAttendanceUpdateToOneWithWhereWithoutMonthlySubAttendanceInput = {
+  where?: Prisma.MonthlyClassAttendanceWhereInput
+  data: Prisma.XOR<Prisma.MonthlyClassAttendanceUpdateWithoutMonthlySubAttendanceInput, Prisma.MonthlyClassAttendanceUncheckedUpdateWithoutMonthlySubAttendanceInput>
 }
 
 export type MonthlyClassAttendanceUpdateWithoutMonthlySubAttendanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  monthlySubAttendanceId?: Prisma.MonthlyClassAttendanceUpdatemonthlySubAttendanceIdInput | string[]
   totalTimes?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  class?: Prisma.ClassUpdateOneWithoutMonthlyClassAttendanceNestedInput
 }
 
 export type MonthlyClassAttendanceUncheckedUpdateWithoutMonthlySubAttendanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  monthlySubAttendanceId?: Prisma.MonthlyClassAttendanceUpdatemonthlySubAttendanceIdInput | string[]
   totalTimes?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  classId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
-export type MonthlyClassAttendanceUncheckedUpdateManyWithoutMonthlySubAttendanceInput = {
+export type MonthlyClassAttendanceCreateManyClassInput = {
+  id?: string
+  monthlySubAttendanceId?: Prisma.MonthlyClassAttendanceCreatemonthlySubAttendanceIdInput | string[]
+  totalTimes: number
+  status: boolean
+}
+
+export type MonthlyClassAttendanceUpdateWithoutClassInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  monthlySubAttendanceId?: Prisma.MonthlyClassAttendanceUpdatemonthlySubAttendanceIdInput | string[]
+  totalTimes?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUpdateManyWithoutMonthlyClassAttendanceNestedInput
+}
+
+export type MonthlyClassAttendanceUncheckedUpdateWithoutClassInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  monthlySubAttendanceId?: Prisma.MonthlyClassAttendanceUpdatemonthlySubAttendanceIdInput | string[]
+  totalTimes?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUncheckedUpdateManyWithoutMonthlyClassAttendanceNestedInput
+}
+
+export type MonthlyClassAttendanceUncheckedUpdateManyWithoutClassInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  monthlySubAttendanceId?: Prisma.MonthlyClassAttendanceUpdatemonthlySubAttendanceIdInput | string[]
   totalTimes?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
+
+/**
+ * Count Type MonthlyClassAttendanceCountOutputType
+ */
+
+export type MonthlyClassAttendanceCountOutputType = {
+  monthlySubAttendance: number
+}
+
+export type MonthlyClassAttendanceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  monthlySubAttendance?: boolean | MonthlyClassAttendanceCountOutputTypeCountMonthlySubAttendanceArgs
+}
+
+/**
+ * MonthlyClassAttendanceCountOutputType without action
+ */
+export type MonthlyClassAttendanceCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MonthlyClassAttendanceCountOutputType
+   */
+  select?: Prisma.MonthlyClassAttendanceCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * MonthlyClassAttendanceCountOutputType without action
+ */
+export type MonthlyClassAttendanceCountOutputTypeCountMonthlySubAttendanceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MonthlySubAttendanceWhereInput
+}
 
 
 export type MonthlyClassAttendanceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -460,7 +609,10 @@ export type MonthlyClassAttendanceSelect<ExtArgs extends runtime.Types.Extension
   monthlySubAttendanceId?: boolean
   totalTimes?: boolean
   status?: boolean
+  classId?: boolean
+  class?: boolean | Prisma.MonthlyClassAttendance$classArgs<ExtArgs>
   monthlySubAttendance?: boolean | Prisma.MonthlyClassAttendance$monthlySubAttendanceArgs<ExtArgs>
+  _count?: boolean | Prisma.MonthlyClassAttendanceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["monthlyClassAttendance"]>
 
 export type MonthlyClassAttendanceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -468,7 +620,8 @@ export type MonthlyClassAttendanceSelectCreateManyAndReturn<ExtArgs extends runt
   monthlySubAttendanceId?: boolean
   totalTimes?: boolean
   status?: boolean
-  monthlySubAttendance?: boolean | Prisma.MonthlyClassAttendance$monthlySubAttendanceArgs<ExtArgs>
+  classId?: boolean
+  class?: boolean | Prisma.MonthlyClassAttendance$classArgs<ExtArgs>
 }, ExtArgs["result"]["monthlyClassAttendance"]>
 
 export type MonthlyClassAttendanceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -476,7 +629,8 @@ export type MonthlyClassAttendanceSelectUpdateManyAndReturn<ExtArgs extends runt
   monthlySubAttendanceId?: boolean
   totalTimes?: boolean
   status?: boolean
-  monthlySubAttendance?: boolean | Prisma.MonthlyClassAttendance$monthlySubAttendanceArgs<ExtArgs>
+  classId?: boolean
+  class?: boolean | Prisma.MonthlyClassAttendance$classArgs<ExtArgs>
 }, ExtArgs["result"]["monthlyClassAttendance"]>
 
 export type MonthlyClassAttendanceSelectScalar = {
@@ -484,29 +638,34 @@ export type MonthlyClassAttendanceSelectScalar = {
   monthlySubAttendanceId?: boolean
   totalTimes?: boolean
   status?: boolean
+  classId?: boolean
 }
 
-export type MonthlyClassAttendanceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "monthlySubAttendanceId" | "totalTimes" | "status", ExtArgs["result"]["monthlyClassAttendance"]>
+export type MonthlyClassAttendanceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "monthlySubAttendanceId" | "totalTimes" | "status" | "classId", ExtArgs["result"]["monthlyClassAttendance"]>
 export type MonthlyClassAttendanceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  class?: boolean | Prisma.MonthlyClassAttendance$classArgs<ExtArgs>
   monthlySubAttendance?: boolean | Prisma.MonthlyClassAttendance$monthlySubAttendanceArgs<ExtArgs>
+  _count?: boolean | Prisma.MonthlyClassAttendanceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MonthlyClassAttendanceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  monthlySubAttendance?: boolean | Prisma.MonthlyClassAttendance$monthlySubAttendanceArgs<ExtArgs>
+  class?: boolean | Prisma.MonthlyClassAttendance$classArgs<ExtArgs>
 }
 export type MonthlyClassAttendanceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  monthlySubAttendance?: boolean | Prisma.MonthlyClassAttendance$monthlySubAttendanceArgs<ExtArgs>
+  class?: boolean | Prisma.MonthlyClassAttendance$classArgs<ExtArgs>
 }
 
 export type $MonthlyClassAttendancePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "MonthlyClassAttendance"
   objects: {
-    monthlySubAttendance: Prisma.$MonthlySubAttendancePayload<ExtArgs> | null
+    class: Prisma.$ClassPayload<ExtArgs> | null
+    monthlySubAttendance: Prisma.$MonthlySubAttendancePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    monthlySubAttendanceId: string | null
+    monthlySubAttendanceId: string[]
     totalTimes: number
     status: boolean
+    classId: string
   }, ExtArgs["result"]["monthlyClassAttendance"]>
   composites: {}
 }
@@ -901,7 +1060,8 @@ readonly fields: MonthlyClassAttendanceFieldRefs;
  */
 export interface Prisma__MonthlyClassAttendanceClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  monthlySubAttendance<T extends Prisma.MonthlyClassAttendance$monthlySubAttendanceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MonthlyClassAttendance$monthlySubAttendanceArgs<ExtArgs>>): Prisma.Prisma__MonthlySubAttendanceClient<runtime.Types.Result.GetResult<Prisma.$MonthlySubAttendancePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  class<T extends Prisma.MonthlyClassAttendance$classArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MonthlyClassAttendance$classArgs<ExtArgs>>): Prisma.Prisma__ClassClient<runtime.Types.Result.GetResult<Prisma.$ClassPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  monthlySubAttendance<T extends Prisma.MonthlyClassAttendance$monthlySubAttendanceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MonthlyClassAttendance$monthlySubAttendanceArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MonthlySubAttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -932,9 +1092,10 @@ export interface Prisma__MonthlyClassAttendanceClient<T, Null = never, ExtArgs e
  */
 export interface MonthlyClassAttendanceFieldRefs {
   readonly id: Prisma.FieldRef<"MonthlyClassAttendance", 'String'>
-  readonly monthlySubAttendanceId: Prisma.FieldRef<"MonthlyClassAttendance", 'String'>
+  readonly monthlySubAttendanceId: Prisma.FieldRef<"MonthlyClassAttendance", 'String[]'>
   readonly totalTimes: Prisma.FieldRef<"MonthlyClassAttendance", 'Int'>
   readonly status: Prisma.FieldRef<"MonthlyClassAttendance", 'Boolean'>
+  readonly classId: Prisma.FieldRef<"MonthlyClassAttendance", 'String'>
 }
     
 
@@ -1331,6 +1492,25 @@ export type MonthlyClassAttendanceDeleteManyArgs<ExtArgs extends runtime.Types.E
 }
 
 /**
+ * MonthlyClassAttendance.class
+ */
+export type MonthlyClassAttendance$classArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Class
+   */
+  select?: Prisma.ClassSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Class
+   */
+  omit?: Prisma.ClassOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClassInclude<ExtArgs> | null
+  where?: Prisma.ClassWhereInput
+}
+
+/**
  * MonthlyClassAttendance.monthlySubAttendance
  */
 export type MonthlyClassAttendance$monthlySubAttendanceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1347,6 +1527,11 @@ export type MonthlyClassAttendance$monthlySubAttendanceArgs<ExtArgs extends runt
    */
   include?: Prisma.MonthlySubAttendanceInclude<ExtArgs> | null
   where?: Prisma.MonthlySubAttendanceWhereInput
+  orderBy?: Prisma.MonthlySubAttendanceOrderByWithRelationInput | Prisma.MonthlySubAttendanceOrderByWithRelationInput[]
+  cursor?: Prisma.MonthlySubAttendanceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MonthlySubAttendanceScalarFieldEnum | Prisma.MonthlySubAttendanceScalarFieldEnum[]
 }
 
 /**

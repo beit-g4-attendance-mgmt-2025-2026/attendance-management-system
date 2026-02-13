@@ -288,6 +288,11 @@ export type AcademicYearUncheckedUpdateManyInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
+export type AcademicYearNullableScalarRelationFilter = {
+  is?: Prisma.AcademicYearWhereInput | null
+  isNot?: Prisma.AcademicYearWhereInput | null
+}
+
 export type AcademicYearCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -312,27 +317,24 @@ export type AcademicYearMinOrderByAggregateInput = {
   isActive?: Prisma.SortOrder
 }
 
-export type AcademicYearScalarRelationFilter = {
-  is?: Prisma.AcademicYearWhereInput
-  isNot?: Prisma.AcademicYearWhereInput
-}
-
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type AcademicYearCreateNestedOneWithoutClassesInput = {
   create?: Prisma.XOR<Prisma.AcademicYearCreateWithoutClassesInput, Prisma.AcademicYearUncheckedCreateWithoutClassesInput>
   connectOrCreate?: Prisma.AcademicYearCreateOrConnectWithoutClassesInput
   connect?: Prisma.AcademicYearWhereUniqueInput
 }
 
-export type AcademicYearUpdateOneRequiredWithoutClassesNestedInput = {
+export type AcademicYearUpdateOneWithoutClassesNestedInput = {
   create?: Prisma.XOR<Prisma.AcademicYearCreateWithoutClassesInput, Prisma.AcademicYearUncheckedCreateWithoutClassesInput>
   connectOrCreate?: Prisma.AcademicYearCreateOrConnectWithoutClassesInput
   upsert?: Prisma.AcademicYearUpsertWithoutClassesInput
+  disconnect?: Prisma.AcademicYearWhereInput | boolean
+  delete?: Prisma.AcademicYearWhereInput | boolean
   connect?: Prisma.AcademicYearWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.AcademicYearUpdateToOneWithWhereWithoutClassesInput, Prisma.AcademicYearUpdateWithoutClassesInput>, Prisma.AcademicYearUncheckedUpdateWithoutClassesInput>
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type AcademicYearCreateWithoutClassesInput = {

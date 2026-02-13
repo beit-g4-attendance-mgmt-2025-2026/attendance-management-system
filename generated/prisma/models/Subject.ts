@@ -193,7 +193,8 @@ export type SubjectWhereInput = {
   department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   class?: Prisma.XOR<Prisma.ClassScalarRelationFilter, Prisma.ClassWhereInput>
-  attendance?: Prisma.DailyAttendanceListRelationFilter
+  dailyAttendance?: Prisma.DailyAttendanceListRelationFilter
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceListRelationFilter
 }
 
 export type SubjectOrderByWithRelationInput = {
@@ -206,7 +207,8 @@ export type SubjectOrderByWithRelationInput = {
   department?: Prisma.DepartmentOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
   class?: Prisma.ClassOrderByWithRelationInput
-  attendance?: Prisma.DailyAttendanceOrderByRelationAggregateInput
+  dailyAttendance?: Prisma.DailyAttendanceOrderByRelationAggregateInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceOrderByRelationAggregateInput
 }
 
 export type SubjectWhereUniqueInput = Prisma.AtLeast<{
@@ -222,7 +224,8 @@ export type SubjectWhereUniqueInput = Prisma.AtLeast<{
   department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   class?: Prisma.XOR<Prisma.ClassScalarRelationFilter, Prisma.ClassWhereInput>
-  attendance?: Prisma.DailyAttendanceListRelationFilter
+  dailyAttendance?: Prisma.DailyAttendanceListRelationFilter
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceListRelationFilter
 }, "id">
 
 export type SubjectOrderByWithAggregationInput = {
@@ -256,7 +259,8 @@ export type SubjectCreateInput = {
   department: Prisma.DepartmentCreateNestedOneWithoutSubjectsInput
   user: Prisma.UserCreateNestedOneWithoutSubjectsInput
   class: Prisma.ClassCreateNestedOneWithoutSubjectsInput
-  attendance?: Prisma.DailyAttendanceCreateNestedManyWithoutSubjectInput
+  dailyAttendance?: Prisma.DailyAttendanceCreateNestedManyWithoutSubjectInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectUncheckedCreateInput = {
@@ -266,7 +270,8 @@ export type SubjectUncheckedCreateInput = {
   departmentId: string
   userId: string
   classId: string
-  attendance?: Prisma.DailyAttendanceUncheckedCreateNestedManyWithoutSubjectInput
+  dailyAttendance?: Prisma.DailyAttendanceUncheckedCreateNestedManyWithoutSubjectInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUncheckedCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectUpdateInput = {
@@ -276,7 +281,8 @@ export type SubjectUpdateInput = {
   department?: Prisma.DepartmentUpdateOneRequiredWithoutSubjectsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutSubjectsNestedInput
   class?: Prisma.ClassUpdateOneRequiredWithoutSubjectsNestedInput
-  attendance?: Prisma.DailyAttendanceUpdateManyWithoutSubjectNestedInput
+  dailyAttendance?: Prisma.DailyAttendanceUpdateManyWithoutSubjectNestedInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectUncheckedUpdateInput = {
@@ -286,7 +292,8 @@ export type SubjectUncheckedUpdateInput = {
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
-  attendance?: Prisma.DailyAttendanceUncheckedUpdateManyWithoutSubjectNestedInput
+  dailyAttendance?: Prisma.DailyAttendanceUncheckedUpdateManyWithoutSubjectNestedInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUncheckedUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectCreateManyInput = {
@@ -397,48 +404,6 @@ export type SubjectUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.SubjectScalarWhereInput | Prisma.SubjectScalarWhereInput[]
 }
 
-export type SubjectCreateNestedManyWithoutDepartmentInput = {
-  create?: Prisma.XOR<Prisma.SubjectCreateWithoutDepartmentInput, Prisma.SubjectUncheckedCreateWithoutDepartmentInput> | Prisma.SubjectCreateWithoutDepartmentInput[] | Prisma.SubjectUncheckedCreateWithoutDepartmentInput[]
-  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutDepartmentInput | Prisma.SubjectCreateOrConnectWithoutDepartmentInput[]
-  createMany?: Prisma.SubjectCreateManyDepartmentInputEnvelope
-  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-}
-
-export type SubjectUncheckedCreateNestedManyWithoutDepartmentInput = {
-  create?: Prisma.XOR<Prisma.SubjectCreateWithoutDepartmentInput, Prisma.SubjectUncheckedCreateWithoutDepartmentInput> | Prisma.SubjectCreateWithoutDepartmentInput[] | Prisma.SubjectUncheckedCreateWithoutDepartmentInput[]
-  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutDepartmentInput | Prisma.SubjectCreateOrConnectWithoutDepartmentInput[]
-  createMany?: Prisma.SubjectCreateManyDepartmentInputEnvelope
-  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-}
-
-export type SubjectUpdateManyWithoutDepartmentNestedInput = {
-  create?: Prisma.XOR<Prisma.SubjectCreateWithoutDepartmentInput, Prisma.SubjectUncheckedCreateWithoutDepartmentInput> | Prisma.SubjectCreateWithoutDepartmentInput[] | Prisma.SubjectUncheckedCreateWithoutDepartmentInput[]
-  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutDepartmentInput | Prisma.SubjectCreateOrConnectWithoutDepartmentInput[]
-  upsert?: Prisma.SubjectUpsertWithWhereUniqueWithoutDepartmentInput | Prisma.SubjectUpsertWithWhereUniqueWithoutDepartmentInput[]
-  createMany?: Prisma.SubjectCreateManyDepartmentInputEnvelope
-  set?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  disconnect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  delete?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  update?: Prisma.SubjectUpdateWithWhereUniqueWithoutDepartmentInput | Prisma.SubjectUpdateWithWhereUniqueWithoutDepartmentInput[]
-  updateMany?: Prisma.SubjectUpdateManyWithWhereWithoutDepartmentInput | Prisma.SubjectUpdateManyWithWhereWithoutDepartmentInput[]
-  deleteMany?: Prisma.SubjectScalarWhereInput | Prisma.SubjectScalarWhereInput[]
-}
-
-export type SubjectUncheckedUpdateManyWithoutDepartmentNestedInput = {
-  create?: Prisma.XOR<Prisma.SubjectCreateWithoutDepartmentInput, Prisma.SubjectUncheckedCreateWithoutDepartmentInput> | Prisma.SubjectCreateWithoutDepartmentInput[] | Prisma.SubjectUncheckedCreateWithoutDepartmentInput[]
-  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutDepartmentInput | Prisma.SubjectCreateOrConnectWithoutDepartmentInput[]
-  upsert?: Prisma.SubjectUpsertWithWhereUniqueWithoutDepartmentInput | Prisma.SubjectUpsertWithWhereUniqueWithoutDepartmentInput[]
-  createMany?: Prisma.SubjectCreateManyDepartmentInputEnvelope
-  set?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  disconnect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  delete?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  update?: Prisma.SubjectUpdateWithWhereUniqueWithoutDepartmentInput | Prisma.SubjectUpdateWithWhereUniqueWithoutDepartmentInput[]
-  updateMany?: Prisma.SubjectUpdateManyWithWhereWithoutDepartmentInput | Prisma.SubjectUpdateManyWithWhereWithoutDepartmentInput[]
-  deleteMany?: Prisma.SubjectScalarWhereInput | Prisma.SubjectScalarWhereInput[]
-}
-
 export type SubjectCreateNestedManyWithoutClassInput = {
   create?: Prisma.XOR<Prisma.SubjectCreateWithoutClassInput, Prisma.SubjectUncheckedCreateWithoutClassInput> | Prisma.SubjectCreateWithoutClassInput[] | Prisma.SubjectUncheckedCreateWithoutClassInput[]
   connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutClassInput | Prisma.SubjectCreateOrConnectWithoutClassInput[]
@@ -481,18 +446,74 @@ export type SubjectUncheckedUpdateManyWithoutClassNestedInput = {
   deleteMany?: Prisma.SubjectScalarWhereInput | Prisma.SubjectScalarWhereInput[]
 }
 
-export type SubjectCreateNestedOneWithoutAttendanceInput = {
-  create?: Prisma.XOR<Prisma.SubjectCreateWithoutAttendanceInput, Prisma.SubjectUncheckedCreateWithoutAttendanceInput>
-  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutAttendanceInput
+export type SubjectCreateNestedManyWithoutDepartmentInput = {
+  create?: Prisma.XOR<Prisma.SubjectCreateWithoutDepartmentInput, Prisma.SubjectUncheckedCreateWithoutDepartmentInput> | Prisma.SubjectCreateWithoutDepartmentInput[] | Prisma.SubjectUncheckedCreateWithoutDepartmentInput[]
+  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutDepartmentInput | Prisma.SubjectCreateOrConnectWithoutDepartmentInput[]
+  createMany?: Prisma.SubjectCreateManyDepartmentInputEnvelope
+  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
+}
+
+export type SubjectUncheckedCreateNestedManyWithoutDepartmentInput = {
+  create?: Prisma.XOR<Prisma.SubjectCreateWithoutDepartmentInput, Prisma.SubjectUncheckedCreateWithoutDepartmentInput> | Prisma.SubjectCreateWithoutDepartmentInput[] | Prisma.SubjectUncheckedCreateWithoutDepartmentInput[]
+  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutDepartmentInput | Prisma.SubjectCreateOrConnectWithoutDepartmentInput[]
+  createMany?: Prisma.SubjectCreateManyDepartmentInputEnvelope
+  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
+}
+
+export type SubjectUpdateManyWithoutDepartmentNestedInput = {
+  create?: Prisma.XOR<Prisma.SubjectCreateWithoutDepartmentInput, Prisma.SubjectUncheckedCreateWithoutDepartmentInput> | Prisma.SubjectCreateWithoutDepartmentInput[] | Prisma.SubjectUncheckedCreateWithoutDepartmentInput[]
+  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutDepartmentInput | Prisma.SubjectCreateOrConnectWithoutDepartmentInput[]
+  upsert?: Prisma.SubjectUpsertWithWhereUniqueWithoutDepartmentInput | Prisma.SubjectUpsertWithWhereUniqueWithoutDepartmentInput[]
+  createMany?: Prisma.SubjectCreateManyDepartmentInputEnvelope
+  set?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
+  disconnect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
+  delete?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
+  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
+  update?: Prisma.SubjectUpdateWithWhereUniqueWithoutDepartmentInput | Prisma.SubjectUpdateWithWhereUniqueWithoutDepartmentInput[]
+  updateMany?: Prisma.SubjectUpdateManyWithWhereWithoutDepartmentInput | Prisma.SubjectUpdateManyWithWhereWithoutDepartmentInput[]
+  deleteMany?: Prisma.SubjectScalarWhereInput | Prisma.SubjectScalarWhereInput[]
+}
+
+export type SubjectUncheckedUpdateManyWithoutDepartmentNestedInput = {
+  create?: Prisma.XOR<Prisma.SubjectCreateWithoutDepartmentInput, Prisma.SubjectUncheckedCreateWithoutDepartmentInput> | Prisma.SubjectCreateWithoutDepartmentInput[] | Prisma.SubjectUncheckedCreateWithoutDepartmentInput[]
+  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutDepartmentInput | Prisma.SubjectCreateOrConnectWithoutDepartmentInput[]
+  upsert?: Prisma.SubjectUpsertWithWhereUniqueWithoutDepartmentInput | Prisma.SubjectUpsertWithWhereUniqueWithoutDepartmentInput[]
+  createMany?: Prisma.SubjectCreateManyDepartmentInputEnvelope
+  set?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
+  disconnect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
+  delete?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
+  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
+  update?: Prisma.SubjectUpdateWithWhereUniqueWithoutDepartmentInput | Prisma.SubjectUpdateWithWhereUniqueWithoutDepartmentInput[]
+  updateMany?: Prisma.SubjectUpdateManyWithWhereWithoutDepartmentInput | Prisma.SubjectUpdateManyWithWhereWithoutDepartmentInput[]
+  deleteMany?: Prisma.SubjectScalarWhereInput | Prisma.SubjectScalarWhereInput[]
+}
+
+export type SubjectCreateNestedOneWithoutDailyAttendanceInput = {
+  create?: Prisma.XOR<Prisma.SubjectCreateWithoutDailyAttendanceInput, Prisma.SubjectUncheckedCreateWithoutDailyAttendanceInput>
+  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutDailyAttendanceInput
   connect?: Prisma.SubjectWhereUniqueInput
 }
 
-export type SubjectUpdateOneRequiredWithoutAttendanceNestedInput = {
-  create?: Prisma.XOR<Prisma.SubjectCreateWithoutAttendanceInput, Prisma.SubjectUncheckedCreateWithoutAttendanceInput>
-  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutAttendanceInput
-  upsert?: Prisma.SubjectUpsertWithoutAttendanceInput
+export type SubjectUpdateOneRequiredWithoutDailyAttendanceNestedInput = {
+  create?: Prisma.XOR<Prisma.SubjectCreateWithoutDailyAttendanceInput, Prisma.SubjectUncheckedCreateWithoutDailyAttendanceInput>
+  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutDailyAttendanceInput
+  upsert?: Prisma.SubjectUpsertWithoutDailyAttendanceInput
   connect?: Prisma.SubjectWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.SubjectUpdateToOneWithWhereWithoutAttendanceInput, Prisma.SubjectUpdateWithoutAttendanceInput>, Prisma.SubjectUncheckedUpdateWithoutAttendanceInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SubjectUpdateToOneWithWhereWithoutDailyAttendanceInput, Prisma.SubjectUpdateWithoutDailyAttendanceInput>, Prisma.SubjectUncheckedUpdateWithoutDailyAttendanceInput>
+}
+
+export type SubjectCreateNestedOneWithoutMonthlySubAttendanceInput = {
+  create?: Prisma.XOR<Prisma.SubjectCreateWithoutMonthlySubAttendanceInput, Prisma.SubjectUncheckedCreateWithoutMonthlySubAttendanceInput>
+  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutMonthlySubAttendanceInput
+  connect?: Prisma.SubjectWhereUniqueInput
+}
+
+export type SubjectUpdateOneRequiredWithoutMonthlySubAttendanceNestedInput = {
+  create?: Prisma.XOR<Prisma.SubjectCreateWithoutMonthlySubAttendanceInput, Prisma.SubjectUncheckedCreateWithoutMonthlySubAttendanceInput>
+  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutMonthlySubAttendanceInput
+  upsert?: Prisma.SubjectUpsertWithoutMonthlySubAttendanceInput
+  connect?: Prisma.SubjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SubjectUpdateToOneWithWhereWithoutMonthlySubAttendanceInput, Prisma.SubjectUpdateWithoutMonthlySubAttendanceInput>, Prisma.SubjectUncheckedUpdateWithoutMonthlySubAttendanceInput>
 }
 
 export type SubjectCreateWithoutUserInput = {
@@ -501,7 +522,8 @@ export type SubjectCreateWithoutUserInput = {
   subCode: string
   department: Prisma.DepartmentCreateNestedOneWithoutSubjectsInput
   class: Prisma.ClassCreateNestedOneWithoutSubjectsInput
-  attendance?: Prisma.DailyAttendanceCreateNestedManyWithoutSubjectInput
+  dailyAttendance?: Prisma.DailyAttendanceCreateNestedManyWithoutSubjectInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectUncheckedCreateWithoutUserInput = {
@@ -510,7 +532,8 @@ export type SubjectUncheckedCreateWithoutUserInput = {
   subCode: string
   departmentId: string
   classId: string
-  attendance?: Prisma.DailyAttendanceUncheckedCreateNestedManyWithoutSubjectInput
+  dailyAttendance?: Prisma.DailyAttendanceUncheckedCreateNestedManyWithoutSubjectInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUncheckedCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectCreateOrConnectWithoutUserInput = {
@@ -551,57 +574,14 @@ export type SubjectScalarWhereInput = {
   classId?: Prisma.UuidFilter<"Subject"> | string
 }
 
-export type SubjectCreateWithoutDepartmentInput = {
-  id?: string
-  name: string
-  subCode: string
-  user: Prisma.UserCreateNestedOneWithoutSubjectsInput
-  class: Prisma.ClassCreateNestedOneWithoutSubjectsInput
-  attendance?: Prisma.DailyAttendanceCreateNestedManyWithoutSubjectInput
-}
-
-export type SubjectUncheckedCreateWithoutDepartmentInput = {
-  id?: string
-  name: string
-  subCode: string
-  userId: string
-  classId: string
-  attendance?: Prisma.DailyAttendanceUncheckedCreateNestedManyWithoutSubjectInput
-}
-
-export type SubjectCreateOrConnectWithoutDepartmentInput = {
-  where: Prisma.SubjectWhereUniqueInput
-  create: Prisma.XOR<Prisma.SubjectCreateWithoutDepartmentInput, Prisma.SubjectUncheckedCreateWithoutDepartmentInput>
-}
-
-export type SubjectCreateManyDepartmentInputEnvelope = {
-  data: Prisma.SubjectCreateManyDepartmentInput | Prisma.SubjectCreateManyDepartmentInput[]
-  skipDuplicates?: boolean
-}
-
-export type SubjectUpsertWithWhereUniqueWithoutDepartmentInput = {
-  where: Prisma.SubjectWhereUniqueInput
-  update: Prisma.XOR<Prisma.SubjectUpdateWithoutDepartmentInput, Prisma.SubjectUncheckedUpdateWithoutDepartmentInput>
-  create: Prisma.XOR<Prisma.SubjectCreateWithoutDepartmentInput, Prisma.SubjectUncheckedCreateWithoutDepartmentInput>
-}
-
-export type SubjectUpdateWithWhereUniqueWithoutDepartmentInput = {
-  where: Prisma.SubjectWhereUniqueInput
-  data: Prisma.XOR<Prisma.SubjectUpdateWithoutDepartmentInput, Prisma.SubjectUncheckedUpdateWithoutDepartmentInput>
-}
-
-export type SubjectUpdateManyWithWhereWithoutDepartmentInput = {
-  where: Prisma.SubjectScalarWhereInput
-  data: Prisma.XOR<Prisma.SubjectUpdateManyMutationInput, Prisma.SubjectUncheckedUpdateManyWithoutDepartmentInput>
-}
-
 export type SubjectCreateWithoutClassInput = {
   id?: string
   name: string
   subCode: string
   department: Prisma.DepartmentCreateNestedOneWithoutSubjectsInput
   user: Prisma.UserCreateNestedOneWithoutSubjectsInput
-  attendance?: Prisma.DailyAttendanceCreateNestedManyWithoutSubjectInput
+  dailyAttendance?: Prisma.DailyAttendanceCreateNestedManyWithoutSubjectInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectUncheckedCreateWithoutClassInput = {
@@ -610,7 +590,8 @@ export type SubjectUncheckedCreateWithoutClassInput = {
   subCode: string
   departmentId: string
   userId: string
-  attendance?: Prisma.DailyAttendanceUncheckedCreateNestedManyWithoutSubjectInput
+  dailyAttendance?: Prisma.DailyAttendanceUncheckedCreateNestedManyWithoutSubjectInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUncheckedCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectCreateOrConnectWithoutClassInput = {
@@ -639,56 +620,162 @@ export type SubjectUpdateManyWithWhereWithoutClassInput = {
   data: Prisma.XOR<Prisma.SubjectUpdateManyMutationInput, Prisma.SubjectUncheckedUpdateManyWithoutClassInput>
 }
 
-export type SubjectCreateWithoutAttendanceInput = {
+export type SubjectCreateWithoutDepartmentInput = {
+  id?: string
+  name: string
+  subCode: string
+  user: Prisma.UserCreateNestedOneWithoutSubjectsInput
+  class: Prisma.ClassCreateNestedOneWithoutSubjectsInput
+  dailyAttendance?: Prisma.DailyAttendanceCreateNestedManyWithoutSubjectInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceCreateNestedManyWithoutSubjectInput
+}
+
+export type SubjectUncheckedCreateWithoutDepartmentInput = {
+  id?: string
+  name: string
+  subCode: string
+  userId: string
+  classId: string
+  dailyAttendance?: Prisma.DailyAttendanceUncheckedCreateNestedManyWithoutSubjectInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUncheckedCreateNestedManyWithoutSubjectInput
+}
+
+export type SubjectCreateOrConnectWithoutDepartmentInput = {
+  where: Prisma.SubjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.SubjectCreateWithoutDepartmentInput, Prisma.SubjectUncheckedCreateWithoutDepartmentInput>
+}
+
+export type SubjectCreateManyDepartmentInputEnvelope = {
+  data: Prisma.SubjectCreateManyDepartmentInput | Prisma.SubjectCreateManyDepartmentInput[]
+  skipDuplicates?: boolean
+}
+
+export type SubjectUpsertWithWhereUniqueWithoutDepartmentInput = {
+  where: Prisma.SubjectWhereUniqueInput
+  update: Prisma.XOR<Prisma.SubjectUpdateWithoutDepartmentInput, Prisma.SubjectUncheckedUpdateWithoutDepartmentInput>
+  create: Prisma.XOR<Prisma.SubjectCreateWithoutDepartmentInput, Prisma.SubjectUncheckedCreateWithoutDepartmentInput>
+}
+
+export type SubjectUpdateWithWhereUniqueWithoutDepartmentInput = {
+  where: Prisma.SubjectWhereUniqueInput
+  data: Prisma.XOR<Prisma.SubjectUpdateWithoutDepartmentInput, Prisma.SubjectUncheckedUpdateWithoutDepartmentInput>
+}
+
+export type SubjectUpdateManyWithWhereWithoutDepartmentInput = {
+  where: Prisma.SubjectScalarWhereInput
+  data: Prisma.XOR<Prisma.SubjectUpdateManyMutationInput, Prisma.SubjectUncheckedUpdateManyWithoutDepartmentInput>
+}
+
+export type SubjectCreateWithoutDailyAttendanceInput = {
   id?: string
   name: string
   subCode: string
   department: Prisma.DepartmentCreateNestedOneWithoutSubjectsInput
   user: Prisma.UserCreateNestedOneWithoutSubjectsInput
   class: Prisma.ClassCreateNestedOneWithoutSubjectsInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceCreateNestedManyWithoutSubjectInput
 }
 
-export type SubjectUncheckedCreateWithoutAttendanceInput = {
+export type SubjectUncheckedCreateWithoutDailyAttendanceInput = {
   id?: string
   name: string
   subCode: string
   departmentId: string
   userId: string
   classId: string
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUncheckedCreateNestedManyWithoutSubjectInput
 }
 
-export type SubjectCreateOrConnectWithoutAttendanceInput = {
+export type SubjectCreateOrConnectWithoutDailyAttendanceInput = {
   where: Prisma.SubjectWhereUniqueInput
-  create: Prisma.XOR<Prisma.SubjectCreateWithoutAttendanceInput, Prisma.SubjectUncheckedCreateWithoutAttendanceInput>
+  create: Prisma.XOR<Prisma.SubjectCreateWithoutDailyAttendanceInput, Prisma.SubjectUncheckedCreateWithoutDailyAttendanceInput>
 }
 
-export type SubjectUpsertWithoutAttendanceInput = {
-  update: Prisma.XOR<Prisma.SubjectUpdateWithoutAttendanceInput, Prisma.SubjectUncheckedUpdateWithoutAttendanceInput>
-  create: Prisma.XOR<Prisma.SubjectCreateWithoutAttendanceInput, Prisma.SubjectUncheckedCreateWithoutAttendanceInput>
+export type SubjectUpsertWithoutDailyAttendanceInput = {
+  update: Prisma.XOR<Prisma.SubjectUpdateWithoutDailyAttendanceInput, Prisma.SubjectUncheckedUpdateWithoutDailyAttendanceInput>
+  create: Prisma.XOR<Prisma.SubjectCreateWithoutDailyAttendanceInput, Prisma.SubjectUncheckedCreateWithoutDailyAttendanceInput>
   where?: Prisma.SubjectWhereInput
 }
 
-export type SubjectUpdateToOneWithWhereWithoutAttendanceInput = {
+export type SubjectUpdateToOneWithWhereWithoutDailyAttendanceInput = {
   where?: Prisma.SubjectWhereInput
-  data: Prisma.XOR<Prisma.SubjectUpdateWithoutAttendanceInput, Prisma.SubjectUncheckedUpdateWithoutAttendanceInput>
+  data: Prisma.XOR<Prisma.SubjectUpdateWithoutDailyAttendanceInput, Prisma.SubjectUncheckedUpdateWithoutDailyAttendanceInput>
 }
 
-export type SubjectUpdateWithoutAttendanceInput = {
+export type SubjectUpdateWithoutDailyAttendanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
   department?: Prisma.DepartmentUpdateOneRequiredWithoutSubjectsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutSubjectsNestedInput
   class?: Prisma.ClassUpdateOneRequiredWithoutSubjectsNestedInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUpdateManyWithoutSubjectNestedInput
 }
 
-export type SubjectUncheckedUpdateWithoutAttendanceInput = {
+export type SubjectUncheckedUpdateWithoutDailyAttendanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUncheckedUpdateManyWithoutSubjectNestedInput
+}
+
+export type SubjectCreateWithoutMonthlySubAttendanceInput = {
+  id?: string
+  name: string
+  subCode: string
+  department: Prisma.DepartmentCreateNestedOneWithoutSubjectsInput
+  user: Prisma.UserCreateNestedOneWithoutSubjectsInput
+  class: Prisma.ClassCreateNestedOneWithoutSubjectsInput
+  dailyAttendance?: Prisma.DailyAttendanceCreateNestedManyWithoutSubjectInput
+}
+
+export type SubjectUncheckedCreateWithoutMonthlySubAttendanceInput = {
+  id?: string
+  name: string
+  subCode: string
+  departmentId: string
+  userId: string
+  classId: string
+  dailyAttendance?: Prisma.DailyAttendanceUncheckedCreateNestedManyWithoutSubjectInput
+}
+
+export type SubjectCreateOrConnectWithoutMonthlySubAttendanceInput = {
+  where: Prisma.SubjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.SubjectCreateWithoutMonthlySubAttendanceInput, Prisma.SubjectUncheckedCreateWithoutMonthlySubAttendanceInput>
+}
+
+export type SubjectUpsertWithoutMonthlySubAttendanceInput = {
+  update: Prisma.XOR<Prisma.SubjectUpdateWithoutMonthlySubAttendanceInput, Prisma.SubjectUncheckedUpdateWithoutMonthlySubAttendanceInput>
+  create: Prisma.XOR<Prisma.SubjectCreateWithoutMonthlySubAttendanceInput, Prisma.SubjectUncheckedCreateWithoutMonthlySubAttendanceInput>
+  where?: Prisma.SubjectWhereInput
+}
+
+export type SubjectUpdateToOneWithWhereWithoutMonthlySubAttendanceInput = {
+  where?: Prisma.SubjectWhereInput
+  data: Prisma.XOR<Prisma.SubjectUpdateWithoutMonthlySubAttendanceInput, Prisma.SubjectUncheckedUpdateWithoutMonthlySubAttendanceInput>
+}
+
+export type SubjectUpdateWithoutMonthlySubAttendanceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutSubjectsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutSubjectsNestedInput
+  class?: Prisma.ClassUpdateOneRequiredWithoutSubjectsNestedInput
+  dailyAttendance?: Prisma.DailyAttendanceUpdateManyWithoutSubjectNestedInput
+}
+
+export type SubjectUncheckedUpdateWithoutMonthlySubAttendanceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  departmentId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  classId?: Prisma.StringFieldUpdateOperationsInput | string
+  dailyAttendance?: Prisma.DailyAttendanceUncheckedUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectCreateManyUserInput = {
@@ -705,7 +792,8 @@ export type SubjectUpdateWithoutUserInput = {
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
   department?: Prisma.DepartmentUpdateOneRequiredWithoutSubjectsNestedInput
   class?: Prisma.ClassUpdateOneRequiredWithoutSubjectsNestedInput
-  attendance?: Prisma.DailyAttendanceUpdateManyWithoutSubjectNestedInput
+  dailyAttendance?: Prisma.DailyAttendanceUpdateManyWithoutSubjectNestedInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectUncheckedUpdateWithoutUserInput = {
@@ -714,7 +802,8 @@ export type SubjectUncheckedUpdateWithoutUserInput = {
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
-  attendance?: Prisma.DailyAttendanceUncheckedUpdateManyWithoutSubjectNestedInput
+  dailyAttendance?: Prisma.DailyAttendanceUncheckedUpdateManyWithoutSubjectNestedInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUncheckedUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectUncheckedUpdateManyWithoutUserInput = {
@@ -722,40 +811,6 @@ export type SubjectUncheckedUpdateManyWithoutUserInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
-  classId?: Prisma.StringFieldUpdateOperationsInput | string
-}
-
-export type SubjectCreateManyDepartmentInput = {
-  id?: string
-  name: string
-  subCode: string
-  userId: string
-  classId: string
-}
-
-export type SubjectUpdateWithoutDepartmentInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  subCode?: Prisma.StringFieldUpdateOperationsInput | string
-  user?: Prisma.UserUpdateOneRequiredWithoutSubjectsNestedInput
-  class?: Prisma.ClassUpdateOneRequiredWithoutSubjectsNestedInput
-  attendance?: Prisma.DailyAttendanceUpdateManyWithoutSubjectNestedInput
-}
-
-export type SubjectUncheckedUpdateWithoutDepartmentInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  subCode?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  classId?: Prisma.StringFieldUpdateOperationsInput | string
-  attendance?: Prisma.DailyAttendanceUncheckedUpdateManyWithoutSubjectNestedInput
-}
-
-export type SubjectUncheckedUpdateManyWithoutDepartmentInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  subCode?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -773,7 +828,8 @@ export type SubjectUpdateWithoutClassInput = {
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
   department?: Prisma.DepartmentUpdateOneRequiredWithoutSubjectsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutSubjectsNestedInput
-  attendance?: Prisma.DailyAttendanceUpdateManyWithoutSubjectNestedInput
+  dailyAttendance?: Prisma.DailyAttendanceUpdateManyWithoutSubjectNestedInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectUncheckedUpdateWithoutClassInput = {
@@ -782,7 +838,8 @@ export type SubjectUncheckedUpdateWithoutClassInput = {
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  attendance?: Prisma.DailyAttendanceUncheckedUpdateManyWithoutSubjectNestedInput
+  dailyAttendance?: Prisma.DailyAttendanceUncheckedUpdateManyWithoutSubjectNestedInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUncheckedUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectUncheckedUpdateManyWithoutClassInput = {
@@ -793,17 +850,55 @@ export type SubjectUncheckedUpdateManyWithoutClassInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
+export type SubjectCreateManyDepartmentInput = {
+  id?: string
+  name: string
+  subCode: string
+  userId: string
+  classId: string
+}
+
+export type SubjectUpdateWithoutDepartmentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  user?: Prisma.UserUpdateOneRequiredWithoutSubjectsNestedInput
+  class?: Prisma.ClassUpdateOneRequiredWithoutSubjectsNestedInput
+  dailyAttendance?: Prisma.DailyAttendanceUpdateManyWithoutSubjectNestedInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUpdateManyWithoutSubjectNestedInput
+}
+
+export type SubjectUncheckedUpdateWithoutDepartmentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  classId?: Prisma.StringFieldUpdateOperationsInput | string
+  dailyAttendance?: Prisma.DailyAttendanceUncheckedUpdateManyWithoutSubjectNestedInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUncheckedUpdateManyWithoutSubjectNestedInput
+}
+
+export type SubjectUncheckedUpdateManyWithoutDepartmentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  classId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
 
 /**
  * Count Type SubjectCountOutputType
  */
 
 export type SubjectCountOutputType = {
-  attendance: number
+  dailyAttendance: number
+  monthlySubAttendance: number
 }
 
 export type SubjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  attendance?: boolean | SubjectCountOutputTypeCountAttendanceArgs
+  dailyAttendance?: boolean | SubjectCountOutputTypeCountDailyAttendanceArgs
+  monthlySubAttendance?: boolean | SubjectCountOutputTypeCountMonthlySubAttendanceArgs
 }
 
 /**
@@ -819,8 +914,15 @@ export type SubjectCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
 /**
  * SubjectCountOutputType without action
  */
-export type SubjectCountOutputTypeCountAttendanceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type SubjectCountOutputTypeCountDailyAttendanceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.DailyAttendanceWhereInput
+}
+
+/**
+ * SubjectCountOutputType without action
+ */
+export type SubjectCountOutputTypeCountMonthlySubAttendanceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MonthlySubAttendanceWhereInput
 }
 
 
@@ -834,7 +936,8 @@ export type SubjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   class?: boolean | Prisma.ClassDefaultArgs<ExtArgs>
-  attendance?: boolean | Prisma.Subject$attendanceArgs<ExtArgs>
+  dailyAttendance?: boolean | Prisma.Subject$dailyAttendanceArgs<ExtArgs>
+  monthlySubAttendance?: boolean | Prisma.Subject$monthlySubAttendanceArgs<ExtArgs>
   _count?: boolean | Prisma.SubjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["subject"]>
 
@@ -876,7 +979,8 @@ export type SubjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   class?: boolean | Prisma.ClassDefaultArgs<ExtArgs>
-  attendance?: boolean | Prisma.Subject$attendanceArgs<ExtArgs>
+  dailyAttendance?: boolean | Prisma.Subject$dailyAttendanceArgs<ExtArgs>
+  monthlySubAttendance?: boolean | Prisma.Subject$monthlySubAttendanceArgs<ExtArgs>
   _count?: boolean | Prisma.SubjectCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SubjectIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -896,7 +1000,8 @@ export type $SubjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     department: Prisma.$DepartmentPayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs>
     class: Prisma.$ClassPayload<ExtArgs>
-    attendance: Prisma.$DailyAttendancePayload<ExtArgs>[]
+    dailyAttendance: Prisma.$DailyAttendancePayload<ExtArgs>[]
+    monthlySubAttendance: Prisma.$MonthlySubAttendancePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1302,7 +1407,8 @@ export interface Prisma__SubjectClient<T, Null = never, ExtArgs extends runtime.
   department<T extends Prisma.DepartmentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DepartmentDefaultArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   class<T extends Prisma.ClassDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClassDefaultArgs<ExtArgs>>): Prisma.Prisma__ClassClient<runtime.Types.Result.GetResult<Prisma.$ClassPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  attendance<T extends Prisma.Subject$attendanceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Subject$attendanceArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DailyAttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  dailyAttendance<T extends Prisma.Subject$dailyAttendanceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Subject$dailyAttendanceArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DailyAttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  monthlySubAttendance<T extends Prisma.Subject$monthlySubAttendanceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Subject$monthlySubAttendanceArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MonthlySubAttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1734,9 +1840,9 @@ export type SubjectDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Subject.attendance
+ * Subject.dailyAttendance
  */
-export type Subject$attendanceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Subject$dailyAttendanceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the DailyAttendance
    */
@@ -1755,6 +1861,30 @@ export type Subject$attendanceArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.DailyAttendanceScalarFieldEnum | Prisma.DailyAttendanceScalarFieldEnum[]
+}
+
+/**
+ * Subject.monthlySubAttendance
+ */
+export type Subject$monthlySubAttendanceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MonthlySubAttendance
+   */
+  select?: Prisma.MonthlySubAttendanceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MonthlySubAttendance
+   */
+  omit?: Prisma.MonthlySubAttendanceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MonthlySubAttendanceInclude<ExtArgs> | null
+  where?: Prisma.MonthlySubAttendanceWhereInput
+  orderBy?: Prisma.MonthlySubAttendanceOrderByWithRelationInput | Prisma.MonthlySubAttendanceOrderByWithRelationInput[]
+  cursor?: Prisma.MonthlySubAttendanceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MonthlySubAttendanceScalarFieldEnum | Prisma.MonthlySubAttendanceScalarFieldEnum[]
 }
 
 /**

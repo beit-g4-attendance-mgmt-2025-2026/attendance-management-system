@@ -28,8 +28,8 @@ export type Gender = (typeof Gender)[keyof typeof Gender]
 
 
 export const Semester = {
-  SEM_1: 'SEM_1',
-  SEM_2: 'SEM_2'
+  first_semester: 'first_semester',
+  second_semester: 'second_semester'
 } as const
 
 export type Semester = (typeof Semester)[keyof typeof Semester]
@@ -39,36 +39,27 @@ export const Year = {
   FIRST: 'FIRST',
   SECOND: 'SECOND',
   THIRD: 'THIRD',
-  FOURTH: 'FOURTH'
+  FOURTH: 'FOURTH',
+  FIFTH: 'FIFTH',
+  FINAL: 'FINAL'
 } as const
 
 export type Year = (typeof Year)[keyof typeof Year]
 
 
-export const Day = {
-  MON: 'MON',
-  TUE: 'TUE',
-  WED: 'WED',
-  THU: 'THU',
-  FRI: 'FRI'
-} as const
-
-export type Day = (typeof Day)[keyof typeof Day]
-
-
 export const Month = {
-  JAN: 'JAN',
-  FEB: 'FEB',
-  MAR: 'MAR',
-  APR: 'APR',
+  JANUARY: 'JANUARY',
+  FEBRUARY: 'FEBRUARY',
+  MARCH: 'MARCH',
+  APRIL: 'APRIL',
   MAY: 'MAY',
-  JUN: 'JUN',
-  JUL: 'JUL',
-  AUG: 'AUG',
-  SEP: 'SEP',
-  OCT: 'OCT',
-  NOV: 'NOV',
-  DEC: 'DEC'
+  JUNE: 'JUNE',
+  JULY: 'JULY',
+  AUGUST: 'AUGUST',
+  SEPTEMBER: 'SEPTEMBER',
+  OCTOBER: 'OCTOBER',
+  NOVEMBER: 'NOVEMBER',
+  DECEMBER: 'DECEMBER'
 } as const
 
 export type Month = (typeof Month)[keyof typeof Month]

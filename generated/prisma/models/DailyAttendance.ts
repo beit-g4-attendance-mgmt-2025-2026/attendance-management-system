@@ -27,85 +27,89 @@ export type AggregateDailyAttendance = {
 }
 
 export type DailyAttendanceAvgAggregateOutputType = {
+  day: number | null
   times: number | null
   totalTimes: number | null
 }
 
 export type DailyAttendanceSumAggregateOutputType = {
+  day: number | null
   times: number | null
   totalTimes: number | null
 }
 
 export type DailyAttendanceMinAggregateOutputType = {
   id: string | null
-  studentId: string | null
-  subjectId: string | null
-  day: $Enums.Day | null
+  day: number | null
   month: $Enums.Month | null
   times: number | null
   totalTimes: number | null
+  studentId: string | null
+  subjectId: string | null
 }
 
 export type DailyAttendanceMaxAggregateOutputType = {
   id: string | null
-  studentId: string | null
-  subjectId: string | null
-  day: $Enums.Day | null
+  day: number | null
   month: $Enums.Month | null
   times: number | null
   totalTimes: number | null
+  studentId: string | null
+  subjectId: string | null
 }
 
 export type DailyAttendanceCountAggregateOutputType = {
   id: number
-  studentId: number
-  subjectId: number
   day: number
   month: number
   times: number
   totalTimes: number
+  studentId: number
+  subjectId: number
   _all: number
 }
 
 
 export type DailyAttendanceAvgAggregateInputType = {
+  day?: true
   times?: true
   totalTimes?: true
 }
 
 export type DailyAttendanceSumAggregateInputType = {
+  day?: true
   times?: true
   totalTimes?: true
 }
 
 export type DailyAttendanceMinAggregateInputType = {
   id?: true
-  studentId?: true
-  subjectId?: true
   day?: true
   month?: true
   times?: true
   totalTimes?: true
+  studentId?: true
+  subjectId?: true
 }
 
 export type DailyAttendanceMaxAggregateInputType = {
   id?: true
-  studentId?: true
-  subjectId?: true
   day?: true
   month?: true
   times?: true
   totalTimes?: true
+  studentId?: true
+  subjectId?: true
 }
 
 export type DailyAttendanceCountAggregateInputType = {
   id?: true
-  studentId?: true
-  subjectId?: true
   day?: true
   month?: true
   times?: true
   totalTimes?: true
+  studentId?: true
+  subjectId?: true
   _all?: true
 }
 
@@ -197,12 +201,12 @@ export type DailyAttendanceGroupByArgs<ExtArgs extends runtime.Types.Extensions.
 
 export type DailyAttendanceGroupByOutputType = {
   id: string
-  studentId: string
-  subjectId: string
-  day: $Enums.Day
+  day: number
   month: $Enums.Month
   times: number
   totalTimes: number
+  studentId: string
+  subjectId: string
   _count: DailyAttendanceCountAggregateOutputType | null
   _avg: DailyAttendanceAvgAggregateOutputType | null
   _sum: DailyAttendanceSumAggregateOutputType | null
@@ -230,54 +234,52 @@ export type DailyAttendanceWhereInput = {
   OR?: Prisma.DailyAttendanceWhereInput[]
   NOT?: Prisma.DailyAttendanceWhereInput | Prisma.DailyAttendanceWhereInput[]
   id?: Prisma.UuidFilter<"DailyAttendance"> | string
-  studentId?: Prisma.UuidFilter<"DailyAttendance"> | string
-  subjectId?: Prisma.UuidFilter<"DailyAttendance"> | string
-  day?: Prisma.EnumDayFilter<"DailyAttendance"> | $Enums.Day
+  day?: Prisma.IntFilter<"DailyAttendance"> | number
   month?: Prisma.EnumMonthFilter<"DailyAttendance"> | $Enums.Month
   times?: Prisma.IntFilter<"DailyAttendance"> | number
   totalTimes?: Prisma.IntFilter<"DailyAttendance"> | number
+  studentId?: Prisma.UuidFilter<"DailyAttendance"> | string
+  subjectId?: Prisma.UuidFilter<"DailyAttendance"> | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
   subject?: Prisma.XOR<Prisma.SubjectScalarRelationFilter, Prisma.SubjectWhereInput>
-  monthlySub?: Prisma.MonthlySubAttendanceListRelationFilter
 }
 
 export type DailyAttendanceOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  studentId?: Prisma.SortOrder
-  subjectId?: Prisma.SortOrder
   day?: Prisma.SortOrder
   month?: Prisma.SortOrder
   times?: Prisma.SortOrder
   totalTimes?: Prisma.SortOrder
+  studentId?: Prisma.SortOrder
+  subjectId?: Prisma.SortOrder
   student?: Prisma.StudentOrderByWithRelationInput
   subject?: Prisma.SubjectOrderByWithRelationInput
-  monthlySub?: Prisma.MonthlySubAttendanceOrderByRelationAggregateInput
 }
 
 export type DailyAttendanceWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  studentId_subjectId_day_month?: Prisma.DailyAttendanceStudentIdSubjectIdDayMonthCompoundUniqueInput
   AND?: Prisma.DailyAttendanceWhereInput | Prisma.DailyAttendanceWhereInput[]
   OR?: Prisma.DailyAttendanceWhereInput[]
   NOT?: Prisma.DailyAttendanceWhereInput | Prisma.DailyAttendanceWhereInput[]
-  studentId?: Prisma.UuidFilter<"DailyAttendance"> | string
-  subjectId?: Prisma.UuidFilter<"DailyAttendance"> | string
-  day?: Prisma.EnumDayFilter<"DailyAttendance"> | $Enums.Day
+  day?: Prisma.IntFilter<"DailyAttendance"> | number
   month?: Prisma.EnumMonthFilter<"DailyAttendance"> | $Enums.Month
   times?: Prisma.IntFilter<"DailyAttendance"> | number
   totalTimes?: Prisma.IntFilter<"DailyAttendance"> | number
+  studentId?: Prisma.UuidFilter<"DailyAttendance"> | string
+  subjectId?: Prisma.UuidFilter<"DailyAttendance"> | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
   subject?: Prisma.XOR<Prisma.SubjectScalarRelationFilter, Prisma.SubjectWhereInput>
-  monthlySub?: Prisma.MonthlySubAttendanceListRelationFilter
-}, "id">
+}, "id" | "studentId_subjectId_day_month">
 
 export type DailyAttendanceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  studentId?: Prisma.SortOrder
-  subjectId?: Prisma.SortOrder
   day?: Prisma.SortOrder
   month?: Prisma.SortOrder
   times?: Prisma.SortOrder
   totalTimes?: Prisma.SortOrder
+  studentId?: Prisma.SortOrder
+  subjectId?: Prisma.SortOrder
   _count?: Prisma.DailyAttendanceCountOrderByAggregateInput
   _avg?: Prisma.DailyAttendanceAvgOrderByAggregateInput
   _max?: Prisma.DailyAttendanceMaxOrderByAggregateInput
@@ -290,71 +292,67 @@ export type DailyAttendanceScalarWhereWithAggregatesInput = {
   OR?: Prisma.DailyAttendanceScalarWhereWithAggregatesInput[]
   NOT?: Prisma.DailyAttendanceScalarWhereWithAggregatesInput | Prisma.DailyAttendanceScalarWhereWithAggregatesInput[]
   id?: Prisma.UuidWithAggregatesFilter<"DailyAttendance"> | string
-  studentId?: Prisma.UuidWithAggregatesFilter<"DailyAttendance"> | string
-  subjectId?: Prisma.UuidWithAggregatesFilter<"DailyAttendance"> | string
-  day?: Prisma.EnumDayWithAggregatesFilter<"DailyAttendance"> | $Enums.Day
+  day?: Prisma.IntWithAggregatesFilter<"DailyAttendance"> | number
   month?: Prisma.EnumMonthWithAggregatesFilter<"DailyAttendance"> | $Enums.Month
   times?: Prisma.IntWithAggregatesFilter<"DailyAttendance"> | number
   totalTimes?: Prisma.IntWithAggregatesFilter<"DailyAttendance"> | number
+  studentId?: Prisma.UuidWithAggregatesFilter<"DailyAttendance"> | string
+  subjectId?: Prisma.UuidWithAggregatesFilter<"DailyAttendance"> | string
 }
 
 export type DailyAttendanceCreateInput = {
   id?: string
-  day: $Enums.Day
+  day: number
   month: $Enums.Month
   times: number
   totalTimes: number
-  student: Prisma.StudentCreateNestedOneWithoutAttendanceInput
-  subject: Prisma.SubjectCreateNestedOneWithoutAttendanceInput
-  monthlySub?: Prisma.MonthlySubAttendanceCreateNestedManyWithoutDailyAttendanceInput
+  student: Prisma.StudentCreateNestedOneWithoutDailyAttendanceInput
+  subject: Prisma.SubjectCreateNestedOneWithoutDailyAttendanceInput
 }
 
 export type DailyAttendanceUncheckedCreateInput = {
   id?: string
-  studentId: string
-  subjectId: string
-  day: $Enums.Day
+  day: number
   month: $Enums.Month
   times: number
   totalTimes: number
-  monthlySub?: Prisma.MonthlySubAttendanceUncheckedCreateNestedManyWithoutDailyAttendanceInput
+  studentId: string
+  subjectId: string
 }
 
 export type DailyAttendanceUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  day?: Prisma.EnumDayFieldUpdateOperationsInput | $Enums.Day
+  day?: Prisma.IntFieldUpdateOperationsInput | number
   month?: Prisma.EnumMonthFieldUpdateOperationsInput | $Enums.Month
   times?: Prisma.IntFieldUpdateOperationsInput | number
   totalTimes?: Prisma.IntFieldUpdateOperationsInput | number
-  student?: Prisma.StudentUpdateOneRequiredWithoutAttendanceNestedInput
-  subject?: Prisma.SubjectUpdateOneRequiredWithoutAttendanceNestedInput
-  monthlySub?: Prisma.MonthlySubAttendanceUpdateManyWithoutDailyAttendanceNestedInput
+  student?: Prisma.StudentUpdateOneRequiredWithoutDailyAttendanceNestedInput
+  subject?: Prisma.SubjectUpdateOneRequiredWithoutDailyAttendanceNestedInput
 }
 
 export type DailyAttendanceUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
-  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
-  day?: Prisma.EnumDayFieldUpdateOperationsInput | $Enums.Day
+  day?: Prisma.IntFieldUpdateOperationsInput | number
   month?: Prisma.EnumMonthFieldUpdateOperationsInput | $Enums.Month
   times?: Prisma.IntFieldUpdateOperationsInput | number
   totalTimes?: Prisma.IntFieldUpdateOperationsInput | number
-  monthlySub?: Prisma.MonthlySubAttendanceUncheckedUpdateManyWithoutDailyAttendanceNestedInput
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type DailyAttendanceCreateManyInput = {
   id?: string
-  studentId: string
-  subjectId: string
-  day: $Enums.Day
+  day: number
   month: $Enums.Month
   times: number
   totalTimes: number
+  studentId: string
+  subjectId: string
 }
 
 export type DailyAttendanceUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  day?: Prisma.EnumDayFieldUpdateOperationsInput | $Enums.Day
+  day?: Prisma.IntFieldUpdateOperationsInput | number
   month?: Prisma.EnumMonthFieldUpdateOperationsInput | $Enums.Month
   times?: Prisma.IntFieldUpdateOperationsInput | number
   totalTimes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -362,12 +360,12 @@ export type DailyAttendanceUpdateManyMutationInput = {
 
 export type DailyAttendanceUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
-  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
-  day?: Prisma.EnumDayFieldUpdateOperationsInput | $Enums.Day
+  day?: Prisma.IntFieldUpdateOperationsInput | number
   month?: Prisma.EnumMonthFieldUpdateOperationsInput | $Enums.Month
   times?: Prisma.IntFieldUpdateOperationsInput | number
   totalTimes?: Prisma.IntFieldUpdateOperationsInput | number
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type DailyAttendanceListRelationFilter = {
@@ -380,49 +378,53 @@ export type DailyAttendanceOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type DailyAttendanceStudentIdSubjectIdDayMonthCompoundUniqueInput = {
+  studentId: string
+  subjectId: string
+  day: number
+  month: $Enums.Month
+}
+
 export type DailyAttendanceCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  studentId?: Prisma.SortOrder
-  subjectId?: Prisma.SortOrder
   day?: Prisma.SortOrder
   month?: Prisma.SortOrder
   times?: Prisma.SortOrder
   totalTimes?: Prisma.SortOrder
+  studentId?: Prisma.SortOrder
+  subjectId?: Prisma.SortOrder
 }
 
 export type DailyAttendanceAvgOrderByAggregateInput = {
+  day?: Prisma.SortOrder
   times?: Prisma.SortOrder
   totalTimes?: Prisma.SortOrder
 }
 
 export type DailyAttendanceMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  studentId?: Prisma.SortOrder
-  subjectId?: Prisma.SortOrder
   day?: Prisma.SortOrder
   month?: Prisma.SortOrder
   times?: Prisma.SortOrder
   totalTimes?: Prisma.SortOrder
+  studentId?: Prisma.SortOrder
+  subjectId?: Prisma.SortOrder
 }
 
 export type DailyAttendanceMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  studentId?: Prisma.SortOrder
-  subjectId?: Prisma.SortOrder
   day?: Prisma.SortOrder
   month?: Prisma.SortOrder
   times?: Prisma.SortOrder
   totalTimes?: Prisma.SortOrder
+  studentId?: Prisma.SortOrder
+  subjectId?: Prisma.SortOrder
 }
 
 export type DailyAttendanceSumOrderByAggregateInput = {
+  day?: Prisma.SortOrder
   times?: Prisma.SortOrder
   totalTimes?: Prisma.SortOrder
-}
-
-export type DailyAttendanceNullableScalarRelationFilter = {
-  is?: Prisma.DailyAttendanceWhereInput | null
-  isNot?: Prisma.DailyAttendanceWhereInput | null
 }
 
 export type DailyAttendanceCreateNestedManyWithoutStudentInput = {
@@ -509,48 +511,26 @@ export type DailyAttendanceUncheckedUpdateManyWithoutSubjectNestedInput = {
   deleteMany?: Prisma.DailyAttendanceScalarWhereInput | Prisma.DailyAttendanceScalarWhereInput[]
 }
 
-export type EnumDayFieldUpdateOperationsInput = {
-  set?: $Enums.Day
-}
-
 export type EnumMonthFieldUpdateOperationsInput = {
   set?: $Enums.Month
 }
 
-export type DailyAttendanceCreateNestedOneWithoutMonthlySubInput = {
-  create?: Prisma.XOR<Prisma.DailyAttendanceCreateWithoutMonthlySubInput, Prisma.DailyAttendanceUncheckedCreateWithoutMonthlySubInput>
-  connectOrCreate?: Prisma.DailyAttendanceCreateOrConnectWithoutMonthlySubInput
-  connect?: Prisma.DailyAttendanceWhereUniqueInput
-}
-
-export type DailyAttendanceUpdateOneWithoutMonthlySubNestedInput = {
-  create?: Prisma.XOR<Prisma.DailyAttendanceCreateWithoutMonthlySubInput, Prisma.DailyAttendanceUncheckedCreateWithoutMonthlySubInput>
-  connectOrCreate?: Prisma.DailyAttendanceCreateOrConnectWithoutMonthlySubInput
-  upsert?: Prisma.DailyAttendanceUpsertWithoutMonthlySubInput
-  disconnect?: Prisma.DailyAttendanceWhereInput | boolean
-  delete?: Prisma.DailyAttendanceWhereInput | boolean
-  connect?: Prisma.DailyAttendanceWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.DailyAttendanceUpdateToOneWithWhereWithoutMonthlySubInput, Prisma.DailyAttendanceUpdateWithoutMonthlySubInput>, Prisma.DailyAttendanceUncheckedUpdateWithoutMonthlySubInput>
-}
-
 export type DailyAttendanceCreateWithoutStudentInput = {
   id?: string
-  day: $Enums.Day
+  day: number
   month: $Enums.Month
   times: number
   totalTimes: number
-  subject: Prisma.SubjectCreateNestedOneWithoutAttendanceInput
-  monthlySub?: Prisma.MonthlySubAttendanceCreateNestedManyWithoutDailyAttendanceInput
+  subject: Prisma.SubjectCreateNestedOneWithoutDailyAttendanceInput
 }
 
 export type DailyAttendanceUncheckedCreateWithoutStudentInput = {
   id?: string
-  subjectId: string
-  day: $Enums.Day
+  day: number
   month: $Enums.Month
   times: number
   totalTimes: number
-  monthlySub?: Prisma.MonthlySubAttendanceUncheckedCreateNestedManyWithoutDailyAttendanceInput
+  subjectId: string
 }
 
 export type DailyAttendanceCreateOrConnectWithoutStudentInput = {
@@ -584,32 +564,30 @@ export type DailyAttendanceScalarWhereInput = {
   OR?: Prisma.DailyAttendanceScalarWhereInput[]
   NOT?: Prisma.DailyAttendanceScalarWhereInput | Prisma.DailyAttendanceScalarWhereInput[]
   id?: Prisma.UuidFilter<"DailyAttendance"> | string
-  studentId?: Prisma.UuidFilter<"DailyAttendance"> | string
-  subjectId?: Prisma.UuidFilter<"DailyAttendance"> | string
-  day?: Prisma.EnumDayFilter<"DailyAttendance"> | $Enums.Day
+  day?: Prisma.IntFilter<"DailyAttendance"> | number
   month?: Prisma.EnumMonthFilter<"DailyAttendance"> | $Enums.Month
   times?: Prisma.IntFilter<"DailyAttendance"> | number
   totalTimes?: Prisma.IntFilter<"DailyAttendance"> | number
+  studentId?: Prisma.UuidFilter<"DailyAttendance"> | string
+  subjectId?: Prisma.UuidFilter<"DailyAttendance"> | string
 }
 
 export type DailyAttendanceCreateWithoutSubjectInput = {
   id?: string
-  day: $Enums.Day
+  day: number
   month: $Enums.Month
   times: number
   totalTimes: number
-  student: Prisma.StudentCreateNestedOneWithoutAttendanceInput
-  monthlySub?: Prisma.MonthlySubAttendanceCreateNestedManyWithoutDailyAttendanceInput
+  student: Prisma.StudentCreateNestedOneWithoutDailyAttendanceInput
 }
 
 export type DailyAttendanceUncheckedCreateWithoutSubjectInput = {
   id?: string
-  studentId: string
-  day: $Enums.Day
+  day: number
   month: $Enums.Month
   times: number
   totalTimes: number
-  monthlySub?: Prisma.MonthlySubAttendanceUncheckedCreateNestedManyWithoutDailyAttendanceInput
+  studentId: string
 }
 
 export type DailyAttendanceCreateOrConnectWithoutSubjectInput = {
@@ -638,223 +616,130 @@ export type DailyAttendanceUpdateManyWithWhereWithoutSubjectInput = {
   data: Prisma.XOR<Prisma.DailyAttendanceUpdateManyMutationInput, Prisma.DailyAttendanceUncheckedUpdateManyWithoutSubjectInput>
 }
 
-export type DailyAttendanceCreateWithoutMonthlySubInput = {
-  id?: string
-  day: $Enums.Day
-  month: $Enums.Month
-  times: number
-  totalTimes: number
-  student: Prisma.StudentCreateNestedOneWithoutAttendanceInput
-  subject: Prisma.SubjectCreateNestedOneWithoutAttendanceInput
-}
-
-export type DailyAttendanceUncheckedCreateWithoutMonthlySubInput = {
-  id?: string
-  studentId: string
-  subjectId: string
-  day: $Enums.Day
-  month: $Enums.Month
-  times: number
-  totalTimes: number
-}
-
-export type DailyAttendanceCreateOrConnectWithoutMonthlySubInput = {
-  where: Prisma.DailyAttendanceWhereUniqueInput
-  create: Prisma.XOR<Prisma.DailyAttendanceCreateWithoutMonthlySubInput, Prisma.DailyAttendanceUncheckedCreateWithoutMonthlySubInput>
-}
-
-export type DailyAttendanceUpsertWithoutMonthlySubInput = {
-  update: Prisma.XOR<Prisma.DailyAttendanceUpdateWithoutMonthlySubInput, Prisma.DailyAttendanceUncheckedUpdateWithoutMonthlySubInput>
-  create: Prisma.XOR<Prisma.DailyAttendanceCreateWithoutMonthlySubInput, Prisma.DailyAttendanceUncheckedCreateWithoutMonthlySubInput>
-  where?: Prisma.DailyAttendanceWhereInput
-}
-
-export type DailyAttendanceUpdateToOneWithWhereWithoutMonthlySubInput = {
-  where?: Prisma.DailyAttendanceWhereInput
-  data: Prisma.XOR<Prisma.DailyAttendanceUpdateWithoutMonthlySubInput, Prisma.DailyAttendanceUncheckedUpdateWithoutMonthlySubInput>
-}
-
-export type DailyAttendanceUpdateWithoutMonthlySubInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  day?: Prisma.EnumDayFieldUpdateOperationsInput | $Enums.Day
-  month?: Prisma.EnumMonthFieldUpdateOperationsInput | $Enums.Month
-  times?: Prisma.IntFieldUpdateOperationsInput | number
-  totalTimes?: Prisma.IntFieldUpdateOperationsInput | number
-  student?: Prisma.StudentUpdateOneRequiredWithoutAttendanceNestedInput
-  subject?: Prisma.SubjectUpdateOneRequiredWithoutAttendanceNestedInput
-}
-
-export type DailyAttendanceUncheckedUpdateWithoutMonthlySubInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
-  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
-  day?: Prisma.EnumDayFieldUpdateOperationsInput | $Enums.Day
-  month?: Prisma.EnumMonthFieldUpdateOperationsInput | $Enums.Month
-  times?: Prisma.IntFieldUpdateOperationsInput | number
-  totalTimes?: Prisma.IntFieldUpdateOperationsInput | number
-}
-
 export type DailyAttendanceCreateManyStudentInput = {
   id?: string
-  subjectId: string
-  day: $Enums.Day
+  day: number
   month: $Enums.Month
   times: number
   totalTimes: number
+  subjectId: string
 }
 
 export type DailyAttendanceUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  day?: Prisma.EnumDayFieldUpdateOperationsInput | $Enums.Day
+  day?: Prisma.IntFieldUpdateOperationsInput | number
   month?: Prisma.EnumMonthFieldUpdateOperationsInput | $Enums.Month
   times?: Prisma.IntFieldUpdateOperationsInput | number
   totalTimes?: Prisma.IntFieldUpdateOperationsInput | number
-  subject?: Prisma.SubjectUpdateOneRequiredWithoutAttendanceNestedInput
-  monthlySub?: Prisma.MonthlySubAttendanceUpdateManyWithoutDailyAttendanceNestedInput
+  subject?: Prisma.SubjectUpdateOneRequiredWithoutDailyAttendanceNestedInput
 }
 
 export type DailyAttendanceUncheckedUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
-  day?: Prisma.EnumDayFieldUpdateOperationsInput | $Enums.Day
+  day?: Prisma.IntFieldUpdateOperationsInput | number
   month?: Prisma.EnumMonthFieldUpdateOperationsInput | $Enums.Month
   times?: Prisma.IntFieldUpdateOperationsInput | number
   totalTimes?: Prisma.IntFieldUpdateOperationsInput | number
-  monthlySub?: Prisma.MonthlySubAttendanceUncheckedUpdateManyWithoutDailyAttendanceNestedInput
+  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type DailyAttendanceUncheckedUpdateManyWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
-  day?: Prisma.EnumDayFieldUpdateOperationsInput | $Enums.Day
+  day?: Prisma.IntFieldUpdateOperationsInput | number
   month?: Prisma.EnumMonthFieldUpdateOperationsInput | $Enums.Month
   times?: Prisma.IntFieldUpdateOperationsInput | number
   totalTimes?: Prisma.IntFieldUpdateOperationsInput | number
+  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type DailyAttendanceCreateManySubjectInput = {
   id?: string
-  studentId: string
-  day: $Enums.Day
+  day: number
   month: $Enums.Month
   times: number
   totalTimes: number
+  studentId: string
 }
 
 export type DailyAttendanceUpdateWithoutSubjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  day?: Prisma.EnumDayFieldUpdateOperationsInput | $Enums.Day
+  day?: Prisma.IntFieldUpdateOperationsInput | number
   month?: Prisma.EnumMonthFieldUpdateOperationsInput | $Enums.Month
   times?: Prisma.IntFieldUpdateOperationsInput | number
   totalTimes?: Prisma.IntFieldUpdateOperationsInput | number
-  student?: Prisma.StudentUpdateOneRequiredWithoutAttendanceNestedInput
-  monthlySub?: Prisma.MonthlySubAttendanceUpdateManyWithoutDailyAttendanceNestedInput
+  student?: Prisma.StudentUpdateOneRequiredWithoutDailyAttendanceNestedInput
 }
 
 export type DailyAttendanceUncheckedUpdateWithoutSubjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
-  day?: Prisma.EnumDayFieldUpdateOperationsInput | $Enums.Day
+  day?: Prisma.IntFieldUpdateOperationsInput | number
   month?: Prisma.EnumMonthFieldUpdateOperationsInput | $Enums.Month
   times?: Prisma.IntFieldUpdateOperationsInput | number
   totalTimes?: Prisma.IntFieldUpdateOperationsInput | number
-  monthlySub?: Prisma.MonthlySubAttendanceUncheckedUpdateManyWithoutDailyAttendanceNestedInput
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type DailyAttendanceUncheckedUpdateManyWithoutSubjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
-  day?: Prisma.EnumDayFieldUpdateOperationsInput | $Enums.Day
+  day?: Prisma.IntFieldUpdateOperationsInput | number
   month?: Prisma.EnumMonthFieldUpdateOperationsInput | $Enums.Month
   times?: Prisma.IntFieldUpdateOperationsInput | number
   totalTimes?: Prisma.IntFieldUpdateOperationsInput | number
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
-
-/**
- * Count Type DailyAttendanceCountOutputType
- */
-
-export type DailyAttendanceCountOutputType = {
-  monthlySub: number
-}
-
-export type DailyAttendanceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  monthlySub?: boolean | DailyAttendanceCountOutputTypeCountMonthlySubArgs
-}
-
-/**
- * DailyAttendanceCountOutputType without action
- */
-export type DailyAttendanceCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the DailyAttendanceCountOutputType
-   */
-  select?: Prisma.DailyAttendanceCountOutputTypeSelect<ExtArgs> | null
-}
-
-/**
- * DailyAttendanceCountOutputType without action
- */
-export type DailyAttendanceCountOutputTypeCountMonthlySubArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.MonthlySubAttendanceWhereInput
-}
 
 
 export type DailyAttendanceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  studentId?: boolean
-  subjectId?: boolean
   day?: boolean
   month?: boolean
   times?: boolean
   totalTimes?: boolean
+  studentId?: boolean
+  subjectId?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
-  monthlySub?: boolean | Prisma.DailyAttendance$monthlySubArgs<ExtArgs>
-  _count?: boolean | Prisma.DailyAttendanceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["dailyAttendance"]>
 
 export type DailyAttendanceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  studentId?: boolean
-  subjectId?: boolean
   day?: boolean
   month?: boolean
   times?: boolean
   totalTimes?: boolean
+  studentId?: boolean
+  subjectId?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["dailyAttendance"]>
 
 export type DailyAttendanceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  studentId?: boolean
-  subjectId?: boolean
   day?: boolean
   month?: boolean
   times?: boolean
   totalTimes?: boolean
+  studentId?: boolean
+  subjectId?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["dailyAttendance"]>
 
 export type DailyAttendanceSelectScalar = {
   id?: boolean
-  studentId?: boolean
-  subjectId?: boolean
   day?: boolean
   month?: boolean
   times?: boolean
   totalTimes?: boolean
+  studentId?: boolean
+  subjectId?: boolean
 }
 
-export type DailyAttendanceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "subjectId" | "day" | "month" | "times" | "totalTimes", ExtArgs["result"]["dailyAttendance"]>
+export type DailyAttendanceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "day" | "month" | "times" | "totalTimes" | "studentId" | "subjectId", ExtArgs["result"]["dailyAttendance"]>
 export type DailyAttendanceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
-  monthlySub?: boolean | Prisma.DailyAttendance$monthlySubArgs<ExtArgs>
-  _count?: boolean | Prisma.DailyAttendanceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type DailyAttendanceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
@@ -870,16 +755,15 @@ export type $DailyAttendancePayload<ExtArgs extends runtime.Types.Extensions.Int
   objects: {
     student: Prisma.$StudentPayload<ExtArgs>
     subject: Prisma.$SubjectPayload<ExtArgs>
-    monthlySub: Prisma.$MonthlySubAttendancePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    studentId: string
-    subjectId: string
-    day: $Enums.Day
+    day: number
     month: $Enums.Month
     times: number
     totalTimes: number
+    studentId: string
+    subjectId: string
   }, ExtArgs["result"]["dailyAttendance"]>
   composites: {}
 }
@@ -1276,7 +1160,6 @@ export interface Prisma__DailyAttendanceClient<T, Null = never, ExtArgs extends 
   readonly [Symbol.toStringTag]: "PrismaPromise"
   student<T extends Prisma.StudentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentDefaultArgs<ExtArgs>>): Prisma.Prisma__StudentClient<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   subject<T extends Prisma.SubjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SubjectDefaultArgs<ExtArgs>>): Prisma.Prisma__SubjectClient<runtime.Types.Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  monthlySub<T extends Prisma.DailyAttendance$monthlySubArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DailyAttendance$monthlySubArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MonthlySubAttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1307,12 +1190,12 @@ export interface Prisma__DailyAttendanceClient<T, Null = never, ExtArgs extends 
  */
 export interface DailyAttendanceFieldRefs {
   readonly id: Prisma.FieldRef<"DailyAttendance", 'String'>
-  readonly studentId: Prisma.FieldRef<"DailyAttendance", 'String'>
-  readonly subjectId: Prisma.FieldRef<"DailyAttendance", 'String'>
-  readonly day: Prisma.FieldRef<"DailyAttendance", 'Day'>
+  readonly day: Prisma.FieldRef<"DailyAttendance", 'Int'>
   readonly month: Prisma.FieldRef<"DailyAttendance", 'Month'>
   readonly times: Prisma.FieldRef<"DailyAttendance", 'Int'>
   readonly totalTimes: Prisma.FieldRef<"DailyAttendance", 'Int'>
+  readonly studentId: Prisma.FieldRef<"DailyAttendance", 'String'>
+  readonly subjectId: Prisma.FieldRef<"DailyAttendance", 'String'>
 }
     
 
@@ -1706,30 +1589,6 @@ export type DailyAttendanceDeleteManyArgs<ExtArgs extends runtime.Types.Extensio
    * Limit how many DailyAttendances to delete.
    */
   limit?: number
-}
-
-/**
- * DailyAttendance.monthlySub
- */
-export type DailyAttendance$monthlySubArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the MonthlySubAttendance
-   */
-  select?: Prisma.MonthlySubAttendanceSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the MonthlySubAttendance
-   */
-  omit?: Prisma.MonthlySubAttendanceOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.MonthlySubAttendanceInclude<ExtArgs> | null
-  where?: Prisma.MonthlySubAttendanceWhereInput
-  orderBy?: Prisma.MonthlySubAttendanceOrderByWithRelationInput | Prisma.MonthlySubAttendanceOrderByWithRelationInput[]
-  cursor?: Prisma.MonthlySubAttendanceWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.MonthlySubAttendanceScalarFieldEnum | Prisma.MonthlySubAttendanceScalarFieldEnum[]
 }
 
 /**

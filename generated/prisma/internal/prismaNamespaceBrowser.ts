@@ -53,9 +53,9 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Admin: 'Admin',
   User: 'User',
+  Class: 'Class',
   Department: 'Department',
   AcademicYear: 'AcademicYear',
-  Class: 'Class',
   Student: 'Student',
   Subject: 'Subject',
   DailyAttendance: 'DailyAttendance',
@@ -101,7 +101,6 @@ export const UserScalarFieldEnum = {
   email: 'email',
   phoneNumber: 'phoneNumber',
   departmentId: 'departmentId',
-  classId: 'classId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -109,13 +108,23 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const ClassScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  semester: 'semester',
+  year: 'year',
+  userId: 'userId',
+  departmentId: 'departmentId',
+  academicYearId: 'academicYearId'
+} as const
+
+export type ClassScalarFieldEnum = (typeof ClassScalarFieldEnum)[keyof typeof ClassScalarFieldEnum]
+
+
 export const DepartmentScalarFieldEnum = {
   id: 'id',
   name: 'name',
   symbol: 'symbol',
-  teachers: 'teachers',
-  students: 'students',
-  userId: 'userId',
   createdAt: 'createdAt'
 } as const
 
@@ -131,19 +140,6 @@ export const AcademicYearScalarFieldEnum = {
 } as const
 
 export type AcademicYearScalarFieldEnum = (typeof AcademicYearScalarFieldEnum)[keyof typeof AcademicYearScalarFieldEnum]
-
-
-export const ClassScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  semester: 'semester',
-  year: 'year',
-  userId: 'userId',
-  departmentId: 'departmentId',
-  academicYearId: 'academicYearId'
-} as const
-
-export type ClassScalarFieldEnum = (typeof ClassScalarFieldEnum)[keyof typeof ClassScalarFieldEnum]
 
 
 export const StudentScalarFieldEnum = {
@@ -176,12 +172,12 @@ export type SubjectScalarFieldEnum = (typeof SubjectScalarFieldEnum)[keyof typeo
 
 export const DailyAttendanceScalarFieldEnum = {
   id: 'id',
-  studentId: 'studentId',
-  subjectId: 'subjectId',
   day: 'day',
   month: 'month',
   times: 'times',
-  totalTimes: 'totalTimes'
+  totalTimes: 'totalTimes',
+  studentId: 'studentId',
+  subjectId: 'subjectId'
 } as const
 
 export type DailyAttendanceScalarFieldEnum = (typeof DailyAttendanceScalarFieldEnum)[keyof typeof DailyAttendanceScalarFieldEnum]
@@ -189,9 +185,12 @@ export type DailyAttendanceScalarFieldEnum = (typeof DailyAttendanceScalarFieldE
 
 export const MonthlySubAttendanceScalarFieldEnum = {
   id: 'id',
-  dailyAttendanceId: 'dailyAttendanceId',
+  times: 'times',
   totalTimes: 'totalTimes',
-  status: 'status'
+  status: 'status',
+  studentId: 'studentId',
+  subjectId: 'subjectId',
+  monthlyClassAttendanceId: 'monthlyClassAttendanceId'
 } as const
 
 export type MonthlySubAttendanceScalarFieldEnum = (typeof MonthlySubAttendanceScalarFieldEnum)[keyof typeof MonthlySubAttendanceScalarFieldEnum]
@@ -201,7 +200,8 @@ export const MonthlyClassAttendanceScalarFieldEnum = {
   id: 'id',
   monthlySubAttendanceId: 'monthlySubAttendanceId',
   totalTimes: 'totalTimes',
-  status: 'status'
+  status: 'status',
+  classId: 'classId'
 } as const
 
 export type MonthlyClassAttendanceScalarFieldEnum = (typeof MonthlyClassAttendanceScalarFieldEnum)[keyof typeof MonthlyClassAttendanceScalarFieldEnum]
