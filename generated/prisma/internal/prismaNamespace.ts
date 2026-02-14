@@ -1238,6 +1238,7 @@ export const DepartmentScalarFieldEnum = {
   id: 'id',
   name: 'name',
   symbol: 'symbol',
+  logo: 'logo',
   createdAt: 'createdAt'
 } as const
 
