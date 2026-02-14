@@ -12,6 +12,7 @@ import FormSelect from "@/components/inputs/FormSelect";
 import { departments, genders, roles } from "@/constants/index.constants";
 import fetchHandler from "@/lib/fetchHandler";
 import { TeacherSchema } from "@/schema/index.schema";
+import { api } from "@/lib/api";
 
 const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 	const router = useRouter();
@@ -35,24 +36,17 @@ const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 		console.log("Form submitted:");
 		console.log(values);
 		try {
-			const res = await fetchHandler(
-				"http://localhost:3000/api/teachers",
-				{
-					method: "POST",
-					body: JSON.stringify({
-						fullName: values.fullName,
-						username: values.username,
-						email: values.email,
-						password: values.password,
-						phoneNumber: values.phoneNumber,
-						gender: values.gender,
-						role: values.role,
-						departmentName: values.departmentName,
-						resetPasswordToken: "",
-						resetPasswordExpireAt: null,
-					}),
-				},
-			);
+			const res = await api.users.create({
+				fullName: values.fullName,
+				username: values.username,
+				email: values.email,
+				password: values.password,
+				phoneNumber: values.phoneNumber,
+				gender: values.gender,
+				role: values.role,
+				departmentName: values.departmentName,
+			});
+
 			console.log("create user: ", res);
 		} catch (error: unknown) {
 			console.log(error);

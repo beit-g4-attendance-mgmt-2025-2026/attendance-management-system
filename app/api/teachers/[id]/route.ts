@@ -10,13 +10,13 @@ export async function GET(
 	request: NextRequest,
 	{ params }: { params: { id: string } },
 ) {
-	const auth = await requireAuth(request);
-	if ("response" in auth) return auth.response;
-	const authUser = auth.user;
-	const isAdmin = authUser.role === "ADMIN";
-	const isSelf = authUser.id === params.id;
-	if (!isAdmin && !isSelf)
-		return handleErrorResponse("Access denied! Please contact admin.");
+	// const auth = await requireAuth(request);
+	// if ("response" in auth) return auth.response;
+	// const authUser = auth.user;
+	// const isAdmin = authUser.role === "ADMIN";
+	// const isSelf = authUser.id === params.id;
+	// if (!isAdmin && !isSelf)
+	// 	return handleErrorResponse("Access denied! Please contact admin.");
 
 	const user = await prisma.user.findUnique({
 		where: { id: params.id },

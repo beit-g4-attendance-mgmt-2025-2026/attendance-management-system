@@ -44,11 +44,11 @@ const RegisterSchema = z.object({
 		.min(7, { message: "Phone number is too short" })
 		.max(20, { message: "Phone number is too long" })
 		.regex(/^\+?[0-9\s-]+$/, { message: "Invalid phone number" }),
-	departmentName: z.enum(["Civil", "CEIT", "EC", "MP", "EP"], {
+	departmentName: z.enum(["CIVIL", "CEIT", "EC", "MP", "EP"], {
 		message: "Department must be a valid option",
 	}),
-	resetPasswordToken: z.string().nullable(),
-	resetPasswordExpireAt: z.coerce.date().nullable(),
+	resetPasswordToken: z.string().nullable().optional(),
+	resetPasswordExpireAt: z.coerce.date().nullable().optional(),
 });
 
 export type RegisterInput = z.infer<typeof RegisterSchema>;

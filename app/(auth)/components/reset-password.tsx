@@ -19,7 +19,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
-import { LoginSchema } from "@/schema/index.schema";
+import { ResetPasswordSchema } from "@/schema/index.schema";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
@@ -29,31 +29,36 @@ import { useRouter } from "next/navigation";
 import fetchHandler from "@/lib/fetchHandler";
 import { toast } from "sonner";
 
-export function LoginForm({
+export function ResetPasswordForm({
 	className,
 	...props
 }: React.ComponentProps<"div">) {
 	const [error, setError] = useState<string | null>(null);
 	const router = useRouter();
 	const [showPassword, setShowPassword] = useState(false);
-	const form = useForm<z.infer<typeof LoginSchema>>({
-		resolver: zodResolver(LoginSchema),
+	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+	const form = useForm<z.infer<typeof ResetPasswordSchema>>({
+		resolver: zodResolver(ResetPasswordSchema),
 		defaultValues: {
-			username: "",
 			password: "",
+			confirmPassword: "",
 		},
 	});
 
-	async function onSubmit(values: z.infer<typeof LoginSchema>) {
-		const res = await fetchHandler("http://localhost:3000/api/auth/login", {
-			method: "POST",
-			body: JSON.stringify(values),
-		});
-
+	async function onSubmit(values: z.infer<typeof ResetPasswordSchema>) {
+		console.log(values);
+		const token = new URLSearchParams(window.location.search).get("token");
+		const res = await fetchHandler(
+			`http://localhost:3000/api/auth/reset-password?token=${token}`,
+			{
+				method: "POST",
+				body: JSON.stringify({ password: values.password }),
+			},
+		);
 		if (res.success) {
 			router.push("/dashboard");
-			toast.success("Login successful!");
-			console.log("Login successful", res.data);
+			toast.success("Update password successful!");
+			console.log("Update password successful", res.data);
 		} else {
 			setError(res.message);
 		}
@@ -62,9 +67,9 @@ export function LoginForm({
 		<div className={cn("flex flex-col gap-6", className)} {...props}>
 			<Card className="bg-white/10 backdrop-blur-md border-white/20 text-white shadow-xl">
 				<CardHeader>
-					<CardTitle>Login to your account</CardTitle>
+					<CardTitle>Set a new password</CardTitle>
 					<CardDescription>
-						Enter your username below to login to your account
+						Enter a new password to rest to your account
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
@@ -73,23 +78,6 @@ export function LoginForm({
 							onSubmit={form.handleSubmit(onSubmit)}
 							className="space-y-8"
 						>
-							<FormField
-								control={form.control}
-								name="username"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Username</FormLabel>
-										<FormControl>
-											<Input
-												placeholder="Enter your username"
-												{...field}
-											/>
-										</FormControl>
-
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
 							<FormField
 								control={form.control}
 								name="password"
@@ -136,11 +124,57 @@ export function LoginForm({
 									</FormItem>
 								)}
 							/>
+							<FormField
+								control={form.control}
+								name="confirmPassword"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Confirm Password</FormLabel>
+										<FormControl>
+											<div className="relative">
+												<Input
+													type={
+														showConfirmPassword
+															? "text"
+															: "password"
+													}
+													placeholder="Enter your confirm password"
+													{...field}
+												/>
+												<Button
+													type="button"
+													variant="ghost"
+													size="sm"
+													className="absolute right-0 top-0 h-full px-3 py-2 dark:hover:bg-transparent cursor-pointer"
+													onClick={() =>
+														setShowConfirmPassword(
+															(prev) => !prev,
+														)
+													}
+												>
+													{showConfirmPassword ? (
+														<EyeOff className="h-4 w-4 text-muted-foreground " />
+													) : (
+														<Eye className="h-4 w-4 text-muted-foreground " />
+													)}
+												</Button>
+											</div>
+										</FormControl>
+
+										<FormMessage />
+										{error && (
+											<FormMessage className="text-red-500">
+												{error}
+											</FormMessage>
+										)}
+									</FormItem>
+								)}
+							/>
 							<Button
 								type="submit"
 								className="cursor-pointer w-full bg-blue-400 hover:bg-blue-500"
 							>
-								Submit
+								Update Password
 							</Button>
 						</form>
 					</Form>

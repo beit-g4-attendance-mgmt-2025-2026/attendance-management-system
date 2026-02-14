@@ -1,6 +1,7 @@
 import { days, months, times, totalTimes } from "@/constants/index.constants";
 import { Gender, Role } from "@/generated/prisma/enums";
 import { z } from "zod";
+import { ResetPasswordForm } from "../app/(auth)/components/reset-password";
 
 export const LoginSchema = z.object({
 	username: z
@@ -85,7 +86,7 @@ export const TeacherSchema = z.object({
 	gender: z.enum(["MALE", "FEMALE", "OTHER"], {
 		message: "Gender must be male, female, or other",
 	}),
-	role: z.enum(["ADMIN", "DEPARTMENT", "TEACHER"], {
+	role: z.enum(["ADMIN", "HOD", "TEACHER"], {
 		message: "Role must be a valid option",
 	}),
 
@@ -94,10 +95,29 @@ export const TeacherSchema = z.object({
 		.min(7, { message: "Phone number is too short" })
 		.max(20, { message: "Phone number is too long" })
 		.regex(/^\+?[0-9\s-]+$/, { message: "Invalid phone number" }),
-	departmentName: z.enum(["Civil", "CEIT", "EC", "MP", "EP"], {
+	departmentName: z.enum(["CIVIL", "CEIT", "EC", "MP", "EP"], {
 		message: "Department must be a valid option",
 	}),
 });
+
+export const ResetPasswordSchema = z
+	.object({
+		password: z
+			.string()
+			.min(8, { message: "Password must be at least 8 characters" })
+			.max(128, { message: "Password must be less than 128 characters" })
+			.regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, {
+				message:
+					"Password must contain at least one lowercase letter, one uppercase letter, and one number",
+			}),
+		confirmPassword: z.string().min(8, {
+			message: "Confirm password must be at least 8 characters",
+		}),
+	})
+	.refine((data) => data.password === data.confirmPassword, {
+		path: ["confirmPassword"], // Highlight the field with the error
+		message: "Passwords do not match",
+	});
 
 export const StudentSchema = z.object({
 	name: z.string().min(2, {
@@ -234,3 +254,4 @@ export type TeacherSchemaType = z.infer<typeof TeacherSchema>;
 export type StudentSchemaType = z.infer<typeof StudentSchema>;
 export type DepartmentSchemaType = z.infer<typeof DepartmentSchema>;
 export type ClassSchemaType = z.infer<typeof ClassSchema>;
+export type ResetPasswordSchemaType = z.infer<typeof ResetPasswordSchema>;
