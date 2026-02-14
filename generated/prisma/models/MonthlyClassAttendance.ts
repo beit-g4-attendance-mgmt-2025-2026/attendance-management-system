@@ -211,7 +211,7 @@ export type MonthlyClassAttendanceWhereInput = {
   monthlySubAttendanceId?: Prisma.StringNullableListFilter<"MonthlyClassAttendance">
   totalTimes?: Prisma.IntFilter<"MonthlyClassAttendance"> | number
   status?: Prisma.BoolFilter<"MonthlyClassAttendance"> | boolean
-  classId?: Prisma.StringFilter<"MonthlyClassAttendance"> | string
+  classId?: Prisma.UuidFilter<"MonthlyClassAttendance"> | string
   class?: Prisma.XOR<Prisma.ClassNullableScalarRelationFilter, Prisma.ClassWhereInput> | null
   monthlySubAttendance?: Prisma.MonthlySubAttendanceListRelationFilter
 }
@@ -234,7 +234,7 @@ export type MonthlyClassAttendanceWhereUniqueInput = Prisma.AtLeast<{
   monthlySubAttendanceId?: Prisma.StringNullableListFilter<"MonthlyClassAttendance">
   totalTimes?: Prisma.IntFilter<"MonthlyClassAttendance"> | number
   status?: Prisma.BoolFilter<"MonthlyClassAttendance"> | boolean
-  classId?: Prisma.StringFilter<"MonthlyClassAttendance"> | string
+  classId?: Prisma.UuidFilter<"MonthlyClassAttendance"> | string
   class?: Prisma.XOR<Prisma.ClassNullableScalarRelationFilter, Prisma.ClassWhereInput> | null
   monthlySubAttendance?: Prisma.MonthlySubAttendanceListRelationFilter
 }, "id">
@@ -260,7 +260,7 @@ export type MonthlyClassAttendanceScalarWhereWithAggregatesInput = {
   monthlySubAttendanceId?: Prisma.StringNullableListFilter<"MonthlyClassAttendance">
   totalTimes?: Prisma.IntWithAggregatesFilter<"MonthlyClassAttendance"> | number
   status?: Prisma.BoolWithAggregatesFilter<"MonthlyClassAttendance"> | boolean
-  classId?: Prisma.StringWithAggregatesFilter<"MonthlyClassAttendance"> | string
+  classId?: Prisma.UuidWithAggregatesFilter<"MonthlyClassAttendance"> | string
 }
 
 export type MonthlyClassAttendanceCreateInput = {
@@ -492,7 +492,7 @@ export type MonthlyClassAttendanceScalarWhereInput = {
   monthlySubAttendanceId?: Prisma.StringNullableListFilter<"MonthlyClassAttendance">
   totalTimes?: Prisma.IntFilter<"MonthlyClassAttendance"> | number
   status?: Prisma.BoolFilter<"MonthlyClassAttendance"> | boolean
-  classId?: Prisma.StringFilter<"MonthlyClassAttendance"> | string
+  classId?: Prisma.UuidFilter<"MonthlyClassAttendance"> | string
 }
 
 export type MonthlyClassAttendanceCreateWithoutMonthlySubAttendanceInput = {

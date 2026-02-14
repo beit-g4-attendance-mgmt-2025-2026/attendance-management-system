@@ -193,12 +193,12 @@ model MonthlySubAttendance {
   status            Boolean
 
   student   Student? @relation(fields: [studentId], references: [id])
-  studentId   String
+  studentId   String @db.Uuid
   subject    Subject @relation(fields: [subjectId], references: [id])
-  subjectId   String
+  subjectId   String @db.Uuid
 
   monthlyClassAttendance MonthlyClassAttendance? @relation(fields: [monthlyClassAttendanceId], references: [id])
-  monthlyClassAttendanceId  String
+  monthlyClassAttendanceId  String @db.Uuid
 
 }
 
@@ -209,7 +209,7 @@ model MonthlyClassAttendance {
   status                 Boolean
 
   class Class? @relation(fields: [classId], references: [id])
-  classId   String
+  classId   String @db.Uuid
   
   monthlySubAttendance  MonthlySubAttendance[]
 }

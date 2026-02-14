@@ -233,9 +233,9 @@ export type MonthlySubAttendanceWhereInput = {
   times?: Prisma.IntFilter<"MonthlySubAttendance"> | number
   totalTimes?: Prisma.IntFilter<"MonthlySubAttendance"> | number
   status?: Prisma.BoolFilter<"MonthlySubAttendance"> | boolean
-  studentId?: Prisma.StringFilter<"MonthlySubAttendance"> | string
-  subjectId?: Prisma.StringFilter<"MonthlySubAttendance"> | string
-  monthlyClassAttendanceId?: Prisma.StringFilter<"MonthlySubAttendance"> | string
+  studentId?: Prisma.UuidFilter<"MonthlySubAttendance"> | string
+  subjectId?: Prisma.UuidFilter<"MonthlySubAttendance"> | string
+  monthlyClassAttendanceId?: Prisma.UuidFilter<"MonthlySubAttendance"> | string
   student?: Prisma.XOR<Prisma.StudentNullableScalarRelationFilter, Prisma.StudentWhereInput> | null
   subject?: Prisma.XOR<Prisma.SubjectScalarRelationFilter, Prisma.SubjectWhereInput>
   monthlyClassAttendance?: Prisma.XOR<Prisma.MonthlyClassAttendanceNullableScalarRelationFilter, Prisma.MonthlyClassAttendanceWhereInput> | null
@@ -262,9 +262,9 @@ export type MonthlySubAttendanceWhereUniqueInput = Prisma.AtLeast<{
   times?: Prisma.IntFilter<"MonthlySubAttendance"> | number
   totalTimes?: Prisma.IntFilter<"MonthlySubAttendance"> | number
   status?: Prisma.BoolFilter<"MonthlySubAttendance"> | boolean
-  studentId?: Prisma.StringFilter<"MonthlySubAttendance"> | string
-  subjectId?: Prisma.StringFilter<"MonthlySubAttendance"> | string
-  monthlyClassAttendanceId?: Prisma.StringFilter<"MonthlySubAttendance"> | string
+  studentId?: Prisma.UuidFilter<"MonthlySubAttendance"> | string
+  subjectId?: Prisma.UuidFilter<"MonthlySubAttendance"> | string
+  monthlyClassAttendanceId?: Prisma.UuidFilter<"MonthlySubAttendance"> | string
   student?: Prisma.XOR<Prisma.StudentNullableScalarRelationFilter, Prisma.StudentWhereInput> | null
   subject?: Prisma.XOR<Prisma.SubjectScalarRelationFilter, Prisma.SubjectWhereInput>
   monthlyClassAttendance?: Prisma.XOR<Prisma.MonthlyClassAttendanceNullableScalarRelationFilter, Prisma.MonthlyClassAttendanceWhereInput> | null
@@ -293,9 +293,9 @@ export type MonthlySubAttendanceScalarWhereWithAggregatesInput = {
   times?: Prisma.IntWithAggregatesFilter<"MonthlySubAttendance"> | number
   totalTimes?: Prisma.IntWithAggregatesFilter<"MonthlySubAttendance"> | number
   status?: Prisma.BoolWithAggregatesFilter<"MonthlySubAttendance"> | boolean
-  studentId?: Prisma.StringWithAggregatesFilter<"MonthlySubAttendance"> | string
-  subjectId?: Prisma.StringWithAggregatesFilter<"MonthlySubAttendance"> | string
-  monthlyClassAttendanceId?: Prisma.StringWithAggregatesFilter<"MonthlySubAttendance"> | string
+  studentId?: Prisma.UuidWithAggregatesFilter<"MonthlySubAttendance"> | string
+  subjectId?: Prisma.UuidWithAggregatesFilter<"MonthlySubAttendance"> | string
+  monthlyClassAttendanceId?: Prisma.UuidWithAggregatesFilter<"MonthlySubAttendance"> | string
 }
 
 export type MonthlySubAttendanceCreateInput = {
@@ -593,9 +593,9 @@ export type MonthlySubAttendanceScalarWhereInput = {
   times?: Prisma.IntFilter<"MonthlySubAttendance"> | number
   totalTimes?: Prisma.IntFilter<"MonthlySubAttendance"> | number
   status?: Prisma.BoolFilter<"MonthlySubAttendance"> | boolean
-  studentId?: Prisma.StringFilter<"MonthlySubAttendance"> | string
-  subjectId?: Prisma.StringFilter<"MonthlySubAttendance"> | string
-  monthlyClassAttendanceId?: Prisma.StringFilter<"MonthlySubAttendance"> | string
+  studentId?: Prisma.UuidFilter<"MonthlySubAttendance"> | string
+  subjectId?: Prisma.UuidFilter<"MonthlySubAttendance"> | string
+  monthlyClassAttendanceId?: Prisma.UuidFilter<"MonthlySubAttendance"> | string
 }
 
 export type MonthlySubAttendanceCreateWithoutSubjectInput = {

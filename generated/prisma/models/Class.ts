@@ -436,10 +436,6 @@ export type EnumYearFieldUpdateOperationsInput = {
   set?: $Enums.Year
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type ClassCreateNestedManyWithoutDepartmentInput = {
   create?: Prisma.XOR<Prisma.ClassCreateWithoutDepartmentInput, Prisma.ClassUncheckedCreateWithoutDepartmentInput> | Prisma.ClassCreateWithoutDepartmentInput[] | Prisma.ClassUncheckedCreateWithoutDepartmentInput[]
   connectOrCreate?: Prisma.ClassCreateOrConnectWithoutDepartmentInput | Prisma.ClassCreateOrConnectWithoutDepartmentInput[]
