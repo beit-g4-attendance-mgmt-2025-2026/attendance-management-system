@@ -1,6 +1,7 @@
+import { Role } from "@/generated/prisma/enums";
 import { z } from "zod";
 
-const LoginSchema = z.object({
+const CreateAdminSchema = z.object({
 	username: z
 		.string()
 		.min(3, { message: "Username must be at least 3 characters" })
@@ -13,8 +14,11 @@ const LoginSchema = z.object({
 	password: z
 		.string()
 		.min(8, { message: "Password must be at least 8 characters" }),
+	role: z.nativeEnum(Role).refine((role) => role === Role.ADMIN, {
+		message: "Role must be ADMIN",
+	}),
 });
 
-export type LoginSchemaType = z.infer<typeof LoginSchema>;
+export type CreateAdminSchemaType = z.infer<typeof CreateAdminSchema>;
 
-export default LoginSchema;
+export default CreateAdminSchema;
