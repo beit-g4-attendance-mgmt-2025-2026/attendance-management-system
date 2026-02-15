@@ -1,9 +1,9 @@
 import { handleErrorResponse, handleSuccessResponse } from "@/lib/response";
-import { CreateStudentSchema } from "@/lib/schema/CreateStudentSchema";
 import { NextRequest } from "next/server";
 import z from "zod";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/guard";
+import { CreateSubjectSchema } from "@/lib/schema/CreateSubjectSchema";
 
 const paramsSchema = z.object({
   id: z.string().uuid(),
@@ -21,16 +21,15 @@ export async function GET(
 
     const { user } = auth;
     if (user.role !== "HOD") {
-      throw new Error("You are not authorized to view students");
+      throw new Error("You are not authorized to view subjects");
     }
-
     const { id } = await params;
     const validatedId = paramsSchema.safeParse(id);
     if (!validatedId) {
       throw new Error("Invalid id format!");
     }
 
-    const isValid = await prisma.student.findFirst({
+    const isValid = await prisma.subject.findFirst({
       where: {
         id,
         departmentId: user.departmentId,
@@ -40,14 +39,15 @@ export async function GET(
     if (!isValid) {
       throw new Error("Unauthorized");
     }
-    const student = await prisma.student.findFirst({
+
+    const subject = await prisma.subject.findUnique({
       where: { id: id, departmentId: user.departmentId },
       include: { department: true, class: true },
     });
-    if (!student) {
-      throw new Error("Student not found or unauthorized!");
+    if (!subject) {
+      throw new Error("Subject not found!");
     }
-    return handleSuccessResponse(student);
+    return handleSuccessResponse(subject);
   } catch (e) {
     return handleErrorResponse(e);
   }
@@ -65,16 +65,15 @@ export async function DELETE(
 
     const { user } = auth;
     if (user.role !== "HOD") {
-      throw new Error("You are not authorized to delete students");
+      throw new Error("You are not authorized to delete subjects");
     }
-
     const { id } = await params;
     const validatedId = paramsSchema.safeParse(id);
     if (!validatedId) {
       throw new Error("Invalid id format!");
     }
 
-    const isValid = await prisma.student.findFirst({
+    const isValid = await prisma.subject.findFirst({
       where: {
         id,
         departmentId: user.departmentId,
@@ -84,14 +83,16 @@ export async function DELETE(
     if (!isValid) {
       throw new Error("Unauthorized");
     }
-    const student = await prisma.student.deleteMany({
+
+    const subject = await prisma.subject.delete({
       where: { id: id, departmentId: user.departmentId },
+      include: { department: true, class: true },
     });
 
-    if (!student.count) {
-      throw new Error("Student not found or unauthorized!");
+    if (!subject) {
+      throw new Error("Subject not found!");
     }
-    return handleSuccessResponse(student);
+    return handleSuccessResponse(subject);
   } catch (e) {
     return handleErrorResponse(e);
   }
@@ -109,7 +110,7 @@ export async function PUT(
 
     const { user } = auth;
     if (user.role !== "HOD") {
-      throw new Error("You are not authorized to update students");
+      throw new Error("You are not authorized to update subjects");
     }
 
     const { id } = await params;
@@ -118,7 +119,7 @@ export async function PUT(
       throw new Error("Invalid id format!");
     }
 
-    const isValid = await prisma.student.findFirst({
+    const isValid = await prisma.subject.findFirst({
       where: {
         id,
         departmentId: user.departmentId,
@@ -130,17 +131,18 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const validatedData = CreateStudentSchema.partial().parse(body);
+    const validatedData = CreateSubjectSchema.partial().parse(body);
 
-    const student = await prisma.student.updateMany({
+    const subject = await prisma.subject.update({
       where: { id: id, departmentId: user.departmentId },
       data: validatedData,
+      include: { department: true, class: true },
     });
 
-    if (!student) {
-      throw new Error("Student not found or unauthorized!");
+    if (!subject) {
+      throw new Error("Subject not found!");
     }
-    return handleSuccessResponse(student);
+    return handleSuccessResponse(subject);
   } catch (e) {
     return handleErrorResponse(e);
   }

@@ -1,9 +1,9 @@
 import { requireAuth } from "@/lib/guard";
 import { prisma } from "@/lib/prisma";
 import { handleErrorResponse, handleSuccessResponse } from "@/lib/response";
-import { CreateStudentSchema } from "@/lib/schema/CreateStudentSchema";
+import { CreateSubjectSchema } from "@/lib/schema/CreateSubjectSchema";
 import validateBody from "@/lib/validateBody";
-import type { NextRequest } from "next/server";
+import { NextRequest } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,28 +12,28 @@ export async function POST(request: NextRequest) {
 
     const { user } = auth;
     if (user.role !== "HOD") {
-      throw new Error("You are not authorized to create students");
+      throw new Error("You are not authorized to create subjects");
     }
 
     const body = await request.json();
-    const validatedData = validateBody(body, CreateStudentSchema);
+    const validatedData = validateBody(body, CreateSubjectSchema);
     const data = validatedData.data;
 
-    const existingStudent = await prisma.student.findFirst({
+    const existingSubject = await prisma.subject.findFirst({
       where: {
-        OR: [{ email: data.email }, { rollNo: data.rollNo }],
+        OR: [{ name: data.name }, { subCode: data.subCode }],
       },
-      select: { id: true, email: true, rollNo: true },
+      select: { id: true, name: true, subCode: true },
     });
 
-    if (existingStudent) {
-      if (existingStudent.email === data.email) {
-        throw new Error("Student email already exists");
+    if (existingSubject) {
+      if (existingSubject.name === data.name) {
+        throw new Error("Subject name is already exists");
       }
-      if (existingStudent.rollNo === data.rollNo) {
-        throw new Error("Student roll number already exists");
+      if (existingSubject.subCode === data.subCode) {
+        throw new Error("Subject code is already exists");
       }
-      throw new Error("Student already exists");
+      throw new Error("Subject already exists");
     }
 
     const classRecord = await prisma.class.findFirst({
@@ -43,20 +43,17 @@ export async function POST(request: NextRequest) {
       },
       select: { id: true },
     });
+
     if (!classRecord) {
       throw new Error("Class not found for your department");
     }
 
-    const student = await prisma.student.create({
+    const subject = await prisma.subject.create({
       data: {
         name: data.name,
-        rollNo: data.rollNo,
-        phoneNumber: data.phoneNumber,
-        gender: data.gender,
-        email: data.email,
-        year: data.year,
-        semester: data.semester,
+        subCode: data.subCode,
         departmentId: auth.user.departmentId,
+        userId: data.userId,
         classId: data.classId,
       },
       include: {
@@ -65,7 +62,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return handleSuccessResponse({ student }, 201);
+    return handleSuccessResponse({ subject }, 201);
   } catch (error: unknown) {
     return handleErrorResponse(error);
   }
@@ -78,20 +75,18 @@ export async function GET(request: NextRequest) {
 
     const { user } = auth;
     if (user.role !== "HOD") {
-      throw new Error("You are not authorized to view students");
+      throw new Error("You are not authorized to view subjects");
     }
 
-    const students = await prisma.student.findMany({
-      where: { departmentId: user.departmentId },
+    const subjects = await prisma.subject.findMany({
+      where: {
+        departmentId: user.departmentId,
+      },
       include: { department: true, class: true },
     });
 
-    return handleSuccessResponse({
-      students: students,
-      status: 200,
-    });
-  } catch (error: unknown) {
-    console.log("Error during get data:", error);
+    return handleSuccessResponse({ subjects: subjects, status: 200 });
+  } catch (error) {
     return handleErrorResponse(error);
   }
 }
