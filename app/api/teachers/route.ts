@@ -92,6 +92,16 @@ export async function POST(request: NextRequest) {
 			},
 		});
 
+		// If the created user is a HOD, assign them as the department HOD
+		if (role === "HOD" || role === Role.HOD) {
+			await prisma.department.update({
+				where: { id: department.id },
+				data: {
+					hod: { connect: { id: user.id } },
+				},
+			});
+		}
+
 		await sendWelcomeEmail(user.email, user.fullName);
 		const token = signAuthToken(user.id);
 		const response = handleSuccessResponse(toPublicUser(user), 201);

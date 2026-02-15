@@ -39,25 +39,30 @@ export async function PUT(
 
 		const { id } = params;
 
+		// fetch existing user
+		const existingUser = await prisma.user.findUnique({ where: { id } });
+		if (!existingUser) return handleErrorResponse("User not found");
+
 		const body = await request.json();
 		const validatedData = validateBody(body, UserEditSchema);
-		const data = validatedData.data;
+		const data = validatedData.data as any;
 
-		// Check uniqueness for username and email when provided
 		if (data.username) {
-			const existing = await prisma.user.findUnique({
+			const existing = await prisma.user.findFirst({
 				where: { username: data.username, NOT: { id } },
 			});
 			if (existing) throw new Error("Username already exists");
 		}
 		if (data.email) {
-			const existing = await prisma.user.findUnique({
+			const existing = await prisma.user.findFirst({
 				where: { email: data.email, NOT: { id } },
 			});
 			if (existing) throw new Error("Email already exists");
 		}
 
+		// Remove department-related fields - department cannot be edited
 		const updateData: any = { ...data };
+		delete updateData.departmentName;
 
 		const user = await prisma.user.update({
 			where: { id },
@@ -65,9 +70,9 @@ export async function PUT(
 			include: { department: true, class: true, subjects: true },
 		});
 
-		if (!user) throw new Error("User not found");
+		//! Note: Department and HOD status are not modified during teacher edit
 
-		return handleSuccessResponse({ user: toPublicUser(user) });
+		return handleSuccessResponse(toPublicUser(user));
 	} catch (error: unknown) {
 		return handleErrorResponse(error);
 	}
