@@ -10,8 +10,8 @@
  */
 export type * from './models/Admin'
 export type * from './models/User'
-export type * from './models/Class'
 export type * from './models/Department'
+export type * from './models/Class'
 export type * from './models/AcademicYear'
 export type * from './models/Student'
 export type * from './models/Subject'

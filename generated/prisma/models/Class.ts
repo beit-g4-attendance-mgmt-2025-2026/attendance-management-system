@@ -351,6 +351,16 @@ export type ClassNullableScalarRelationFilter = {
   isNot?: Prisma.ClassWhereInput | null
 }
 
+export type ClassListRelationFilter = {
+  every?: Prisma.ClassWhereInput
+  some?: Prisma.ClassWhereInput
+  none?: Prisma.ClassWhereInput
+}
+
+export type ClassOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
 export type ClassCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -379,16 +389,6 @@ export type ClassMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   academicYearId?: Prisma.SortOrder
-}
-
-export type ClassListRelationFilter = {
-  every?: Prisma.ClassWhereInput
-  some?: Prisma.ClassWhereInput
-  none?: Prisma.ClassWhereInput
-}
-
-export type ClassOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
 }
 
 export type ClassScalarRelationFilter = {
@@ -426,14 +426,6 @@ export type ClassUncheckedUpdateOneWithoutUserNestedInput = {
   delete?: Prisma.ClassWhereInput | boolean
   connect?: Prisma.ClassWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ClassUpdateToOneWithWhereWithoutUserInput, Prisma.ClassUpdateWithoutUserInput>, Prisma.ClassUncheckedUpdateWithoutUserInput>
-}
-
-export type EnumSemesterFieldUpdateOperationsInput = {
-  set?: $Enums.Semester
-}
-
-export type EnumYearFieldUpdateOperationsInput = {
-  set?: $Enums.Year
 }
 
 export type ClassCreateNestedManyWithoutDepartmentInput = {
@@ -476,6 +468,14 @@ export type ClassUncheckedUpdateManyWithoutDepartmentNestedInput = {
   update?: Prisma.ClassUpdateWithWhereUniqueWithoutDepartmentInput | Prisma.ClassUpdateWithWhereUniqueWithoutDepartmentInput[]
   updateMany?: Prisma.ClassUpdateManyWithWhereWithoutDepartmentInput | Prisma.ClassUpdateManyWithWhereWithoutDepartmentInput[]
   deleteMany?: Prisma.ClassScalarWhereInput | Prisma.ClassScalarWhereInput[]
+}
+
+export type EnumSemesterFieldUpdateOperationsInput = {
+  set?: $Enums.Semester
+}
+
+export type EnumYearFieldUpdateOperationsInput = {
+  set?: $Enums.Year
 }
 
 export type ClassCreateNestedManyWithoutAcademicYearInput = {

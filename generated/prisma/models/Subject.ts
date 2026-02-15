@@ -404,48 +404,6 @@ export type SubjectUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.SubjectScalarWhereInput | Prisma.SubjectScalarWhereInput[]
 }
 
-export type SubjectCreateNestedManyWithoutClassInput = {
-  create?: Prisma.XOR<Prisma.SubjectCreateWithoutClassInput, Prisma.SubjectUncheckedCreateWithoutClassInput> | Prisma.SubjectCreateWithoutClassInput[] | Prisma.SubjectUncheckedCreateWithoutClassInput[]
-  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutClassInput | Prisma.SubjectCreateOrConnectWithoutClassInput[]
-  createMany?: Prisma.SubjectCreateManyClassInputEnvelope
-  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-}
-
-export type SubjectUncheckedCreateNestedManyWithoutClassInput = {
-  create?: Prisma.XOR<Prisma.SubjectCreateWithoutClassInput, Prisma.SubjectUncheckedCreateWithoutClassInput> | Prisma.SubjectCreateWithoutClassInput[] | Prisma.SubjectUncheckedCreateWithoutClassInput[]
-  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutClassInput | Prisma.SubjectCreateOrConnectWithoutClassInput[]
-  createMany?: Prisma.SubjectCreateManyClassInputEnvelope
-  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-}
-
-export type SubjectUpdateManyWithoutClassNestedInput = {
-  create?: Prisma.XOR<Prisma.SubjectCreateWithoutClassInput, Prisma.SubjectUncheckedCreateWithoutClassInput> | Prisma.SubjectCreateWithoutClassInput[] | Prisma.SubjectUncheckedCreateWithoutClassInput[]
-  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutClassInput | Prisma.SubjectCreateOrConnectWithoutClassInput[]
-  upsert?: Prisma.SubjectUpsertWithWhereUniqueWithoutClassInput | Prisma.SubjectUpsertWithWhereUniqueWithoutClassInput[]
-  createMany?: Prisma.SubjectCreateManyClassInputEnvelope
-  set?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  disconnect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  delete?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  update?: Prisma.SubjectUpdateWithWhereUniqueWithoutClassInput | Prisma.SubjectUpdateWithWhereUniqueWithoutClassInput[]
-  updateMany?: Prisma.SubjectUpdateManyWithWhereWithoutClassInput | Prisma.SubjectUpdateManyWithWhereWithoutClassInput[]
-  deleteMany?: Prisma.SubjectScalarWhereInput | Prisma.SubjectScalarWhereInput[]
-}
-
-export type SubjectUncheckedUpdateManyWithoutClassNestedInput = {
-  create?: Prisma.XOR<Prisma.SubjectCreateWithoutClassInput, Prisma.SubjectUncheckedCreateWithoutClassInput> | Prisma.SubjectCreateWithoutClassInput[] | Prisma.SubjectUncheckedCreateWithoutClassInput[]
-  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutClassInput | Prisma.SubjectCreateOrConnectWithoutClassInput[]
-  upsert?: Prisma.SubjectUpsertWithWhereUniqueWithoutClassInput | Prisma.SubjectUpsertWithWhereUniqueWithoutClassInput[]
-  createMany?: Prisma.SubjectCreateManyClassInputEnvelope
-  set?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  disconnect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  delete?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  update?: Prisma.SubjectUpdateWithWhereUniqueWithoutClassInput | Prisma.SubjectUpdateWithWhereUniqueWithoutClassInput[]
-  updateMany?: Prisma.SubjectUpdateManyWithWhereWithoutClassInput | Prisma.SubjectUpdateManyWithWhereWithoutClassInput[]
-  deleteMany?: Prisma.SubjectScalarWhereInput | Prisma.SubjectScalarWhereInput[]
-}
-
 export type SubjectCreateNestedManyWithoutDepartmentInput = {
   create?: Prisma.XOR<Prisma.SubjectCreateWithoutDepartmentInput, Prisma.SubjectUncheckedCreateWithoutDepartmentInput> | Prisma.SubjectCreateWithoutDepartmentInput[] | Prisma.SubjectUncheckedCreateWithoutDepartmentInput[]
   connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutDepartmentInput | Prisma.SubjectCreateOrConnectWithoutDepartmentInput[]
@@ -485,6 +443,48 @@ export type SubjectUncheckedUpdateManyWithoutDepartmentNestedInput = {
   connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
   update?: Prisma.SubjectUpdateWithWhereUniqueWithoutDepartmentInput | Prisma.SubjectUpdateWithWhereUniqueWithoutDepartmentInput[]
   updateMany?: Prisma.SubjectUpdateManyWithWhereWithoutDepartmentInput | Prisma.SubjectUpdateManyWithWhereWithoutDepartmentInput[]
+  deleteMany?: Prisma.SubjectScalarWhereInput | Prisma.SubjectScalarWhereInput[]
+}
+
+export type SubjectCreateNestedManyWithoutClassInput = {
+  create?: Prisma.XOR<Prisma.SubjectCreateWithoutClassInput, Prisma.SubjectUncheckedCreateWithoutClassInput> | Prisma.SubjectCreateWithoutClassInput[] | Prisma.SubjectUncheckedCreateWithoutClassInput[]
+  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutClassInput | Prisma.SubjectCreateOrConnectWithoutClassInput[]
+  createMany?: Prisma.SubjectCreateManyClassInputEnvelope
+  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
+}
+
+export type SubjectUncheckedCreateNestedManyWithoutClassInput = {
+  create?: Prisma.XOR<Prisma.SubjectCreateWithoutClassInput, Prisma.SubjectUncheckedCreateWithoutClassInput> | Prisma.SubjectCreateWithoutClassInput[] | Prisma.SubjectUncheckedCreateWithoutClassInput[]
+  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutClassInput | Prisma.SubjectCreateOrConnectWithoutClassInput[]
+  createMany?: Prisma.SubjectCreateManyClassInputEnvelope
+  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
+}
+
+export type SubjectUpdateManyWithoutClassNestedInput = {
+  create?: Prisma.XOR<Prisma.SubjectCreateWithoutClassInput, Prisma.SubjectUncheckedCreateWithoutClassInput> | Prisma.SubjectCreateWithoutClassInput[] | Prisma.SubjectUncheckedCreateWithoutClassInput[]
+  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutClassInput | Prisma.SubjectCreateOrConnectWithoutClassInput[]
+  upsert?: Prisma.SubjectUpsertWithWhereUniqueWithoutClassInput | Prisma.SubjectUpsertWithWhereUniqueWithoutClassInput[]
+  createMany?: Prisma.SubjectCreateManyClassInputEnvelope
+  set?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
+  disconnect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
+  delete?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
+  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
+  update?: Prisma.SubjectUpdateWithWhereUniqueWithoutClassInput | Prisma.SubjectUpdateWithWhereUniqueWithoutClassInput[]
+  updateMany?: Prisma.SubjectUpdateManyWithWhereWithoutClassInput | Prisma.SubjectUpdateManyWithWhereWithoutClassInput[]
+  deleteMany?: Prisma.SubjectScalarWhereInput | Prisma.SubjectScalarWhereInput[]
+}
+
+export type SubjectUncheckedUpdateManyWithoutClassNestedInput = {
+  create?: Prisma.XOR<Prisma.SubjectCreateWithoutClassInput, Prisma.SubjectUncheckedCreateWithoutClassInput> | Prisma.SubjectCreateWithoutClassInput[] | Prisma.SubjectUncheckedCreateWithoutClassInput[]
+  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutClassInput | Prisma.SubjectCreateOrConnectWithoutClassInput[]
+  upsert?: Prisma.SubjectUpsertWithWhereUniqueWithoutClassInput | Prisma.SubjectUpsertWithWhereUniqueWithoutClassInput[]
+  createMany?: Prisma.SubjectCreateManyClassInputEnvelope
+  set?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
+  disconnect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
+  delete?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
+  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
+  update?: Prisma.SubjectUpdateWithWhereUniqueWithoutClassInput | Prisma.SubjectUpdateWithWhereUniqueWithoutClassInput[]
+  updateMany?: Prisma.SubjectUpdateManyWithWhereWithoutClassInput | Prisma.SubjectUpdateManyWithWhereWithoutClassInput[]
   deleteMany?: Prisma.SubjectScalarWhereInput | Prisma.SubjectScalarWhereInput[]
 }
 
@@ -574,52 +574,6 @@ export type SubjectScalarWhereInput = {
   classId?: Prisma.UuidFilter<"Subject"> | string
 }
 
-export type SubjectCreateWithoutClassInput = {
-  id?: string
-  name: string
-  subCode: string
-  department: Prisma.DepartmentCreateNestedOneWithoutSubjectsInput
-  user: Prisma.UserCreateNestedOneWithoutSubjectsInput
-  dailyAttendance?: Prisma.DailyAttendanceCreateNestedManyWithoutSubjectInput
-  monthlySubAttendance?: Prisma.MonthlySubAttendanceCreateNestedManyWithoutSubjectInput
-}
-
-export type SubjectUncheckedCreateWithoutClassInput = {
-  id?: string
-  name: string
-  subCode: string
-  departmentId: string
-  userId: string
-  dailyAttendance?: Prisma.DailyAttendanceUncheckedCreateNestedManyWithoutSubjectInput
-  monthlySubAttendance?: Prisma.MonthlySubAttendanceUncheckedCreateNestedManyWithoutSubjectInput
-}
-
-export type SubjectCreateOrConnectWithoutClassInput = {
-  where: Prisma.SubjectWhereUniqueInput
-  create: Prisma.XOR<Prisma.SubjectCreateWithoutClassInput, Prisma.SubjectUncheckedCreateWithoutClassInput>
-}
-
-export type SubjectCreateManyClassInputEnvelope = {
-  data: Prisma.SubjectCreateManyClassInput | Prisma.SubjectCreateManyClassInput[]
-  skipDuplicates?: boolean
-}
-
-export type SubjectUpsertWithWhereUniqueWithoutClassInput = {
-  where: Prisma.SubjectWhereUniqueInput
-  update: Prisma.XOR<Prisma.SubjectUpdateWithoutClassInput, Prisma.SubjectUncheckedUpdateWithoutClassInput>
-  create: Prisma.XOR<Prisma.SubjectCreateWithoutClassInput, Prisma.SubjectUncheckedCreateWithoutClassInput>
-}
-
-export type SubjectUpdateWithWhereUniqueWithoutClassInput = {
-  where: Prisma.SubjectWhereUniqueInput
-  data: Prisma.XOR<Prisma.SubjectUpdateWithoutClassInput, Prisma.SubjectUncheckedUpdateWithoutClassInput>
-}
-
-export type SubjectUpdateManyWithWhereWithoutClassInput = {
-  where: Prisma.SubjectScalarWhereInput
-  data: Prisma.XOR<Prisma.SubjectUpdateManyMutationInput, Prisma.SubjectUncheckedUpdateManyWithoutClassInput>
-}
-
 export type SubjectCreateWithoutDepartmentInput = {
   id?: string
   name: string
@@ -664,6 +618,52 @@ export type SubjectUpdateWithWhereUniqueWithoutDepartmentInput = {
 export type SubjectUpdateManyWithWhereWithoutDepartmentInput = {
   where: Prisma.SubjectScalarWhereInput
   data: Prisma.XOR<Prisma.SubjectUpdateManyMutationInput, Prisma.SubjectUncheckedUpdateManyWithoutDepartmentInput>
+}
+
+export type SubjectCreateWithoutClassInput = {
+  id?: string
+  name: string
+  subCode: string
+  department: Prisma.DepartmentCreateNestedOneWithoutSubjectsInput
+  user: Prisma.UserCreateNestedOneWithoutSubjectsInput
+  dailyAttendance?: Prisma.DailyAttendanceCreateNestedManyWithoutSubjectInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceCreateNestedManyWithoutSubjectInput
+}
+
+export type SubjectUncheckedCreateWithoutClassInput = {
+  id?: string
+  name: string
+  subCode: string
+  departmentId: string
+  userId: string
+  dailyAttendance?: Prisma.DailyAttendanceUncheckedCreateNestedManyWithoutSubjectInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUncheckedCreateNestedManyWithoutSubjectInput
+}
+
+export type SubjectCreateOrConnectWithoutClassInput = {
+  where: Prisma.SubjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.SubjectCreateWithoutClassInput, Prisma.SubjectUncheckedCreateWithoutClassInput>
+}
+
+export type SubjectCreateManyClassInputEnvelope = {
+  data: Prisma.SubjectCreateManyClassInput | Prisma.SubjectCreateManyClassInput[]
+  skipDuplicates?: boolean
+}
+
+export type SubjectUpsertWithWhereUniqueWithoutClassInput = {
+  where: Prisma.SubjectWhereUniqueInput
+  update: Prisma.XOR<Prisma.SubjectUpdateWithoutClassInput, Prisma.SubjectUncheckedUpdateWithoutClassInput>
+  create: Prisma.XOR<Prisma.SubjectCreateWithoutClassInput, Prisma.SubjectUncheckedCreateWithoutClassInput>
+}
+
+export type SubjectUpdateWithWhereUniqueWithoutClassInput = {
+  where: Prisma.SubjectWhereUniqueInput
+  data: Prisma.XOR<Prisma.SubjectUpdateWithoutClassInput, Prisma.SubjectUncheckedUpdateWithoutClassInput>
+}
+
+export type SubjectUpdateManyWithWhereWithoutClassInput = {
+  where: Prisma.SubjectScalarWhereInput
+  data: Prisma.XOR<Prisma.SubjectUpdateManyMutationInput, Prisma.SubjectUncheckedUpdateManyWithoutClassInput>
 }
 
 export type SubjectCreateWithoutDailyAttendanceInput = {
@@ -814,42 +814,6 @@ export type SubjectUncheckedUpdateManyWithoutUserInput = {
   classId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
-export type SubjectCreateManyClassInput = {
-  id?: string
-  name: string
-  subCode: string
-  departmentId: string
-  userId: string
-}
-
-export type SubjectUpdateWithoutClassInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  subCode?: Prisma.StringFieldUpdateOperationsInput | string
-  department?: Prisma.DepartmentUpdateOneRequiredWithoutSubjectsNestedInput
-  user?: Prisma.UserUpdateOneRequiredWithoutSubjectsNestedInput
-  dailyAttendance?: Prisma.DailyAttendanceUpdateManyWithoutSubjectNestedInput
-  monthlySubAttendance?: Prisma.MonthlySubAttendanceUpdateManyWithoutSubjectNestedInput
-}
-
-export type SubjectUncheckedUpdateWithoutClassInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  subCode?: Prisma.StringFieldUpdateOperationsInput | string
-  departmentId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  dailyAttendance?: Prisma.DailyAttendanceUncheckedUpdateManyWithoutSubjectNestedInput
-  monthlySubAttendance?: Prisma.MonthlySubAttendanceUncheckedUpdateManyWithoutSubjectNestedInput
-}
-
-export type SubjectUncheckedUpdateManyWithoutClassInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  subCode?: Prisma.StringFieldUpdateOperationsInput | string
-  departmentId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-}
-
 export type SubjectCreateManyDepartmentInput = {
   id?: string
   name: string
@@ -884,6 +848,42 @@ export type SubjectUncheckedUpdateManyWithoutDepartmentInput = {
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type SubjectCreateManyClassInput = {
+  id?: string
+  name: string
+  subCode: string
+  departmentId: string
+  userId: string
+}
+
+export type SubjectUpdateWithoutClassInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutSubjectsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutSubjectsNestedInput
+  dailyAttendance?: Prisma.DailyAttendanceUpdateManyWithoutSubjectNestedInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUpdateManyWithoutSubjectNestedInput
+}
+
+export type SubjectUncheckedUpdateWithoutClassInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  departmentId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  dailyAttendance?: Prisma.DailyAttendanceUncheckedUpdateManyWithoutSubjectNestedInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUncheckedUpdateManyWithoutSubjectNestedInput
+}
+
+export type SubjectUncheckedUpdateManyWithoutClassInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  departmentId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 

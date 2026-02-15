@@ -20,25 +20,15 @@ export type StudentModel = runtime.Types.Result.DefaultSelection<Prisma.$Student
 
 export type AggregateStudent = {
   _count: StudentCountAggregateOutputType | null
-  _avg: StudentAvgAggregateOutputType | null
-  _sum: StudentSumAggregateOutputType | null
   _min: StudentMinAggregateOutputType | null
   _max: StudentMaxAggregateOutputType | null
-}
-
-export type StudentAvgAggregateOutputType = {
-  phoneNumber: number | null
-}
-
-export type StudentSumAggregateOutputType = {
-  phoneNumber: number | null
 }
 
 export type StudentMinAggregateOutputType = {
   id: string | null
   name: string | null
   rollNo: string | null
-  phoneNumber: number | null
+  phoneNumber: string | null
   gender: $Enums.Gender | null
   email: string | null
   year: $Enums.Year | null
@@ -51,7 +41,7 @@ export type StudentMaxAggregateOutputType = {
   id: string | null
   name: string | null
   rollNo: string | null
-  phoneNumber: number | null
+  phoneNumber: string | null
   gender: $Enums.Gender | null
   email: string | null
   year: $Enums.Year | null
@@ -74,14 +64,6 @@ export type StudentCountAggregateOutputType = {
   _all: number
 }
 
-
-export type StudentAvgAggregateInputType = {
-  phoneNumber?: true
-}
-
-export type StudentSumAggregateInputType = {
-  phoneNumber?: true
-}
 
 export type StudentMinAggregateInputType = {
   id?: true
@@ -161,18 +143,6 @@ export type StudentAggregateArgs<ExtArgs extends runtime.Types.Extensions.Intern
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Select which fields to average
-  **/
-  _avg?: StudentAvgAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
-   * Select which fields to sum
-  **/
-  _sum?: StudentSumAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
    * Select which fields to find the minimum value
   **/
   _min?: StudentMinAggregateInputType
@@ -203,8 +173,6 @@ export type StudentGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   _count?: StudentCountAggregateInputType | true
-  _avg?: StudentAvgAggregateInputType
-  _sum?: StudentSumAggregateInputType
   _min?: StudentMinAggregateInputType
   _max?: StudentMaxAggregateInputType
 }
@@ -213,7 +181,7 @@ export type StudentGroupByOutputType = {
   id: string
   name: string
   rollNo: string
-  phoneNumber: number
+  phoneNumber: string
   gender: $Enums.Gender
   email: string
   year: $Enums.Year
@@ -221,8 +189,6 @@ export type StudentGroupByOutputType = {
   departmentId: string
   classId: string
   _count: StudentCountAggregateOutputType | null
-  _avg: StudentAvgAggregateOutputType | null
-  _sum: StudentSumAggregateOutputType | null
   _min: StudentMinAggregateOutputType | null
   _max: StudentMaxAggregateOutputType | null
 }
@@ -249,7 +215,7 @@ export type StudentWhereInput = {
   id?: Prisma.UuidFilter<"Student"> | string
   name?: Prisma.StringFilter<"Student"> | string
   rollNo?: Prisma.StringFilter<"Student"> | string
-  phoneNumber?: Prisma.IntFilter<"Student"> | number
+  phoneNumber?: Prisma.StringFilter<"Student"> | string
   gender?: Prisma.EnumGenderFilter<"Student"> | $Enums.Gender
   email?: Prisma.StringFilter<"Student"> | string
   year?: Prisma.EnumYearFilter<"Student"> | $Enums.Year
@@ -287,7 +253,7 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.StudentWhereInput[]
   NOT?: Prisma.StudentWhereInput | Prisma.StudentWhereInput[]
   name?: Prisma.StringFilter<"Student"> | string
-  phoneNumber?: Prisma.IntFilter<"Student"> | number
+  phoneNumber?: Prisma.StringFilter<"Student"> | string
   gender?: Prisma.EnumGenderFilter<"Student"> | $Enums.Gender
   year?: Prisma.EnumYearFilter<"Student"> | $Enums.Year
   semester?: Prisma.EnumSemesterFilter<"Student"> | $Enums.Semester
@@ -311,10 +277,8 @@ export type StudentOrderByWithAggregationInput = {
   departmentId?: Prisma.SortOrder
   classId?: Prisma.SortOrder
   _count?: Prisma.StudentCountOrderByAggregateInput
-  _avg?: Prisma.StudentAvgOrderByAggregateInput
   _max?: Prisma.StudentMaxOrderByAggregateInput
   _min?: Prisma.StudentMinOrderByAggregateInput
-  _sum?: Prisma.StudentSumOrderByAggregateInput
 }
 
 export type StudentScalarWhereWithAggregatesInput = {
@@ -324,7 +288,7 @@ export type StudentScalarWhereWithAggregatesInput = {
   id?: Prisma.UuidWithAggregatesFilter<"Student"> | string
   name?: Prisma.StringWithAggregatesFilter<"Student"> | string
   rollNo?: Prisma.StringWithAggregatesFilter<"Student"> | string
-  phoneNumber?: Prisma.IntWithAggregatesFilter<"Student"> | number
+  phoneNumber?: Prisma.StringWithAggregatesFilter<"Student"> | string
   gender?: Prisma.EnumGenderWithAggregatesFilter<"Student"> | $Enums.Gender
   email?: Prisma.StringWithAggregatesFilter<"Student"> | string
   year?: Prisma.EnumYearWithAggregatesFilter<"Student"> | $Enums.Year
@@ -337,7 +301,7 @@ export type StudentCreateInput = {
   id?: string
   name: string
   rollNo: string
-  phoneNumber: number
+  phoneNumber: string
   gender: $Enums.Gender
   email: string
   year: $Enums.Year
@@ -352,7 +316,7 @@ export type StudentUncheckedCreateInput = {
   id?: string
   name: string
   rollNo: string
-  phoneNumber: number
+  phoneNumber: string
   gender: $Enums.Gender
   email: string
   year: $Enums.Year
@@ -367,7 +331,7 @@ export type StudentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
   year?: Prisma.EnumYearFieldUpdateOperationsInput | $Enums.Year
@@ -382,7 +346,7 @@ export type StudentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
   year?: Prisma.EnumYearFieldUpdateOperationsInput | $Enums.Year
@@ -397,7 +361,7 @@ export type StudentCreateManyInput = {
   id?: string
   name: string
   rollNo: string
-  phoneNumber: number
+  phoneNumber: string
   gender: $Enums.Gender
   email: string
   year: $Enums.Year
@@ -410,7 +374,7 @@ export type StudentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
   year?: Prisma.EnumYearFieldUpdateOperationsInput | $Enums.Year
@@ -421,7 +385,7 @@ export type StudentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
   year?: Prisma.EnumYearFieldUpdateOperationsInput | $Enums.Year
@@ -453,10 +417,6 @@ export type StudentCountOrderByAggregateInput = {
   classId?: Prisma.SortOrder
 }
 
-export type StudentAvgOrderByAggregateInput = {
-  phoneNumber?: Prisma.SortOrder
-}
-
 export type StudentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -483,10 +443,6 @@ export type StudentMinOrderByAggregateInput = {
   classId?: Prisma.SortOrder
 }
 
-export type StudentSumOrderByAggregateInput = {
-  phoneNumber?: Prisma.SortOrder
-}
-
 export type StudentScalarRelationFilter = {
   is?: Prisma.StudentWhereInput
   isNot?: Prisma.StudentWhereInput
@@ -495,48 +451,6 @@ export type StudentScalarRelationFilter = {
 export type StudentNullableScalarRelationFilter = {
   is?: Prisma.StudentWhereInput | null
   isNot?: Prisma.StudentWhereInput | null
-}
-
-export type StudentCreateNestedManyWithoutClassInput = {
-  create?: Prisma.XOR<Prisma.StudentCreateWithoutClassInput, Prisma.StudentUncheckedCreateWithoutClassInput> | Prisma.StudentCreateWithoutClassInput[] | Prisma.StudentUncheckedCreateWithoutClassInput[]
-  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutClassInput | Prisma.StudentCreateOrConnectWithoutClassInput[]
-  createMany?: Prisma.StudentCreateManyClassInputEnvelope
-  connect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
-}
-
-export type StudentUncheckedCreateNestedManyWithoutClassInput = {
-  create?: Prisma.XOR<Prisma.StudentCreateWithoutClassInput, Prisma.StudentUncheckedCreateWithoutClassInput> | Prisma.StudentCreateWithoutClassInput[] | Prisma.StudentUncheckedCreateWithoutClassInput[]
-  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutClassInput | Prisma.StudentCreateOrConnectWithoutClassInput[]
-  createMany?: Prisma.StudentCreateManyClassInputEnvelope
-  connect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
-}
-
-export type StudentUpdateManyWithoutClassNestedInput = {
-  create?: Prisma.XOR<Prisma.StudentCreateWithoutClassInput, Prisma.StudentUncheckedCreateWithoutClassInput> | Prisma.StudentCreateWithoutClassInput[] | Prisma.StudentUncheckedCreateWithoutClassInput[]
-  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutClassInput | Prisma.StudentCreateOrConnectWithoutClassInput[]
-  upsert?: Prisma.StudentUpsertWithWhereUniqueWithoutClassInput | Prisma.StudentUpsertWithWhereUniqueWithoutClassInput[]
-  createMany?: Prisma.StudentCreateManyClassInputEnvelope
-  set?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
-  disconnect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
-  delete?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
-  connect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
-  update?: Prisma.StudentUpdateWithWhereUniqueWithoutClassInput | Prisma.StudentUpdateWithWhereUniqueWithoutClassInput[]
-  updateMany?: Prisma.StudentUpdateManyWithWhereWithoutClassInput | Prisma.StudentUpdateManyWithWhereWithoutClassInput[]
-  deleteMany?: Prisma.StudentScalarWhereInput | Prisma.StudentScalarWhereInput[]
-}
-
-export type StudentUncheckedUpdateManyWithoutClassNestedInput = {
-  create?: Prisma.XOR<Prisma.StudentCreateWithoutClassInput, Prisma.StudentUncheckedCreateWithoutClassInput> | Prisma.StudentCreateWithoutClassInput[] | Prisma.StudentUncheckedCreateWithoutClassInput[]
-  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutClassInput | Prisma.StudentCreateOrConnectWithoutClassInput[]
-  upsert?: Prisma.StudentUpsertWithWhereUniqueWithoutClassInput | Prisma.StudentUpsertWithWhereUniqueWithoutClassInput[]
-  createMany?: Prisma.StudentCreateManyClassInputEnvelope
-  set?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
-  disconnect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
-  delete?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
-  connect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
-  update?: Prisma.StudentUpdateWithWhereUniqueWithoutClassInput | Prisma.StudentUpdateWithWhereUniqueWithoutClassInput[]
-  updateMany?: Prisma.StudentUpdateManyWithWhereWithoutClassInput | Prisma.StudentUpdateManyWithWhereWithoutClassInput[]
-  deleteMany?: Prisma.StudentScalarWhereInput | Prisma.StudentScalarWhereInput[]
 }
 
 export type StudentCreateNestedManyWithoutDepartmentInput = {
@@ -581,12 +495,46 @@ export type StudentUncheckedUpdateManyWithoutDepartmentNestedInput = {
   deleteMany?: Prisma.StudentScalarWhereInput | Prisma.StudentScalarWhereInput[]
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type StudentCreateNestedManyWithoutClassInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutClassInput, Prisma.StudentUncheckedCreateWithoutClassInput> | Prisma.StudentCreateWithoutClassInput[] | Prisma.StudentUncheckedCreateWithoutClassInput[]
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutClassInput | Prisma.StudentCreateOrConnectWithoutClassInput[]
+  createMany?: Prisma.StudentCreateManyClassInputEnvelope
+  connect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+}
+
+export type StudentUncheckedCreateNestedManyWithoutClassInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutClassInput, Prisma.StudentUncheckedCreateWithoutClassInput> | Prisma.StudentCreateWithoutClassInput[] | Prisma.StudentUncheckedCreateWithoutClassInput[]
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutClassInput | Prisma.StudentCreateOrConnectWithoutClassInput[]
+  createMany?: Prisma.StudentCreateManyClassInputEnvelope
+  connect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+}
+
+export type StudentUpdateManyWithoutClassNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutClassInput, Prisma.StudentUncheckedCreateWithoutClassInput> | Prisma.StudentCreateWithoutClassInput[] | Prisma.StudentUncheckedCreateWithoutClassInput[]
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutClassInput | Prisma.StudentCreateOrConnectWithoutClassInput[]
+  upsert?: Prisma.StudentUpsertWithWhereUniqueWithoutClassInput | Prisma.StudentUpsertWithWhereUniqueWithoutClassInput[]
+  createMany?: Prisma.StudentCreateManyClassInputEnvelope
+  set?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  disconnect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  delete?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  connect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  update?: Prisma.StudentUpdateWithWhereUniqueWithoutClassInput | Prisma.StudentUpdateWithWhereUniqueWithoutClassInput[]
+  updateMany?: Prisma.StudentUpdateManyWithWhereWithoutClassInput | Prisma.StudentUpdateManyWithWhereWithoutClassInput[]
+  deleteMany?: Prisma.StudentScalarWhereInput | Prisma.StudentScalarWhereInput[]
+}
+
+export type StudentUncheckedUpdateManyWithoutClassNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutClassInput, Prisma.StudentUncheckedCreateWithoutClassInput> | Prisma.StudentCreateWithoutClassInput[] | Prisma.StudentUncheckedCreateWithoutClassInput[]
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutClassInput | Prisma.StudentCreateOrConnectWithoutClassInput[]
+  upsert?: Prisma.StudentUpsertWithWhereUniqueWithoutClassInput | Prisma.StudentUpsertWithWhereUniqueWithoutClassInput[]
+  createMany?: Prisma.StudentCreateManyClassInputEnvelope
+  set?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  disconnect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  delete?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  connect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  update?: Prisma.StudentUpdateWithWhereUniqueWithoutClassInput | Prisma.StudentUpdateWithWhereUniqueWithoutClassInput[]
+  updateMany?: Prisma.StudentUpdateManyWithWhereWithoutClassInput | Prisma.StudentUpdateManyWithWhereWithoutClassInput[]
+  deleteMany?: Prisma.StudentScalarWhereInput | Prisma.StudentScalarWhereInput[]
 }
 
 export type StudentCreateNestedOneWithoutDailyAttendanceInput = {
@@ -619,81 +567,11 @@ export type StudentUpdateOneWithoutMonthlySubAttendanceNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.StudentUpdateToOneWithWhereWithoutMonthlySubAttendanceInput, Prisma.StudentUpdateWithoutMonthlySubAttendanceInput>, Prisma.StudentUncheckedUpdateWithoutMonthlySubAttendanceInput>
 }
 
-export type StudentCreateWithoutClassInput = {
-  id?: string
-  name: string
-  rollNo: string
-  phoneNumber: number
-  gender: $Enums.Gender
-  email: string
-  year: $Enums.Year
-  semester: $Enums.Semester
-  department: Prisma.DepartmentCreateNestedOneWithoutStudentsInput
-  dailyAttendance?: Prisma.DailyAttendanceCreateNestedManyWithoutStudentInput
-  monthlySubAttendance?: Prisma.MonthlySubAttendanceCreateNestedManyWithoutStudentInput
-}
-
-export type StudentUncheckedCreateWithoutClassInput = {
-  id?: string
-  name: string
-  rollNo: string
-  phoneNumber: number
-  gender: $Enums.Gender
-  email: string
-  year: $Enums.Year
-  semester: $Enums.Semester
-  departmentId: string
-  dailyAttendance?: Prisma.DailyAttendanceUncheckedCreateNestedManyWithoutStudentInput
-  monthlySubAttendance?: Prisma.MonthlySubAttendanceUncheckedCreateNestedManyWithoutStudentInput
-}
-
-export type StudentCreateOrConnectWithoutClassInput = {
-  where: Prisma.StudentWhereUniqueInput
-  create: Prisma.XOR<Prisma.StudentCreateWithoutClassInput, Prisma.StudentUncheckedCreateWithoutClassInput>
-}
-
-export type StudentCreateManyClassInputEnvelope = {
-  data: Prisma.StudentCreateManyClassInput | Prisma.StudentCreateManyClassInput[]
-  skipDuplicates?: boolean
-}
-
-export type StudentUpsertWithWhereUniqueWithoutClassInput = {
-  where: Prisma.StudentWhereUniqueInput
-  update: Prisma.XOR<Prisma.StudentUpdateWithoutClassInput, Prisma.StudentUncheckedUpdateWithoutClassInput>
-  create: Prisma.XOR<Prisma.StudentCreateWithoutClassInput, Prisma.StudentUncheckedCreateWithoutClassInput>
-}
-
-export type StudentUpdateWithWhereUniqueWithoutClassInput = {
-  where: Prisma.StudentWhereUniqueInput
-  data: Prisma.XOR<Prisma.StudentUpdateWithoutClassInput, Prisma.StudentUncheckedUpdateWithoutClassInput>
-}
-
-export type StudentUpdateManyWithWhereWithoutClassInput = {
-  where: Prisma.StudentScalarWhereInput
-  data: Prisma.XOR<Prisma.StudentUpdateManyMutationInput, Prisma.StudentUncheckedUpdateManyWithoutClassInput>
-}
-
-export type StudentScalarWhereInput = {
-  AND?: Prisma.StudentScalarWhereInput | Prisma.StudentScalarWhereInput[]
-  OR?: Prisma.StudentScalarWhereInput[]
-  NOT?: Prisma.StudentScalarWhereInput | Prisma.StudentScalarWhereInput[]
-  id?: Prisma.UuidFilter<"Student"> | string
-  name?: Prisma.StringFilter<"Student"> | string
-  rollNo?: Prisma.StringFilter<"Student"> | string
-  phoneNumber?: Prisma.IntFilter<"Student"> | number
-  gender?: Prisma.EnumGenderFilter<"Student"> | $Enums.Gender
-  email?: Prisma.StringFilter<"Student"> | string
-  year?: Prisma.EnumYearFilter<"Student"> | $Enums.Year
-  semester?: Prisma.EnumSemesterFilter<"Student"> | $Enums.Semester
-  departmentId?: Prisma.UuidFilter<"Student"> | string
-  classId?: Prisma.UuidFilter<"Student"> | string
-}
-
 export type StudentCreateWithoutDepartmentInput = {
   id?: string
   name: string
   rollNo: string
-  phoneNumber: number
+  phoneNumber: string
   gender: $Enums.Gender
   email: string
   year: $Enums.Year
@@ -707,7 +585,7 @@ export type StudentUncheckedCreateWithoutDepartmentInput = {
   id?: string
   name: string
   rollNo: string
-  phoneNumber: number
+  phoneNumber: string
   gender: $Enums.Gender
   email: string
   year: $Enums.Year
@@ -743,11 +621,81 @@ export type StudentUpdateManyWithWhereWithoutDepartmentInput = {
   data: Prisma.XOR<Prisma.StudentUpdateManyMutationInput, Prisma.StudentUncheckedUpdateManyWithoutDepartmentInput>
 }
 
+export type StudentScalarWhereInput = {
+  AND?: Prisma.StudentScalarWhereInput | Prisma.StudentScalarWhereInput[]
+  OR?: Prisma.StudentScalarWhereInput[]
+  NOT?: Prisma.StudentScalarWhereInput | Prisma.StudentScalarWhereInput[]
+  id?: Prisma.UuidFilter<"Student"> | string
+  name?: Prisma.StringFilter<"Student"> | string
+  rollNo?: Prisma.StringFilter<"Student"> | string
+  phoneNumber?: Prisma.StringFilter<"Student"> | string
+  gender?: Prisma.EnumGenderFilter<"Student"> | $Enums.Gender
+  email?: Prisma.StringFilter<"Student"> | string
+  year?: Prisma.EnumYearFilter<"Student"> | $Enums.Year
+  semester?: Prisma.EnumSemesterFilter<"Student"> | $Enums.Semester
+  departmentId?: Prisma.UuidFilter<"Student"> | string
+  classId?: Prisma.UuidFilter<"Student"> | string
+}
+
+export type StudentCreateWithoutClassInput = {
+  id?: string
+  name: string
+  rollNo: string
+  phoneNumber: string
+  gender: $Enums.Gender
+  email: string
+  year: $Enums.Year
+  semester: $Enums.Semester
+  department: Prisma.DepartmentCreateNestedOneWithoutStudentsInput
+  dailyAttendance?: Prisma.DailyAttendanceCreateNestedManyWithoutStudentInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceCreateNestedManyWithoutStudentInput
+}
+
+export type StudentUncheckedCreateWithoutClassInput = {
+  id?: string
+  name: string
+  rollNo: string
+  phoneNumber: string
+  gender: $Enums.Gender
+  email: string
+  year: $Enums.Year
+  semester: $Enums.Semester
+  departmentId: string
+  dailyAttendance?: Prisma.DailyAttendanceUncheckedCreateNestedManyWithoutStudentInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUncheckedCreateNestedManyWithoutStudentInput
+}
+
+export type StudentCreateOrConnectWithoutClassInput = {
+  where: Prisma.StudentWhereUniqueInput
+  create: Prisma.XOR<Prisma.StudentCreateWithoutClassInput, Prisma.StudentUncheckedCreateWithoutClassInput>
+}
+
+export type StudentCreateManyClassInputEnvelope = {
+  data: Prisma.StudentCreateManyClassInput | Prisma.StudentCreateManyClassInput[]
+  skipDuplicates?: boolean
+}
+
+export type StudentUpsertWithWhereUniqueWithoutClassInput = {
+  where: Prisma.StudentWhereUniqueInput
+  update: Prisma.XOR<Prisma.StudentUpdateWithoutClassInput, Prisma.StudentUncheckedUpdateWithoutClassInput>
+  create: Prisma.XOR<Prisma.StudentCreateWithoutClassInput, Prisma.StudentUncheckedCreateWithoutClassInput>
+}
+
+export type StudentUpdateWithWhereUniqueWithoutClassInput = {
+  where: Prisma.StudentWhereUniqueInput
+  data: Prisma.XOR<Prisma.StudentUpdateWithoutClassInput, Prisma.StudentUncheckedUpdateWithoutClassInput>
+}
+
+export type StudentUpdateManyWithWhereWithoutClassInput = {
+  where: Prisma.StudentScalarWhereInput
+  data: Prisma.XOR<Prisma.StudentUpdateManyMutationInput, Prisma.StudentUncheckedUpdateManyWithoutClassInput>
+}
+
 export type StudentCreateWithoutDailyAttendanceInput = {
   id?: string
   name: string
   rollNo: string
-  phoneNumber: number
+  phoneNumber: string
   gender: $Enums.Gender
   email: string
   year: $Enums.Year
@@ -761,7 +709,7 @@ export type StudentUncheckedCreateWithoutDailyAttendanceInput = {
   id?: string
   name: string
   rollNo: string
-  phoneNumber: number
+  phoneNumber: string
   gender: $Enums.Gender
   email: string
   year: $Enums.Year
@@ -791,7 +739,7 @@ export type StudentUpdateWithoutDailyAttendanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
   year?: Prisma.EnumYearFieldUpdateOperationsInput | $Enums.Year
@@ -805,7 +753,7 @@ export type StudentUncheckedUpdateWithoutDailyAttendanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
   year?: Prisma.EnumYearFieldUpdateOperationsInput | $Enums.Year
@@ -819,7 +767,7 @@ export type StudentCreateWithoutMonthlySubAttendanceInput = {
   id?: string
   name: string
   rollNo: string
-  phoneNumber: number
+  phoneNumber: string
   gender: $Enums.Gender
   email: string
   year: $Enums.Year
@@ -833,7 +781,7 @@ export type StudentUncheckedCreateWithoutMonthlySubAttendanceInput = {
   id?: string
   name: string
   rollNo: string
-  phoneNumber: number
+  phoneNumber: string
   gender: $Enums.Gender
   email: string
   year: $Enums.Year
@@ -863,7 +811,7 @@ export type StudentUpdateWithoutMonthlySubAttendanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
   year?: Prisma.EnumYearFieldUpdateOperationsInput | $Enums.Year
@@ -877,7 +825,7 @@ export type StudentUncheckedUpdateWithoutMonthlySubAttendanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
   year?: Prisma.EnumYearFieldUpdateOperationsInput | $Enums.Year
@@ -887,63 +835,11 @@ export type StudentUncheckedUpdateWithoutMonthlySubAttendanceInput = {
   dailyAttendance?: Prisma.DailyAttendanceUncheckedUpdateManyWithoutStudentNestedInput
 }
 
-export type StudentCreateManyClassInput = {
-  id?: string
-  name: string
-  rollNo: string
-  phoneNumber: number
-  gender: $Enums.Gender
-  email: string
-  year: $Enums.Year
-  semester: $Enums.Semester
-  departmentId: string
-}
-
-export type StudentUpdateWithoutClassInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  rollNo?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneNumber?: Prisma.IntFieldUpdateOperationsInput | number
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  year?: Prisma.EnumYearFieldUpdateOperationsInput | $Enums.Year
-  semester?: Prisma.EnumSemesterFieldUpdateOperationsInput | $Enums.Semester
-  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentsNestedInput
-  dailyAttendance?: Prisma.DailyAttendanceUpdateManyWithoutStudentNestedInput
-  monthlySubAttendance?: Prisma.MonthlySubAttendanceUpdateManyWithoutStudentNestedInput
-}
-
-export type StudentUncheckedUpdateWithoutClassInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  rollNo?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneNumber?: Prisma.IntFieldUpdateOperationsInput | number
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  year?: Prisma.EnumYearFieldUpdateOperationsInput | $Enums.Year
-  semester?: Prisma.EnumSemesterFieldUpdateOperationsInput | $Enums.Semester
-  departmentId?: Prisma.StringFieldUpdateOperationsInput | string
-  dailyAttendance?: Prisma.DailyAttendanceUncheckedUpdateManyWithoutStudentNestedInput
-  monthlySubAttendance?: Prisma.MonthlySubAttendanceUncheckedUpdateManyWithoutStudentNestedInput
-}
-
-export type StudentUncheckedUpdateManyWithoutClassInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  rollNo?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneNumber?: Prisma.IntFieldUpdateOperationsInput | number
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  year?: Prisma.EnumYearFieldUpdateOperationsInput | $Enums.Year
-  semester?: Prisma.EnumSemesterFieldUpdateOperationsInput | $Enums.Semester
-  departmentId?: Prisma.StringFieldUpdateOperationsInput | string
-}
-
 export type StudentCreateManyDepartmentInput = {
   id?: string
   name: string
   rollNo: string
-  phoneNumber: number
+  phoneNumber: string
   gender: $Enums.Gender
   email: string
   year: $Enums.Year
@@ -955,7 +851,7 @@ export type StudentUpdateWithoutDepartmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
   year?: Prisma.EnumYearFieldUpdateOperationsInput | $Enums.Year
@@ -969,7 +865,7 @@ export type StudentUncheckedUpdateWithoutDepartmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
   year?: Prisma.EnumYearFieldUpdateOperationsInput | $Enums.Year
@@ -983,12 +879,64 @@ export type StudentUncheckedUpdateManyWithoutDepartmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneNumber?: Prisma.IntFieldUpdateOperationsInput | number
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
   year?: Prisma.EnumYearFieldUpdateOperationsInput | $Enums.Year
   semester?: Prisma.EnumSemesterFieldUpdateOperationsInput | $Enums.Semester
   classId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type StudentCreateManyClassInput = {
+  id?: string
+  name: string
+  rollNo: string
+  phoneNumber: string
+  gender: $Enums.Gender
+  email: string
+  year: $Enums.Year
+  semester: $Enums.Semester
+  departmentId: string
+}
+
+export type StudentUpdateWithoutClassInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  rollNo?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  year?: Prisma.EnumYearFieldUpdateOperationsInput | $Enums.Year
+  semester?: Prisma.EnumSemesterFieldUpdateOperationsInput | $Enums.Semester
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentsNestedInput
+  dailyAttendance?: Prisma.DailyAttendanceUpdateManyWithoutStudentNestedInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUpdateManyWithoutStudentNestedInput
+}
+
+export type StudentUncheckedUpdateWithoutClassInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  rollNo?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  year?: Prisma.EnumYearFieldUpdateOperationsInput | $Enums.Year
+  semester?: Prisma.EnumSemesterFieldUpdateOperationsInput | $Enums.Semester
+  departmentId?: Prisma.StringFieldUpdateOperationsInput | string
+  dailyAttendance?: Prisma.DailyAttendanceUncheckedUpdateManyWithoutStudentNestedInput
+  monthlySubAttendance?: Prisma.MonthlySubAttendanceUncheckedUpdateManyWithoutStudentNestedInput
+}
+
+export type StudentUncheckedUpdateManyWithoutClassInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  rollNo?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  year?: Prisma.EnumYearFieldUpdateOperationsInput | $Enums.Year
+  semester?: Prisma.EnumSemesterFieldUpdateOperationsInput | $Enums.Semester
+  departmentId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -1121,7 +1069,7 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     id: string
     name: string
     rollNo: string
-    phoneNumber: number
+    phoneNumber: string
     gender: $Enums.Gender
     email: string
     year: $Enums.Year
@@ -1558,7 +1506,7 @@ export interface StudentFieldRefs {
   readonly id: Prisma.FieldRef<"Student", 'String'>
   readonly name: Prisma.FieldRef<"Student", 'String'>
   readonly rollNo: Prisma.FieldRef<"Student", 'String'>
-  readonly phoneNumber: Prisma.FieldRef<"Student", 'Int'>
+  readonly phoneNumber: Prisma.FieldRef<"Student", 'String'>
   readonly gender: Prisma.FieldRef<"Student", 'Gender'>
   readonly email: Prisma.FieldRef<"Student", 'String'>
   readonly year: Prisma.FieldRef<"Student", 'Year'>
