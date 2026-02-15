@@ -43,22 +43,31 @@ export async function PUT(
 		const validatedData = validateBody(body, UserEditSchema);
 		const data = validatedData.data;
 
+		// Check uniqueness for username and email when provided
+		if (data.username) {
+			const existing = await prisma.user.findUnique({
+				where: { username: data.username, NOT: { id } },
+			});
+			if (existing) throw new Error("Username already exists");
+		}
+		if (data.email) {
+			const existing = await prisma.user.findUnique({
+				where: { email: data.email, NOT: { id } },
+			});
+			if (existing) throw new Error("Email already exists");
+		}
+
+		const updateData: any = { ...data };
+
 		const user = await prisma.user.update({
-			where: {
-				id: id,
-			},
-			data: {
-				...data,
-				department: data.departmentId
-					? {
-							connect: { id: data.departmentId },
-						}
-					: undefined,
-			},
+			where: { id },
+			data: updateData,
+			include: { department: true, class: true, subjects: true },
 		});
+
 		if (!user) throw new Error("User not found");
 
-		return handleSuccessResponse(toPublicUser(user));
+		return handleSuccessResponse({ user: toPublicUser(user) });
 	} catch (error: unknown) {
 		return handleErrorResponse(error);
 	}

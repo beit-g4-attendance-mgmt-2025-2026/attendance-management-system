@@ -1,6 +1,5 @@
 import Image from "next/image";
-import { LoginForm } from "../components/LoginForm";
-
+import { LoginForm } from "../../components/LoginForm";
 const page = () => {
 	return (
 		<div className="relative min-h-svh w-full flex items-center justify-center p-6 md:p-10">
@@ -28,7 +27,7 @@ const page = () => {
 
 			{/* Login Form Container */}
 			<div className="w-full max-w-sm">
-				<LoginForm url="http://localhost:3000/api/login" />
+				<LoginForm url="http://localhost:3000/api/auth/admin/login" />
 			</div>
 		</div>
 	);
