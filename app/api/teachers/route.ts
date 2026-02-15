@@ -12,17 +12,23 @@ import { setAuthCookie, signAuthToken } from "@/lib/jwt";
 import { hashToken } from "../../../lib/password";
 
 export async function GET(request: NextRequest) {
-	const auth = await requireAuth(request);
-	if ("response" in auth) return auth.response;
+	try {
+		// const auth = await requireAuth(request);
+		// if ("response" in auth) return auth.response;
 
-	const users = await prisma.user.findMany({
-		include: { department: true, class: true, subjects: true },
-	});
+		const users = await prisma.user.findMany({
+			include: { department: true, class: true, subjects: true },
+		});
 
-	return handleSuccessResponse({
-		users: users.map(toPublicUser),
-		status: 200,
-	});
+		if (!users) throw new Error("No users found");
+
+		return handleSuccessResponse({
+			users: users.map(toPublicUser),
+			status: 200,
+		});
+	} catch (error: unknown) {
+		return handleErrorResponse(error);
+	}
 }
 
 export async function POST(request: NextRequest) {
