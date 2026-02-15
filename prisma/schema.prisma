@@ -64,25 +64,48 @@ model Admin {
 }
 
 model User {
-  id           String      @id @default(uuid()) @db.Uuid
-  username     String      @unique
+  id           String   @id @default(uuid()) @db.Uuid
+  username     String   @unique
   password     String
-  resetPasswordToken  String?
-  resetPasswordExpireAt   DateTime?
+  resetPasswordToken    String?
+  resetPasswordExpireAt DateTime?
   fullName     String
   role         Role
   gender       Gender
   email        String   @unique
   phoneNumber  String
 
-  departmentId String      @db.Uuid
-  department   Department @relation(fields: [departmentId], references: [id])
+  // Belongs to one department
+  departmentId String   @db.Uuid
+  department   Department @relation("DepartmentUsers", fields: [departmentId], references: [id])
+
+  // If this user is a HOD, this will point to that department
+  hod        Department? @relation("DepartmentHod")
 
   class        Class?
-
   subjects     Subject[]
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+model Department {
+  id       String @id @default(uuid()) @db.Uuid
+  name     String
+  symbol   String
+  logo     String?
+
+  // One HOD per department
+  hod      User?  @relation("DepartmentHod", fields: [hodId], references: [id])
+  hodId    String? @unique @db.Uuid
+
+  // Many users per department
+  users    User[] @relation("DepartmentUsers")
+
+  classes   Class[]
+  students  Student[]
+  subjects  Subject[]
+
+  createdAt DateTime @default(now())
 }
 
 model Class {
@@ -105,20 +128,6 @@ model Class {
   monthlyClassAttendance  MonthlyClassAttendance[]
 }
 
-model Department {
-  id       String @id @default(uuid()) @db.Uuid
-  name     String
-  symbol   String
-  logo     String
-
-  users User[]
-  classes      Class[]
-  students Student[]
-  subjects     Subject[]
-
-  createdAt DateTime @default(now())
-
-}
 
 model AcademicYear {
   id        String   @id @default(uuid()) @db.Uuid
@@ -136,7 +145,7 @@ model Student {
   id          String   @id @default(uuid()) @db.Uuid
   name        String
   rollNo      String  @unique
-  phoneNumber Int
+  phoneNumber String
   gender      Gender
   email       String  @unique
   year        Year
