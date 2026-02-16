@@ -18,3 +18,11 @@ export const PASSWORD_RESET_SUCCESS_TEMPLATE = `
     <p>If this wasn’t you, please contact support immediately.</p>
   </div>
 `;
+
+export const WELCOME_TEMPLATE = `
+  <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #1b1f24;">
+    <h2>Welcome, {name}!</h2>
+    <p>Thanks for joining us. We're excited to have you on board.</p>
+    <p>If you have any questions, reply to this email and we'll help.</p>
+  </div>
+`;

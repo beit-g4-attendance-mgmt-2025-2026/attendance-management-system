@@ -29,10 +29,11 @@ import { useRouter } from "next/navigation";
 import fetchHandler from "@/lib/fetchHandler";
 import { toast } from "sonner";
 
-export function LoginForm({
-	className,
-	...props
-}: React.ComponentProps<"div">) {
+type LoginFormProps = React.ComponentProps<"div"> & {
+	url: string;
+};
+
+export function LoginForm({ url, className, ...props }: LoginFormProps) {
 	const [error, setError] = useState<string | null>(null);
 	const router = useRouter();
 	const [showPassword, setShowPassword] = useState(false);
@@ -45,7 +46,7 @@ export function LoginForm({
 	});
 
 	async function onSubmit(values: z.infer<typeof LoginSchema>) {
-		const res = await fetchHandler("http://localhost:3000/api/auth/login", {
+		const res = await fetchHandler(url, {
 			method: "POST",
 			body: JSON.stringify(values),
 		});

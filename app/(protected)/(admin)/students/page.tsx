@@ -12,7 +12,7 @@ import StudentForm from "./components/StudentForm";
 
 const page = () => {
 	const [selectedStudent, setSelectedStudent] = useState<Student | null>(
-		null
+		null,
 	);
 
 	return (

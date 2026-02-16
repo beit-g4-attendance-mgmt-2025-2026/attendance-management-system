@@ -1,22 +1,23 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hashPassword, hashToken } from "@/lib/password";
-import { sendResetSuccessEmail } from "@/lib/email/mail";
 import { handleErrorResponse, handleSuccessResponse } from "@/lib/response";
 import { toPublicUser } from "@/lib/user";
+import { setAuthCookie, signAuthToken } from "@/lib/jwt";
+import { sendResetSuccessEmailMailtrap } from "@/lib/email/mailtrap/email";
 
 export async function POST(request: NextRequest) {
 	try {
 		const body = await request.json();
 		const { password } = body;
 		const { searchParams } = new URL(request.url);
-		const token = searchParams.get("token");
+		const resetToken = searchParams.get("token");
 
-		if (!token) {
+		if (!resetToken) {
 			throw new Error("Invalid or missing token");
 		}
 
-		const tokenHash = hashToken(token);
+		const tokenHash = hashToken(resetToken);
 		let user = await prisma.user.findFirst({
 			where: {
 				resetPasswordToken: tokenHash,
@@ -37,9 +38,13 @@ export async function POST(request: NextRequest) {
 			},
 		});
 
-		await sendResetSuccessEmail(user.email);
+		await sendResetSuccessEmailMailtrap(user.email);
 
-		return handleSuccessResponse(toPublicUser(user));
+		const token = signAuthToken(user.id);
+		const response = handleSuccessResponse(toPublicUser(user), 200);
+		setAuthCookie(response, token);
+
+		return response;
 	} catch (error: unknown) {
 		return handleErrorResponse(error);
 	}
