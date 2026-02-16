@@ -1,4 +1,3 @@
-import { sendPasswordResetEmail, sendWelcomeEmail } from "@/lib/email/mail";
 import { requireAuth } from "@/lib/guard";
 import { generateResetToken, hashPassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";
@@ -10,6 +9,10 @@ import { Gender, Role } from "@/generated/prisma/client";
 import RegisterSchema from "@/lib/schema/RegisterSchema";
 import { setAuthCookie, signAuthToken } from "@/lib/jwt";
 import { hashToken } from "../../../lib/password";
+import {
+	sendPasswordResetEmailMailtrap,
+	sendWelcomeEmailMailtrap,
+} from "@/lib/email/mailtrap/email";
 
 export async function GET(request: NextRequest) {
 	const auth = await requireAuth(request);
@@ -105,16 +108,18 @@ export async function POST(request: NextRequest) {
 			});
 		}
 
-		await sendWelcomeEmail(user.email, user.fullName);
-		const token = signAuthToken(user.id);
-		const response = handleSuccessResponse(toPublicUser(user), 201);
-		setAuthCookie(response, token);
+		return handleSuccessResponse(toPublicUser(user), 201);
+
+		// await sendWelcomeEmailMailtrap(user.email, user.fullName);
+		// const token = signAuthToken(user.id);
+		// const response = handleSuccessResponse(toPublicUser(user), 201);
+		// setAuthCookie(response, token);
 
 		// const baseUrl = process.env.APP_BASE_URL ?? "http://localhost:3000";
 		// const resetUrl = `${baseUrl}/reset-password?token=${resetToken}`;
-		// await sendPasswordResetEmail(user.email, resetUrl);
+		// await sendPasswordResetEmailMailtrap(user.email, resetUrl);
 
-		return response;
+		// return response;
 	} catch (error: unknown) {
 		console.log("Error during registration:", error);
 		return handleErrorResponse(error);

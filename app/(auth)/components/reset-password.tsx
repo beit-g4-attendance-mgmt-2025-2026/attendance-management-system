@@ -56,7 +56,7 @@ export function ResetPasswordForm({
 			},
 		);
 		if (res.success) {
-			router.push("/dashboard");
+			router.push("/");
 			toast.success("Update password successful!");
 			console.log("Update password successful", res.data);
 		} else {

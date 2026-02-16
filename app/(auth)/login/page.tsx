@@ -28,7 +28,7 @@ const page = () => {
 
 			{/* Login Form Container */}
 			<div className="w-full max-w-sm">
-				<LoginForm url="http://localhost:3000/api/login" />
+				<LoginForm url="http://localhost:3000/api/auth/login" />
 			</div>
 		</div>
 	);

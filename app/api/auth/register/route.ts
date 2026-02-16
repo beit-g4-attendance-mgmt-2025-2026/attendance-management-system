@@ -1,4 +1,4 @@
-import { sendWelcomeEmail } from "@/lib/email/mail";
+import { sendWelcomeEmail } from "@/lib/email/resendEmail/mail";
 import { requireAuth } from "@/lib/guard";
 import { hashPassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";

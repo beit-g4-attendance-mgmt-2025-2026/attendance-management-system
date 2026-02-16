@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Define public pages and API prefixes that don't require authentication
-const PUBLIC_PAGES = ["/login", "/register"];
+const PUBLIC_PAGES = ["/login", "/register", "/reset-password"];
 const PUBLIC_API_PREFIXES = ["/api/auth"];
 
 export function middleware(request: NextRequest) {
