@@ -3,16 +3,16 @@
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FormInput } from "@/components/inputs/FormInput";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import z from "zod";
 import FormSelect from "@/components/inputs/FormSelect";
 import { departments, genders, roles } from "@/constants/index.constants";
-import fetchHandler from "@/lib/fetchHandler";
 import { TeacherSchema } from "@/schema/index.schema";
 import { api } from "@/lib/api";
+import { useFormStatus } from "react-dom";
+import { toast } from "sonner";
 
 const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 	const router = useRouter();
@@ -31,9 +31,12 @@ const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 		},
 	});
 
+	const {
+		setError,
+		formState: { isSubmitting },
+	} = form;
+
 	async function onSubmit(values: z.infer<typeof TeacherSchema>) {
-		// Do something with the form values.
-		console.log("Form submitted:");
 		console.log(values);
 		try {
 			const res = await api.users.create({
@@ -47,9 +50,27 @@ const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 				departmentName: values.departmentName,
 			});
 
-			console.log("create user: ", res);
-		} catch (error: unknown) {
-			console.log(error);
+			if (res?.success) {
+				window.location.reload();
+				return;
+			}
+
+			console.log("created user: ", res);
+		} catch (error: any) {
+			const message = error.message;
+
+			if (message.includes("Email")) {
+				form.setError("email", {
+					message,
+				});
+			} else if (message.includes("Username")) {
+				form.setError("username", {
+					message,
+				});
+			} else {
+				// ဘယ် field မှ မဟုတ်ရင် general message အဖြစ်ပြပါ
+				toast.error(message);
+			}
 		}
 	}
 
@@ -68,6 +89,7 @@ const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 						name="fullName"
 						label="Full Name"
 						placeholder="Enter full name"
+						disabled={isSubmitting}
 					/>
 
 					<FormInput
@@ -75,6 +97,7 @@ const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 						name="username"
 						label="Username"
 						placeholder="Enter username"
+						disabled={isSubmitting}
 					/>
 
 					<FormInput
@@ -83,6 +106,7 @@ const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 						label="Email address"
 						placeholder="Enter email address"
 						className="w-full"
+						disabled={isSubmitting}
 					/>
 
 					<div className="flex gap-6">
@@ -93,10 +117,12 @@ const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 								label="Password"
 								placeholder="Enter password"
 								className="w-full"
+								disabled={isSubmitting}
 							/>
 						</div>
 						<div className="rounded-md w-4/12 mt-5">
 							<FormSelect
+								disabled={isSubmitting}
 								form={form}
 								name="gender"
 								placeholder="Gender"
@@ -114,10 +140,12 @@ const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 								label="Phone number"
 								placeholder="Enter phone number"
 								className="w-full"
+								disabled={isSubmitting}
 							/>
 						</div>
 						<div className="rounded-md w-4/12 mt-5">
 							<FormSelect
+								disabled={isSubmitting}
 								form={form}
 								name="departmentName"
 								placeholder="Department"
@@ -138,6 +166,7 @@ const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 							Cancel
 						</Button>{" "}
 						<Button
+							disabled={isSubmitting}
 							type="submit"
 							className="cursor-pointer min-w-36 text-white bg-sky-600 hover:bg-sky-700 hover:text-white"
 						>

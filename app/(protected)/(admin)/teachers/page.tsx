@@ -1,22 +1,22 @@
-"use client";
-
-import { useState } from "react";
-import TeacherListTable from "./components/TeachersListTable";
-import { Paginationn } from "@/components/Pagination";
-import { TeacherProfileCard } from "./components/TeacherProfileCard";
+import { api } from "@/lib/api";
+import TeacherPageClient from "./components/TeacherPageClient";
+import type { User } from "@/generated/prisma/client";
 import SubHeader from "@/components/sub-header";
-import { TEACHERS } from "@/constants/index.constants";
-import { Teacher } from "@/types/index.types";
 import { DialogCardBtn } from "@/components/DialogCardBtn";
 import TeacherForm from "./components/TeacherForm";
 
-const page = () => {
-	const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(
-		null,
-	);
+const page = async () => {
+	let teachers: User[] = [];
+	try {
+		const res = await api.users.getAll();
+
+		teachers = res?.data?.users || [];
+	} catch (error: any) {
+		throw error.message;
+	}
 
 	return (
-		<main>
+		<>
 			<SubHeader
 				placeholder="Search for a teacher by name or email"
 				dialogButton={
@@ -29,23 +29,14 @@ const page = () => {
 					</DialogCardBtn>
 				}
 			/>
-
-			<div className="flex gap-5 w-full">
-				<div className=" flex flex-col justify-between">
-					<TeacherListTable
-						teachers={TEACHERS}
-						selectedTeacher={selectedTeacher}
-						onSelectTeacher={setSelectedTeacher}
-					/>
-					<div>
-						<Paginationn />
-					</div>
+			{teachers?.length ? (
+				<TeacherPageClient initialTeachers={teachers} />
+			) : (
+				<div className="flex items-center justify-center min-h-[50vh]">
+					<p className="text-gray-500">No teachers found.</p>
 				</div>
-				{/* <div className="w-4/12 sticky top-0  h-svh  "> */}
-				<TeacherProfileCard teacher={selectedTeacher} />
-				{/* </div> */}
-			</div>
-		</main>
+			)}
+		</>
 	);
 };
 

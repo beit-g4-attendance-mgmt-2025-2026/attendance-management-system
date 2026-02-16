@@ -19,6 +19,7 @@ type Props<TFormValues extends FieldValues> = {
 	type?: string;
 	className?: string;
 	inputClassName?: string;
+	disabled?: boolean;
 };
 
 export function FormInput<TFormValues extends FieldValues>({
@@ -29,6 +30,7 @@ export function FormInput<TFormValues extends FieldValues>({
 	type = "text",
 	className,
 	inputClassName,
+	disabled,
 }: Props<TFormValues>) {
 	return (
 		<FormField
@@ -43,6 +45,7 @@ export function FormInput<TFormValues extends FieldValues>({
 							placeholder={placeholder}
 							type={type}
 							className={inputClassName}
+							disabled={disabled}
 						/>
 					</FormControl>
 					<FormMessage />

@@ -13,19 +13,32 @@ import {
 	sendPasswordResetEmailMailtrap,
 	sendWelcomeEmailMailtrap,
 } from "@/lib/email/mailtrap/email";
+import { revalidatePath } from "next/cache";
 
 export async function GET(request: NextRequest) {
-	const auth = await requireAuth(request);
-	if ("response" in auth) return auth.response;
+	// const auth = await requireAuth(request);
+	// if ("response" in auth) return auth.response;
 
-	const users = await prisma.user.findMany({
-		include: { department: true, class: true, subjects: true },
-	});
+	try {
+		const users = await prisma.user.findMany({
+			include: { department: true, class: true, subjects: true },
+			orderBy: [
+				{
+					fullName: "asc",
+				},
+				{
+					createdAt: "desc", // if two users have the same full name, order by creation date
+				},
+			],
+		});
 
-	return handleSuccessResponse({
-		users: users.map(toPublicUser),
-		status: 200,
-	});
+		return handleSuccessResponse({
+			users: users.map(toPublicUser),
+			status: 200,
+		});
+	} catch (error: unknown) {
+		return handleErrorResponse(error);
+	}
 }
 
 export async function POST(request: NextRequest) {
@@ -107,7 +120,7 @@ export async function POST(request: NextRequest) {
 				},
 			});
 		}
-
+		revalidatePath("/teachers");
 		return handleSuccessResponse(toPublicUser(user), 201);
 
 		// await sendWelcomeEmailMailtrap(user.email, user.fullName);

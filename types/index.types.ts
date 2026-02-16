@@ -1,3 +1,5 @@
+import { User } from "@/generated/prisma/client";
+
 export interface Teacher {
 	id: string;
 	name: string;
@@ -51,12 +53,6 @@ export interface StudentsListTableProps {
 	students: Student[];
 	selectedStudent?: Student | null;
 	onSelectStudent?: (student: Student) => void;
-}
-
-export interface TeachersListTableProps {
-	teachers: Teacher[];
-	selectedTeacher: Teacher | null;
-	onSelectTeacher: (teacher: Teacher) => void;
 }
 
 export interface DepartmentsListTableProps {
