@@ -154,18 +154,9 @@ export const StudentSchema = z.object({
 });
 
 export const DepartmentSchema = z.object({
-  name: z.string().min(2, {
-    message: "Please enter department name",
-  }),
-  symbol: z.string().min(2, {
-    message: "Please enter department short term",
-  }),
-  logo: z
-    .instanceof(File)
-    .or(z.null())
-    .refine((file) => file !== null, {
-      message: "Logo is required",
-    }),
+  name: z.string().min(2, { message: "Please enter department name" }),
+  symbol: z.string().min(2, { message: "Please enter department short term" }),
+  logo: z.union([z.instanceof(File), z.null()]).optional(),
 });
 
 export const SubjectSchema = z.object({

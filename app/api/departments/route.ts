@@ -13,6 +13,7 @@ export async function GET(request: NextRequest) {
   try {
     const departments = await prisma.department.findMany({
       include: {
+        hod: true,
         users: true,
         classes: true,
         students: true,
@@ -20,7 +21,19 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    return handleSuccessResponse({ departments }, 200);
+    const formattedDepartment = departments.map((d) => ({
+      id: d.id,
+      name: d.name,
+      symbol: d.symbol,
+      logo: d.logo ?? null,
+      head_of_department: d.hod?.fullName ?? null,
+      email: d.hod?.email ?? null,
+      phone: d.hod?.phoneNumber ?? null,
+      teachers: d.users.length,
+      students: d.students.length,
+    }));
+
+    return handleSuccessResponse({ formattedDepartment }, 200);
   } catch (error) {
     return handleErrorResponse(error);
   }
@@ -34,9 +47,12 @@ export async function POST(request: NextRequest) {
 
     const name = form.get("name") as string;
     const symbol = form.get("symbol") as string;
-    const logo = form.get("logo") as File;
+    const logo = form.get("logo");
 
-    const validated = validateBody({ name, symbol, logo }, DepartmentSchema);
+    const validated = validateBody(
+      { name, symbol, logo: logo instanceof File ? logo : null },
+      DepartmentSchema,
+    );
     const {
       name: validatedName,
       symbol: validatedSymbol,
@@ -53,11 +69,15 @@ export async function POST(request: NextRequest) {
     });
     if (existingSymbol) throw new Error("Department symbol already exists");
 
-    const uploadResult: any = await uploadImageToCloudinary(
-      validatedLogo,
-      "departments",
-    );
-    const imageUrl = uploadResult.secure_url;
+    let imageUrl: string | null = null;
+
+    if (validatedLogo instanceof File) {
+      const uploadResult: any = await uploadImageToCloudinary(
+        validatedLogo,
+        "departments",
+      );
+      imageUrl = uploadResult.secure_url;
+    }
 
     const department = await prisma.department.create({
       data: {

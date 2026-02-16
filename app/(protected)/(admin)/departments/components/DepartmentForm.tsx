@@ -10,26 +10,53 @@ import { useForm, Controller } from "react-hook-form";
 import z from "zod";
 import { toast } from "sonner";
 import fetchHandler from "@/lib/fetchHandler";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-type DepartmentFormValues = {
-  name: string;
-  symbol: string;
-  logo: File | null;
+type DepartmentFormValues = z.infer<typeof DepartmentSchema>;
+type Props = {
+  departmentId?: string;
+  isEdit?: boolean;
 };
 
-const DepartmentForm = () => {
+const DepartmentForm = ({ departmentId, isEdit }: Props) => {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
+  const [initialData, setInitialData] = useState<DepartmentFormValues | null>(
+    null,
+  );
+  const [loading, setLoading] = useState(isEdit);
 
-  const form = useForm<DepartmentFormValues>({
+  const form = useForm<z.infer<typeof DepartmentSchema>>({
     resolver: zodResolver(DepartmentSchema),
-    defaultValues: {
+    defaultValues: initialData || {
       name: "",
       symbol: "",
       logo: null,
     },
   });
+  useEffect(() => {
+    if (isEdit && departmentId) {
+      (async () => {
+        try {
+          const res = await fetchHandler(`/api/departments/${departmentId}`);
+          if (res?.success) {
+            const dept = res.data.department;
+            setInitialData(dept);
+
+            form.reset({
+              name: dept.name || "",
+              symbol: dept.symbol || "",
+              logo: null,
+            });
+          }
+        } catch (error) {
+          toast.error("Failed to load department");
+        } finally {
+          setLoading(false);
+        }
+      })();
+    }
+  }, [isEdit, departmentId, form]);
 
   const onSubmit = async (values: DepartmentFormValues) => {
     if (submitting) return;
@@ -38,21 +65,24 @@ const DepartmentForm = () => {
       const formData = new FormData();
       formData.append("name", values.name);
       formData.append("symbol", values.symbol);
+      if (values.logo) formData.append("logo", values.logo);
 
-      if (values.logo) {
-        formData.append("logo", values.logo);
-      }
-
-      const res = await fetch("/api/departments", {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(
+        isEdit ? `/api/departments/${departmentId}` : "/api/departments",
+        {
+          method: isEdit ? "PUT" : "POST",
+          body: formData,
+        },
+      );
 
       const data = await res.json();
       if (res.ok) {
-        toast.success("Department added successfully");
+        toast.success(
+          `Department ${isEdit ? "updated" : "added"} successfully`,
+        );
+        router.back();
       } else {
-        toast.error(data?.message || "Failed to add department");
+        toast.error(data?.message || "Failed to save department");
       }
     } catch (error: any) {
       toast.error(error.message || "Something went wrong");
@@ -62,7 +92,13 @@ const DepartmentForm = () => {
   };
 
   const handleCancel = () => router.back();
-
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64 text-gray-500">
+        Loading department...
+      </div>
+    );
+  }
   return (
     <div className="flex items-center justify-center">
       <Form {...form}>
@@ -93,7 +129,7 @@ const DepartmentForm = () => {
                   type="file"
                   accept="image/*"
                   onChange={(e) => field.onChange(e.target.files?.[0] || null)}
-                  className="w-full"
+                  className="w-full cursor-pointer"
                 />
                 {fieldState.error && (
                   <p className="text-red-500 text-sm mt-1">
@@ -109,15 +145,15 @@ const DepartmentForm = () => {
               disabled={submitting}
               type="button"
               variant="destructive"
-              className="min-w-36"
+              className="min-w-36 cursor-pointer"
               onClick={handleCancel}>
               Cancel
             </Button>
             <Button
               disabled={submitting}
               type="submit"
-              className="min-w-36 text-white bg-sky-600 hover:bg-sky-700">
-              Add Department
+              className="min-w-36 text-white bg-sky-600 hover:bg-sky-700 cursor-pointer">
+              {isEdit ? "Update" : "Add"} Department
             </Button>
           </div>
         </form>

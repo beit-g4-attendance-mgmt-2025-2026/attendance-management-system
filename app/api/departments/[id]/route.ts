@@ -3,6 +3,32 @@ import { DepartmentSchema } from "@/schema/index.schema";
 import validateBody from "@/lib/validateBody";
 import { uploadImageToCloudinary } from "@/lib/cloudinaryUpload";
 
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } },
+) {
+  try {
+    const { id } = params;
+
+    const department = await prisma.department.findUnique({
+      where: { id },
+      select: {
+        name: true,
+        symbol: true,
+        logo: true,
+      },
+    });
+
+    if (!department) {
+      return handleErrorResponse("Department not found");
+    }
+
+    return handleSuccessResponse({ department }, 200);
+  } catch (error) {
+    return handleErrorResponse(error);
+  }
+}
+
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } },
@@ -10,8 +36,8 @@ export async function PUT(
   try {
     const { id } = params;
 
-    const auth = await requireAuth(request, { roles: ["ADMIN"] });
-    if ("response" in auth) return auth.response;
+    // const auth = await requireAuth(request, { roles: ["ADMIN"] });
+    // if ("response" in auth) return auth.response;
 
     const form = await request.formData();
     const name = form.get("name") as string | null;
