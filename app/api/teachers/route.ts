@@ -45,19 +45,22 @@ export async function POST(request: NextRequest) {
 			resetPasswordExpireAt,
 		} = validatedData.data;
 
-		const existingUsername = await prisma.user.findUnique({
+		const existingUser = await prisma.user.findFirst({
 			where: {
-				username,
+				OR: [{ username }, { email }],
 			},
+			select: { id: true, username: true, email: true },
 		});
 
-		if (existingUsername) throw new Error("Username already exists");
-		const existingEmail = await prisma.user.findFirst({
-			where: {
-				email,
-			},
-		});
-		if (existingEmail) throw new Error("Email already exists");
+		if (existingUser) {
+			if (existingUser.username === username) {
+				throw new Error("Username already exists");
+			}
+			if (existingUser.email === email) {
+				throw new Error("Email already exists");
+			}
+			throw new Error("User already exists");
+		}
 
 		const department = await prisma.department.findFirst({
 			where: { symbol: departmentName },

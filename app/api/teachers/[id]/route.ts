@@ -39,9 +39,8 @@ export async function PUT(
 
 		const { id } = params;
 
-		// fetch existing user
 		const existingUser = await prisma.user.findUnique({ where: { id } });
-		if (!existingUser) return handleErrorResponse("User not found");
+		if (!existingUser) throw new Error("User not found");
 
 		const body = await request.json();
 		const validatedData = validateBody(body, UserEditSchema);
