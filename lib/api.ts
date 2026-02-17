@@ -1,3 +1,4 @@
+import { Gender, Role } from "@/generated/prisma/enums";
 import fetchHandler from "./fetchHandler";
 
 const API_URL = "http://localhost:3000/api";
@@ -43,9 +44,9 @@ export const api = {
 				username: string;
 				email: string;
 				phoneNumber: string;
-				gender: "MALE" | "FEMALE" | "OTHER";
-				role: "ADMIN" | "HOD" | "TEACHER";
-				departmentName: "Civil" | "CEIT" | "EC" | "MP" | "EP";
+				gender: Gender;
+				role: Role;
+				// departmentName: "Civil" | "CEIT" | "EC" | "MP" | "EP";
 			}>,
 		) =>
 			fetchHandler(API_URL + `/teachers/${id}`, {

@@ -4,6 +4,7 @@ import { handleErrorResponse, handleSuccessResponse } from "@/lib/response";
 import UserEditSchema from "@/lib/schema/TeacherEditSchema";
 import { toPublicUser } from "@/lib/user";
 import validateBody from "@/lib/validateBody";
+import { TeacherSchema } from "@/schema/index.schema";
 import { NextRequest } from "next/server";
 
 export async function GET(
@@ -28,7 +29,7 @@ export async function GET(
 
 export async function PUT(
 	request: NextRequest,
-	{ params }: { params: { id: string } },
+	{ params }: { params: Promise<{ id: string }> },
 ) {
 	try {
 		// const auth = await requireAuth(request, {
@@ -37,13 +38,13 @@ export async function PUT(
 
 		// if ("response" in auth) return auth.response;
 
-		const { id } = params;
+		const { id } = await params;
 
 		const existingUser = await prisma.user.findUnique({ where: { id } });
 		if (!existingUser) throw new Error("User not found");
 
 		const body = await request.json();
-		const validatedData = validateBody(body, UserEditSchema);
+		const validatedData = validateBody(body, TeacherSchema.partial());
 		const data = validatedData.data as any;
 
 		if (data.username) {
@@ -84,8 +85,8 @@ export async function DELETE(
 	try {
 		const { id } = params;
 
-		const auth = await requireAuth(request, { roles: ["ADMIN", "HOD"] });
-		if ("response" in auth) return auth.response;
+		// const auth = await requireAuth(request, { roles: ["ADMIN", "HOD"] });
+		// if ("response" in auth) return auth.response;
 
 		// const authUser = auth.user;
 		// const isAdmin = authUser.role === "ADMIN";

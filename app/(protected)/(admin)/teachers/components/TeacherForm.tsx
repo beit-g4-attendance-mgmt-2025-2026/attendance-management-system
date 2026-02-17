@@ -11,14 +11,24 @@ import FormSelect from "@/components/inputs/FormSelect";
 import { departments, genders, roles } from "@/constants/index.constants";
 import { TeacherSchema } from "@/schema/index.schema";
 import { api } from "@/lib/api";
-import { useFormStatus } from "react-dom";
+
 import { toast } from "sonner";
+import { Gender, Role, User } from "@/generated/prisma/client";
+import { useEffect } from "react";
 
-const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
+const TeacherForm = ({
+	isEdit = false,
+	teacher,
+}: {
+	isEdit: boolean;
+	teacher?: User | null;
+}) => {
 	const router = useRouter();
+	const schema = teacher && isEdit ? TeacherSchema.partial() : TeacherSchema;
+	if (teacher && isEdit) console.log(teacher);
 
-	const form = useForm<z.infer<typeof TeacherSchema>>({
-		resolver: zodResolver(TeacherSchema),
+	const form = useForm<z.infer<typeof schema>>({
+		resolver: zodResolver(schema),
 		defaultValues: {
 			fullName: "",
 			username: "",
@@ -30,45 +40,75 @@ const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 			departmentName: undefined as any,
 		},
 	});
+	useEffect(() => {
+		if (!teacher) return;
+
+		form.reset({
+			fullName: teacher.fullName,
+			username: teacher.username,
+			email: teacher.email,
+			phoneNumber: teacher.phoneNumber,
+			gender: teacher.gender,
+		});
+	}, [teacher, form]);
 
 	const {
-		setError,
 		formState: { isSubmitting },
 	} = form;
 
-	async function onSubmit(values: z.infer<typeof TeacherSchema>) {
-		console.log(values);
+	async function onSubmit(values: z.infer<typeof schema>) {
 		try {
-			const res = await api.users.create({
-				fullName: values.fullName,
-				username: values.username,
-				email: values.email,
-				password: values.password,
-				phoneNumber: values.phoneNumber,
-				gender: values.gender,
-				role: values.role,
-				departmentName: values.departmentName,
-			});
+			if (isEdit && teacher) {
+				// update payload (remove empty strings)
+				const updateData: Partial<{
+					fullName: string;
+					username: string;
+					email: string;
+					phoneNumber: string;
+					gender: Gender;
+					// role: Role;
+				}> = {
+					fullName: values.fullName as string,
+					username: values.username as string,
+					email: values.email as string,
+					phoneNumber: values.phoneNumber as string,
+					gender: values.gender as Gender,
+					// role: values.role as Role,
+				};
 
-			if (res?.success) {
-				window.location.reload();
-				return;
+				const res = await api.users.update(teacher.id, updateData);
+				console.log("updated User: ", res);
+				if (res?.success) {
+					window.location.reload();
+					return;
+				}
+			} else {
+				const data = {
+					fullName: values.fullName as string,
+					username: values.username as string,
+					email: values.email as string,
+					password: values.password as string,
+					phoneNumber: values.phoneNumber as string,
+					gender: values.gender as Gender,
+					role: values.role as Role,
+					departmentName: values.departmentName as any,
+				};
+
+				const res = await api.users.create(data);
+				console.log("create user: ", res);
+				if (res?.success) {
+					window.location.reload();
+					return;
+				}
 			}
-
-			console.log("created user: ", res);
 		} catch (error: any) {
 			const message = error.message;
 
 			if (message.includes("Email")) {
-				form.setError("email", {
-					message,
-				});
+				form.setError("email", { message });
 			} else if (message.includes("Username")) {
-				form.setError("username", {
-					message,
-				});
+				form.setError("username", { message });
 			} else {
-				// ဘယ် field မှ မဟုတ်ရင် general message အဖြစ်ပြပါ
 				toast.error(message);
 			}
 		}
@@ -110,16 +150,20 @@ const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 					/>
 
 					<div className="flex gap-6">
-						<div className=" w-8/12">
-							<FormInput
-								form={form}
-								name="password"
-								label="Password"
-								placeholder="Enter password"
-								className="w-full"
-								disabled={isSubmitting}
-							/>
-						</div>
+						{!isEdit && !teacher && (
+							<div className=" w-8/12">
+								<FormInput
+									form={form}
+									name="password"
+									label="Password"
+									placeholder={
+										isEdit ? "••••••••" : "Enter password"
+									}
+									className={`w-full ${isEdit ?? "cursor-not-allowed"}`}
+									disabled={isSubmitting || isEdit}
+								/>
+							</div>
+						)}
 						<div className="rounded-md w-4/12 mt-5">
 							<FormSelect
 								disabled={isSubmitting}
@@ -145,7 +189,7 @@ const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 						</div>
 						<div className="rounded-md w-4/12 mt-5">
 							<FormSelect
-								disabled={isSubmitting}
+								disabled={isSubmitting || isEdit}
 								form={form}
 								name="departmentName"
 								placeholder="Department"

@@ -1,3 +1,5 @@
+import { ConfirmBtn } from "@/components/ConfirmBtn";
+import { DialogCardBtn } from "@/components/DialogCardBtn";
 import { Button } from "@/components/ui/button";
 import {
 	Table,
@@ -8,19 +10,23 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { User } from "@/generated/prisma/client";
-import { Edit2Icon, TrashIcon } from "lucide-react";
-import Link from "next/link";
+import { Edit, Edit2Icon, TrashIcon } from "lucide-react";
+import TeacherForm from "./TeacherForm";
 
 export interface TeachersListTableProps {
 	teachers: User[];
 	selectedTeacher: User | null;
 	onSelectTeacher: (teacher: User) => void;
+	onDelete: (id: string) => void;
+	deletingId?: string | null;
 }
 
 const TeachersListTable = ({
 	teachers,
 	selectedTeacher,
 	onSelectTeacher,
+	onDelete,
+	deletingId,
 }: TeachersListTableProps) => {
 	return (
 		<>
@@ -58,18 +64,32 @@ const TeachersListTable = ({
 								className="flex items-center gap-1"
 								onClick={(e) => e.stopPropagation()} // Prevent row selection on action click
 							>
-								<Link
-									href={"/teacher/edit"}
-									className="text-blue-500"
+								<DialogCardBtn
+									triggerIcon={<Edit />}
+									title="Edit Teacher"
+									description=""
 								>
-									<Edit2Icon size={16} />
-								</Link>
-								<Button
-									variant={"ghost"}
-									className="text-red-500 cursor-pointer hover:text-red-700"
+									<TeacherForm
+										isEdit={true}
+										teacher={teacher}
+									/>
+								</DialogCardBtn>
+
+								<ConfirmBtn
+									title="Delete teacher?"
+									description="This action cannot be undone."
+									confirmLabel="Delete"
+									onConfirm={() => onDelete(teacher.id)}
+									disabled={deletingId === teacher.id}
 								>
-									<TrashIcon />
-								</Button>
+									<Button
+										variant={"ghost"}
+										className="text-red-500 cursor-pointer hover:text-red-700"
+										disabled={deletingId === teacher.id}
+									>
+										<TrashIcon />
+									</Button>
+								</ConfirmBtn>
 							</TableCell>
 						</TableRow>
 					))}
