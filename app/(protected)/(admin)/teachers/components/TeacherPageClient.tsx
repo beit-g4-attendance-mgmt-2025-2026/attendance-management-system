@@ -4,13 +4,10 @@ import { useState } from "react";
 import { Paginationn } from "@/components/Pagination";
 import TeachersListTable from "./TeachersListTable";
 import { TeacherProfileCard } from "./TeacherProfileCard";
-import { Department, User } from "@/generated/prisma/client";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
+import { TeacherWithDepartment } from "../page";
 
-export type TeacherWithDepartment = User & {
-	department: Department;
-};
 export interface TeacherPageClientProps {
 	initialTeachers: TeacherWithDepartment[];
 }

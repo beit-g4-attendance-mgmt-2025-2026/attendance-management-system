@@ -1,12 +1,13 @@
 import { api } from "@/lib/api";
-import TeacherPageClient, {
-	TeacherWithDepartment,
-} from "./components/TeacherPageClient";
-import type { User } from "@/generated/prisma/client";
+import TeacherPageClient from "./components/TeacherPageClient";
+import type { Department, User } from "@/generated/prisma/client";
 import SubHeader from "@/components/sub-header";
 import { DialogCardBtn } from "@/components/DialogCardBtn";
 import TeacherForm from "./components/TeacherForm";
 
+export type TeacherWithDepartment = User & {
+	department: Department;
+};
 const page = async () => {
 	let teachers: TeacherWithDepartment[] = [];
 	try {

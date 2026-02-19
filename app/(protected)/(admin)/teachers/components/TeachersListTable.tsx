@@ -9,10 +9,9 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { User } from "@/generated/prisma/client";
 import { Edit, TrashIcon } from "lucide-react";
 import TeacherForm from "./TeacherForm";
-import { TeacherWithDepartment } from "./TeacherPageClient";
+import { TeacherWithDepartment } from "../page";
 
 export interface TeachersListTableProps {
 	teachers: TeacherWithDepartment[];
