@@ -10,13 +10,14 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { User } from "@/generated/prisma/client";
-import { Edit, Edit2Icon, TrashIcon } from "lucide-react";
+import { Edit, TrashIcon } from "lucide-react";
 import TeacherForm from "./TeacherForm";
+import { TeacherWithDepartment } from "./TeacherPageClient";
 
 export interface TeachersListTableProps {
-	teachers: User[];
-	selectedTeacher: User | null;
-	onSelectTeacher: (teacher: User) => void;
+	teachers: TeacherWithDepartment[];
+	selectedTeacher: TeacherWithDepartment | null;
+	onSelectTeacher: (teacher: TeacherWithDepartment) => void;
 	onDelete: (id: string) => void;
 	deletingId?: string | null;
 }
@@ -57,7 +58,7 @@ const TeachersListTable = ({
 							<TableCell>{teacher.email}</TableCell>
 							<TableCell>{teacher.gender}</TableCell>
 							<TableCell className="text-center">
-								{teacher.departmentId}
+								{teacher.department.symbol}
 							</TableCell>
 							<TableCell>{teacher.phoneNumber}</TableCell>
 							<TableCell

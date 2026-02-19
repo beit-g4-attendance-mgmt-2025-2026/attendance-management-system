@@ -1,16 +1,19 @@
 import { api } from "@/lib/api";
-import TeacherPageClient from "./components/TeacherPageClient";
+import TeacherPageClient, {
+	TeacherWithDepartment,
+} from "./components/TeacherPageClient";
 import type { User } from "@/generated/prisma/client";
 import SubHeader from "@/components/sub-header";
 import { DialogCardBtn } from "@/components/DialogCardBtn";
 import TeacherForm from "./components/TeacherForm";
 
 const page = async () => {
-	let teachers: User[] = [];
+	let teachers: TeacherWithDepartment[] = [];
 	try {
 		const res = await api.users.getAll();
 
 		teachers = res?.data?.users || [];
+		console.log("teacher list; ", teachers);
 	} catch (error: any) {
 		throw error.message;
 	}
