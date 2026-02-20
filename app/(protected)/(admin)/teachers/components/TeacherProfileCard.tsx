@@ -1,16 +1,16 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { User } from "@/generated/prisma/client";
 import {
 	CircleUserIcon,
 	GraduationCap,
 	MailIcon,
 	PhoneCall,
 } from "lucide-react";
+import { TeacherWithDepartment } from "../page";
 
 export interface TeacherProfileCardProps {
-	teacher: User | null;
+	teacher: TeacherWithDepartment | null;
 }
 
 export function TeacherProfileCard({ teacher }: TeacherProfileCardProps) {
@@ -29,7 +29,7 @@ export function TeacherProfileCard({ teacher }: TeacherProfileCardProps) {
 
 				<h1 className="font-bold">{teacher.email}</h1>
 				<h2 className="text-gray-400 text-center">
-					{teacher.departmentId}
+					{teacher.department.name}
 				</h2>
 
 				<div className="flex gap-3 items-center">
@@ -46,9 +46,9 @@ export function TeacherProfileCard({ teacher }: TeacherProfileCardProps) {
 
 				<div className="flex justify-evenly items-center gap-4">
 					<div className="flex flex-col">
-						<span>Date of Birth</span>
+						<span>Role</span>
 						<span className="text-gray-400 text-sm">
-							{teacher.gender || "N/A"}
+							{teacher.role || "N/A"}
 						</span>
 					</div>
 					<div className="flex flex-col">

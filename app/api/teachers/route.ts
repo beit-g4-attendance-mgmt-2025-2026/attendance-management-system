@@ -1,4 +1,4 @@
-import { requireAuth } from "@/lib/guard";
+import { requireAdminOrUserRoles, requireAuth } from "@/lib/guard";
 import { generateResetToken, hashPassword } from "@/lib/password";
 import { prisma } from "@/lib/prisma";
 import { handleErrorResponse, handleSuccessResponse } from "@/lib/response";
@@ -44,6 +44,11 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
 	// const RESET_EXPIRY_MINUTES = 60;
 	const body = await request.json();
+	const auth = await requireAdminOrUserRoles(request, [Role.HOD, Role.ADMIN]);
+
+	if ("response" in auth) return auth.response;
+
+	const assignedRole = "admin" in auth ? Role.HOD : Role.TEACHER;
 
 	try {
 		const validatedData = validateBody(body, RegisterSchema);
@@ -55,7 +60,7 @@ export async function POST(request: NextRequest) {
 			password,
 			phoneNumber,
 			gender,
-			role,
+			// role,
 			departmentName,
 			resetPasswordToken,
 			resetPasswordExpireAt,
@@ -98,7 +103,8 @@ export async function POST(request: NextRequest) {
 				fullName,
 				email,
 				password: passwordHashed,
-				role: role as Role,
+				// role: role as Role,
+				role: assignedRole,
 				gender: gender as Gender,
 				phoneNumber,
 				department: {
@@ -112,7 +118,7 @@ export async function POST(request: NextRequest) {
 		});
 
 		// If the created user is a HOD, assign them as the department HOD
-		if (role === "HOD" || role === Role.HOD) {
+		if (assignedRole === Role.HOD) {
 			await prisma.department.update({
 				where: { id: department.id },
 				data: {
@@ -120,6 +126,7 @@ export async function POST(request: NextRequest) {
 				},
 			});
 		}
+
 		revalidatePath("/teachers");
 		return handleSuccessResponse(toPublicUser(user), 201);
 
