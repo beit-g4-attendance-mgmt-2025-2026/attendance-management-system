@@ -14,11 +14,13 @@ import React from "react";
 export function DialogCardBtn({
 	children,
 	triggerName,
+	triggerIcon,
 	title,
 	description,
 }: {
 	children: React.ReactNode;
-	triggerName: string;
+	triggerName?: string;
+	triggerIcon?: React.ReactElement;
 	title: string;
 	description?: string;
 }) {
@@ -28,6 +30,7 @@ export function DialogCardBtn({
 				<DialogTrigger asChild>
 					<Button className="cursor-pointer text-white bg-sky-600 hover:bg-sky-700 hover:text-white">
 						{triggerName}
+						{triggerIcon}
 					</Button>
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-[425px]">

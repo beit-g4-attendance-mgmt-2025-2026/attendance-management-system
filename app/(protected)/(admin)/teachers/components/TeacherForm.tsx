@@ -3,22 +3,33 @@
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FormInput } from "@/components/inputs/FormInput";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import z from "zod";
 import FormSelect from "@/components/inputs/FormSelect";
 import { departments, genders, roles } from "@/constants/index.constants";
-import fetchHandler from "@/lib/fetchHandler";
 import { TeacherSchema } from "@/schema/index.schema";
 import { api } from "@/lib/api";
 
-const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
-	const router = useRouter();
+import { toast } from "sonner";
+import { Gender, Role, User } from "@/generated/prisma/client";
+import { useEffect } from "react";
+import { PublicUser } from "@/lib/user";
 
-	const form = useForm<z.infer<typeof TeacherSchema>>({
-		resolver: zodResolver(TeacherSchema),
+const TeacherForm = ({
+	isEdit = false,
+	teacher,
+}: {
+	isEdit: boolean;
+	teacher?: PublicUser | null;
+}) => {
+	const router = useRouter();
+	const schema = teacher && isEdit ? TeacherSchema.partial() : TeacherSchema;
+	if (teacher && isEdit) console.log(teacher);
+
+	const form = useForm<z.infer<typeof schema>>({
+		resolver: zodResolver(schema),
 		defaultValues: {
 			fullName: "",
 			username: "",
@@ -30,26 +41,77 @@ const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 			departmentName: undefined as any,
 		},
 	});
+	useEffect(() => {
+		if (!teacher) return;
 
-	async function onSubmit(values: z.infer<typeof TeacherSchema>) {
-		// Do something with the form values.
-		console.log("Form submitted:");
-		console.log(values);
+		form.reset({
+			fullName: teacher.fullName,
+			username: teacher.username,
+			email: teacher.email,
+			phoneNumber: teacher.phoneNumber,
+			gender: teacher.gender,
+		});
+	}, [teacher, form]);
+
+	const {
+		formState: { isSubmitting },
+	} = form;
+
+	async function onSubmit(values: z.infer<typeof schema>) {
 		try {
-			const res = await api.users.create({
-				fullName: values.fullName,
-				username: values.username,
-				email: values.email,
-				password: values.password,
-				phoneNumber: values.phoneNumber,
-				gender: values.gender,
-				role: values.role,
-				departmentName: values.departmentName,
-			});
+			if (isEdit && teacher) {
+				// update payload (remove empty strings)
+				const updateData: Partial<{
+					fullName: string;
+					username: string;
+					email: string;
+					phoneNumber: string;
+					gender: Gender;
+					// role: Role;
+				}> = {
+					fullName: values.fullName as string,
+					username: values.username as string,
+					email: values.email as string,
+					phoneNumber: values.phoneNumber as string,
+					gender: values.gender as Gender,
+					// role: values.role as Role,
+				};
 
-			console.log("create user: ", res);
-		} catch (error: unknown) {
-			console.log(error);
+				const res = await api.users.update(teacher.id, updateData);
+				console.log("updated User: ", res);
+				if (res?.success) {
+					window.location.reload();
+					return;
+				}
+			} else {
+				const data = {
+					fullName: values.fullName as string,
+					username: values.username as string,
+					email: values.email as string,
+					password: values.password as string,
+					phoneNumber: values.phoneNumber as string,
+					gender: values.gender as Gender,
+					role: values.role as Role,
+					departmentName: values.departmentName as any,
+				};
+
+				const res = await api.users.create(data);
+				console.log("create user: ", res);
+				if (res?.success) {
+					window.location.reload();
+					return;
+				}
+			}
+		} catch (error: any) {
+			const message = error.message;
+
+			if (message.includes("Email")) {
+				form.setError("email", { message });
+			} else if (message.includes("Username")) {
+				form.setError("username", { message });
+			} else {
+				toast.error(message);
+			}
 		}
 	}
 
@@ -68,6 +130,7 @@ const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 						name="fullName"
 						label="Full Name"
 						placeholder="Enter full name"
+						disabled={isSubmitting}
 					/>
 
 					<FormInput
@@ -75,6 +138,7 @@ const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 						name="username"
 						label="Username"
 						placeholder="Enter username"
+						disabled={isSubmitting}
 					/>
 
 					<FormInput
@@ -83,20 +147,27 @@ const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 						label="Email address"
 						placeholder="Enter email address"
 						className="w-full"
+						disabled={isSubmitting}
 					/>
 
 					<div className="flex gap-6">
-						<div className=" w-8/12">
-							<FormInput
-								form={form}
-								name="password"
-								label="Password"
-								placeholder="Enter password"
-								className="w-full"
-							/>
-						</div>
+						{!isEdit && !teacher && (
+							<div className=" w-8/12">
+								<FormInput
+									form={form}
+									name="password"
+									label="Password"
+									placeholder={
+										isEdit ? "••••••••" : "Enter password"
+									}
+									className={`w-full ${isEdit ?? "cursor-not-allowed"}`}
+									disabled={isSubmitting || isEdit}
+								/>
+							</div>
+						)}
 						<div className="rounded-md w-4/12 mt-5">
 							<FormSelect
+								disabled={isSubmitting}
 								form={form}
 								name="gender"
 								placeholder="Gender"
@@ -114,10 +185,12 @@ const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 								label="Phone number"
 								placeholder="Enter phone number"
 								className="w-full"
+								disabled={isSubmitting}
 							/>
 						</div>
 						<div className="rounded-md w-4/12 mt-5">
 							<FormSelect
+								disabled={isSubmitting || isEdit}
 								form={form}
 								name="departmentName"
 								placeholder="Department"
@@ -138,6 +211,7 @@ const TeacherForm = ({ isEdit = false }: { isEdit: boolean }) => {
 							Cancel
 						</Button>{" "}
 						<Button
+							disabled={isSubmitting}
 							type="submit"
 							className="cursor-pointer min-w-36 text-white bg-sky-600 hover:bg-sky-700 hover:text-white"
 						>

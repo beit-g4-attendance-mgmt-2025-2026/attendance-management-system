@@ -37,6 +37,7 @@ export function LoginForm({ url, className, ...props }: LoginFormProps) {
 	const [error, setError] = useState<string | null>(null);
 	const router = useRouter();
 	const [showPassword, setShowPassword] = useState(false);
+
 	const form = useForm<z.infer<typeof LoginSchema>>({
 		resolver: zodResolver(LoginSchema),
 		defaultValues: {
@@ -44,6 +45,10 @@ export function LoginForm({ url, className, ...props }: LoginFormProps) {
 			password: "",
 		},
 	});
+
+	const {
+		formState: { isSubmitting },
+	} = form;
 
 	async function onSubmit(values: z.infer<typeof LoginSchema>) {
 		const res = await fetchHandler(url, {
@@ -57,6 +62,7 @@ export function LoginForm({ url, className, ...props }: LoginFormProps) {
 			console.log("Login successful", res.data);
 		} else {
 			setError(res.message);
+			toast.error(res.message);
 		}
 	}
 	return (
@@ -138,10 +144,11 @@ export function LoginForm({ url, className, ...props }: LoginFormProps) {
 								)}
 							/>
 							<Button
+								disabled={isSubmitting}
 								type="submit"
 								className="cursor-pointer w-full bg-blue-400 hover:bg-blue-500"
 							>
-								Submit
+								{isSubmitting ? "Submitting" : "Submit"}
 							</Button>
 						</form>
 					</Form>

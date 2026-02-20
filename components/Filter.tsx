@@ -13,11 +13,14 @@ import {
 import { useState } from "react";
 import queryString from "query-string";
 import { useRouter, useSearchParams } from "next/navigation";
+import { ChevronDown } from "lucide-react";
 
 type Checked = DropdownMenuCheckboxItemProps["checked"];
 
 export function Filter({ filterName }: { filterName: string[] }) {
 	const [showStatusBar, setShowStatusBar] = useState<Checked>(true);
+	const [open, setOpen] = useState(false); //drop down icon
+
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const [filter, setFilter] = useState(searchParams.get("filter") || "");
@@ -38,15 +41,21 @@ export function Filter({ filterName }: { filterName: string[] }) {
 				url: window.location.pathname,
 				query: updatedQuery,
 			},
-			{ skipNull: true, skipEmptyString: true }
+			{ skipNull: true, skipEmptyString: true },
 		);
 		router.push(url);
 	};
 
 	return (
-		<DropdownMenu>
+		<DropdownMenu open={open} onOpenChange={setOpen}>
 			<DropdownMenuTrigger asChild>
-				<span>Department</span>
+				<button className="flex items-center gap-1 cursor-pointer bg-transparent border-none outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:ring-0 hover:bg-transparent">
+					<span className="select-text">Department</span>
+					<ChevronDown
+						size={16}
+						className={`transition-transform ${open ? "rotate-180" : ""}`}
+					/>
+				</button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent className="w-56">
 				<DropdownMenuLabel>Filter</DropdownMenuLabel>
@@ -57,6 +66,7 @@ export function Filter({ filterName }: { filterName: string[] }) {
 						onCheckedChange={setShowStatusBar}
 						key={dept}
 						onClick={() => handleFilter(dept)}
+						className="cursor-pointer"
 					>
 						{dept}
 					</DropdownMenuCheckboxItem>

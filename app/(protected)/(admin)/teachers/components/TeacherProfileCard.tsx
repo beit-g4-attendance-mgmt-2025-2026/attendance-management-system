@@ -1,13 +1,17 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { TeacherProfileCardProps } from "@/types/index.types";
 import {
 	CircleUserIcon,
 	GraduationCap,
 	MailIcon,
 	PhoneCall,
 } from "lucide-react";
+import { TeacherWithDepartment } from "../page";
+
+export interface TeacherProfileCardProps {
+	teacher: TeacherWithDepartment | null;
+}
 
 export function TeacherProfileCard({ teacher }: TeacherProfileCardProps) {
 	if (!teacher) {
@@ -17,15 +21,15 @@ export function TeacherProfileCard({ teacher }: TeacherProfileCardProps) {
 	return (
 		<div className="w-4/12 sticky top-0  h-[400px]  shadow-2xl rounded-2xl">
 			<div className="flex flex-col items-center space-y-3">
-				<h1 className="font-semibold text-sm">{teacher.username}</h1>
+				<h1 className="font-semibold text-sm">{teacher.fullName}</h1>
 
 				<div>
 					<CircleUserIcon size={160} />
 				</div>
 
-				<h1 className="font-bold">{teacher.name}</h1>
+				<h1 className="font-bold">{teacher.email}</h1>
 				<h2 className="text-gray-400 text-center">
-					{teacher.department}
+					{teacher.department.name}
 				</h2>
 
 				<div className="flex gap-3 items-center">
@@ -42,9 +46,9 @@ export function TeacherProfileCard({ teacher }: TeacherProfileCardProps) {
 
 				<div className="flex justify-evenly items-center gap-4">
 					<div className="flex flex-col">
-						<span>Date of Birth</span>
+						<span>Role</span>
 						<span className="text-gray-400 text-sm">
-							{teacher.dateOfBirth || "N/A"}
+							{teacher.role || "N/A"}
 						</span>
 					</div>
 					<div className="flex flex-col">
