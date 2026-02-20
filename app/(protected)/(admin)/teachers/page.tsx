@@ -19,6 +19,7 @@ const page = async ({
 		[key: string]: string; //don't need to specify exact keys
 	}>;
 }) => {
+	const URL = "http://localhost:3000";
 	const { page, pageSize, search, filter } = await searchParams;
 
 	const { success, data, message } = await GetTeachers({
@@ -46,6 +47,7 @@ const page = async ({
 		<>
 			<SubHeader
 				placeholder="Search for a teacher by name or email"
+				exportEndpoint={`${URL}/api/teachers/export`}
 				dialogButton={
 					<DialogCardBtn
 						triggerName="Add Teacher"

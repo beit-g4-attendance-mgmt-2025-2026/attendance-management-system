@@ -2,13 +2,16 @@ import { departmentNames } from "@/constants/index.constants";
 import { Filter } from "./Filter";
 import { Button } from "./ui/button";
 import SearchInput from "./inputs/SearchInput";
+import { ExportCsvBtn } from "./ExportCsvBtn";
 
 const SubHeader = ({
 	placeholder,
 	dialogButton,
+	exportEndpoint,
 }: {
 	placeholder: string;
 	dialogButton: React.ReactNode;
+	exportEndpoint?: string;
 }) => {
 	return (
 		<nav className="flex justify-between items-center mb-10 mx-auto w-auto">
@@ -17,12 +20,12 @@ const SubHeader = ({
 				<SearchInput placeholder={placeholder} />
 			</div>
 			<div className="flex gap-4">
-				<Button
-					variant={"link"}
-					className="cursor-pointer text-sky-600"
-				>
-					Export CSV
-				</Button>
+				{exportEndpoint && (
+					<ExportCsvBtn
+						endpoint={exportEndpoint}
+						allowedParams={["search", "filter"]}
+					/>
+				)}
 
 				{dialogButton}
 			</div>
