@@ -4,9 +4,11 @@ import { prisma } from "@/lib/prisma";
 import validateBody from "@/lib/validateBody";
 import { handleActionErrorResponse } from "@/lib/response";
 import { toPublicUser } from "@/lib/user";
-import type { Prisma, User } from "@/generated/prisma/client";
+import { Role, type Prisma, type User } from "@/generated/prisma/client";
 import PaginatedSearchParamsSchema from "../schema/PaginatedSearchParamsSchema";
 import { TeacherWithDepartment } from "@/app/(protected)/(admin)/teachers/page";
+import { cookies } from "next/headers";
+import { getUserIdFromCookies } from "../jwt";
 
 export async function GetTeachers(params: {
 	page?: number;
@@ -24,6 +26,17 @@ export async function GetTeachers(params: {
 	details?: object | null;
 }> {
 	try {
+		//  Auth user from cookies
+		const userId = await getUserIdFromCookies();
+		if (!userId) return { success: false, message: "Unauthorized" };
+
+		const user = await prisma.user.findUnique({ where: { id: userId } });
+		if (!user) return { success: false, message: "Unauthorized" };
+
+		if (user.role !== Role.ADMIN && user.role !== Role.HOD) {
+			return { success: false, message: "Forbidden" };
+		}
+
 		const validated = validateBody(params, PaginatedSearchParamsSchema);
 		const { page = 1, pageSize = 10, search, filter } = validated.data;
 
@@ -47,6 +60,11 @@ export async function GetTeachers(params: {
 
 		if (filter) {
 			where.department = { symbol: filter };
+		}
+
+		// role-based restriction
+		if (user.role === "HOD") {
+			where.departmentId = user.departmentId;
 		}
 
 		const total = await prisma.user.count({ where });

@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
@@ -44,6 +45,19 @@ export function clearAuthCookie(response: NextResponse) {
 
 export function getUserIdFromRequest(request: NextRequest): string | null {
 	const token = request.cookies.get("token")?.value;
+	if (!token) return null;
+
+	try {
+		const decoded = jwt.verify(token, getJwtSecret()) as AuthTokenPayload;
+		return decoded.userId;
+	} catch {
+		return null;
+	}
+}
+
+export async function getUserIdFromCookies(): Promise<string | null> {
+	const cookieStore = await cookies();
+	const token = cookieStore.get("token")?.value;
 	if (!token) return null;
 
 	try {

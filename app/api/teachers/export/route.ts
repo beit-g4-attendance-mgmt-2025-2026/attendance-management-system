@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAdminOrUserRoles, requireAuth } from "@/lib/guard"; // or requireAdminOrUserRoles
-
+import { requireAdminOrUserRoles } from "@/lib/guard";
+import { forbidden } from "@/lib/response";
 import { Role, type Prisma } from "@/generated/prisma/client";
 
 function csvEscape(value: unknown) {
@@ -30,12 +30,16 @@ export async function GET(request: NextRequest) {
 		];
 	}
 
-	// if (["ADMIN", "HOD", "TEACHER"].includes(filter)) {
-	// 	where.role = filter as any;
-	// }
-
 	if (filter) {
 		where.department = { symbol: filter };
+	}
+
+	// HOD can only export their department
+	if ("user" in auth && auth.user.role === Role.HOD) {
+		if (!auth.user.departmentId) {
+			return forbidden("HOD has no department");
+		}
+		where.departmentId = auth.user.departmentId;
 	}
 
 	const users = await prisma.user.findMany({
