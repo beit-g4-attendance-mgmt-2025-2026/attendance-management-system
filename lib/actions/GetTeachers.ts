@@ -69,7 +69,7 @@ export async function GetTeachers(params: {
 
 		return {
 			success: true,
-			data: { teachers, isNext },
+			data: { teachers, isNext, total },
 		};
 	} catch (error) {
 		return handleActionErrorResponse(error);

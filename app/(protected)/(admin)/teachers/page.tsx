@@ -19,7 +19,7 @@ const page = async ({
 		[key: string]: string; //don't need to specify exact keys
 	}>;
 }) => {
-	const { page, pageSize, search, filter, total } = await searchParams;
+	const { page, pageSize, search, filter } = await searchParams;
 
 	const { success, data, message } = await GetTeachers({
 		page: Number(page) || 1,
@@ -27,6 +27,7 @@ const page = async ({
 		search: search || "",
 		filter,
 	});
+	const total = data?.total ?? 0;
 
 	// const user = await auth();
 
@@ -60,7 +61,11 @@ const page = async ({
 					<div className=" flex items-center justify-center max-w-5xl mx-auto">
 						<TeachersListTable teachers={teachers} />
 					</div>
-					<Paginationn />
+					<Paginationn
+						page={Number(page) || 1}
+						pageSize={Number(pageSize) || 10}
+						total={total}
+					/>
 				</main>
 			) : (
 				<div className="flex items-center justify-center min-h-[50vh]">
