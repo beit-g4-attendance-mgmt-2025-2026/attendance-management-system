@@ -1,3 +1,4 @@
+"use client";
 import { ConfirmBtn } from "@/components/ConfirmBtn";
 import { DialogCardBtn } from "@/components/DialogCardBtn";
 import { Button } from "@/components/ui/button";
@@ -12,29 +13,30 @@ import {
 import { Edit, TrashIcon } from "lucide-react";
 import TeacherForm from "./TeacherForm";
 import { TeacherWithDepartment } from "../page";
+import { api } from "@/lib/api";
+import { toast } from "sonner";
 
 export interface TeachersListTableProps {
 	teachers: TeacherWithDepartment[];
-	selectedTeacher: TeacherWithDepartment | null;
-	onSelectTeacher: (teacher: TeacherWithDepartment) => void;
-	onDelete: (id: string) => void;
-	deletingId?: string | null;
 }
 
-const TeachersListTable = ({
-	teachers,
-	selectedTeacher,
-	onSelectTeacher,
-	onDelete,
-	deletingId,
-}: TeachersListTableProps) => {
+const TeachersListTable = ({ teachers }: TeachersListTableProps) => {
+	const handleDelete = async (id: string) => {
+		try {
+			const res = await api.users.delete(id);
+			if (res.success) toast.success("User deleted successfully!");
+		} catch (error: any) {
+			console.log(error);
+			toast.error(error);
+		}
+	};
 	return (
 		<>
 			<Table className="w-full">
 				{/* <TableCaption className="text-blue-400">Teachers List</TableCaption> */}
 				<TableHeader>
 					<TableRow>
-						<TableHead className="w-[100px]">Name</TableHead>
+						<TableHead>Name</TableHead>
 						<TableHead>email</TableHead>
 						<TableHead>Gender</TableHead>
 						<TableHead>Department</TableHead>
@@ -46,12 +48,11 @@ const TeachersListTable = ({
 					{teachers?.map((teacher, index) => (
 						<TableRow
 							key={teacher.id}
-							onClick={() => onSelectTeacher(teacher)}
-							className={`cursor-pointer transition-colors hover:bg-blue-300  ${
-								selectedTeacher?.id === teacher.id
-									? "bg-blue-300 dark:bg-blue-500 "
-									: ""
-							} `}
+							className={`cursor-pointer 	${
+								index % 2 === 0
+									? ""
+									: "bg-blue-50 dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-50 "
+							}`}
 						>
 							<TableCell>{teacher.fullName}</TableCell>
 							<TableCell>{teacher.email}</TableCell>
@@ -60,10 +61,7 @@ const TeachersListTable = ({
 								{teacher.department.symbol}
 							</TableCell>
 							<TableCell>{teacher.phoneNumber}</TableCell>
-							<TableCell
-								className="flex items-center gap-1"
-								onClick={(e) => e.stopPropagation()} // Prevent row selection on action click
-							>
+							<TableCell className="flex items-center gap-1">
 								<DialogCardBtn
 									triggerIcon={<Edit />}
 									title="Edit Teacher"
@@ -79,13 +77,11 @@ const TeachersListTable = ({
 									title="Delete teacher?"
 									description="This action cannot be undone."
 									confirmLabel="Delete"
-									onConfirm={() => onDelete(teacher.id)}
-									disabled={deletingId === teacher.id}
+									onConfirm={() => handleDelete(teacher.id)}
 								>
 									<Button
 										variant={"ghost"}
 										className="text-red-500 cursor-pointer hover:text-red-700"
-										disabled={deletingId === teacher.id}
 									>
 										<TrashIcon />
 									</Button>

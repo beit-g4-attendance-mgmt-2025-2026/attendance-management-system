@@ -15,13 +15,14 @@ import { api } from "@/lib/api";
 import { toast } from "sonner";
 import { Gender, Role, User } from "@/generated/prisma/client";
 import { useEffect } from "react";
+import { PublicUser } from "@/lib/user";
 
 const TeacherForm = ({
 	isEdit = false,
 	teacher,
 }: {
 	isEdit: boolean;
-	teacher?: User | null;
+	teacher?: PublicUser | null;
 }) => {
 	const router = useRouter();
 	const schema = teacher && isEdit ? TeacherSchema.partial() : TeacherSchema;

@@ -12,12 +12,11 @@ export async function GetTeachers(params: {
 	page?: number;
 	pageSize?: number;
 	search?: string;
-	filter?: string; // e.g. "HOD" | "TEACHER" | "ADMIN"
-	sort?: string; // e.g. "newest" | "oldest"
+	filter?: string;
 }): Promise<{
 	success: boolean;
 	data?: {
-		teachers: User[];
+		teachers: TeacherWithDepartment[];
 		isNext: boolean;
 		total?: number;
 	};
@@ -26,12 +25,7 @@ export async function GetTeachers(params: {
 }> {
 	try {
 		const validated = validateBody(params, PaginatedSearchParamsSchema);
-		const {
-			page = 1,
-			pageSize = 10,
-			search,
-			// filter,
-		} = validated.data;
+		const { page = 1, pageSize = 10, search, filter } = validated.data;
 
 		const skip = (Number(page) - 1) * Number(pageSize);
 		const take = Number(pageSize);
@@ -51,6 +45,10 @@ export async function GetTeachers(params: {
 		// 	where.role = filter as any;
 		// }
 
+		if (filter) {
+			where.department = { symbol: filter };
+		}
+
 		const total = await prisma.user.count({ where });
 
 		const users = await prisma.user.findMany({
@@ -59,9 +57,15 @@ export async function GetTeachers(params: {
 			skip,
 			take,
 		});
-		const teachers = users;
+		const teachers = users.map(
+			({
+				password,
+				resetPasswordToken,
+				resetPasswordExpireAt,
+				...rest
+			}) => rest,
+		);
 		const isNext = total > skip + teachers.length;
-		console.log("users", users);
 
 		return {
 			success: true,

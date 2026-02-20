@@ -1,23 +1,45 @@
 import { api } from "@/lib/api";
-import TeacherPageClient from "./components/TeacherPageClient";
-import type { Department, User } from "@/generated/prisma/client";
+import type { Department } from "@/generated/prisma/client";
+import type { PublicUser } from "@/lib/user";
+
 import SubHeader from "@/components/sub-header";
 import { DialogCardBtn } from "@/components/DialogCardBtn";
 import TeacherForm from "./components/TeacherForm";
+import TeachersListTable from "./components/TeachersListTable";
+import { Paginationn } from "@/components/Pagination";
+import { GetTeachers } from "@/lib/actions/GetTeachers";
 
-export type TeacherWithDepartment = User & {
+export type TeacherWithDepartment = PublicUser & {
 	department: Department;
 };
-const page = async () => {
-	let teachers: TeacherWithDepartment[] = [];
-	try {
-		const res = await api.users.getAll();
+const page = async ({
+	searchParams,
+}: {
+	searchParams: Promise<{
+		[key: string]: string; //don't need to specify exact keys
+	}>;
+}) => {
+	const { page, pageSize, search, filter, total } = await searchParams;
 
-		teachers = res?.data?.users || [];
-		console.log("teacher list; ", teachers);
-	} catch (error: any) {
-		throw error.message;
-	}
+	const { success, data, message } = await GetTeachers({
+		page: Number(page) || 1,
+		pageSize: Number(pageSize) || 10,
+		search: search || "",
+		filter,
+	});
+
+	// const user = await auth();
+
+	const { teachers = [] } = data || {};
+	console.log("server teacher ", teachers);
+	// let teachers: TeacherWithDepartment[] = [];
+	// try {
+	// 	const res = await api.users.getAll();
+	// 	teachers = res?.data?.users || [];
+	// 	console.log("teacher list; ", teachers);
+	// } catch (error: any) {
+	// 	throw error.message;
+	// }
 
 	return (
 		<>
@@ -34,7 +56,12 @@ const page = async () => {
 				}
 			/>
 			{teachers?.length ? (
-				<TeacherPageClient initialTeachers={teachers} />
+				<main className="space-y-5">
+					<div className=" flex items-center justify-center max-w-5xl mx-auto">
+						<TeachersListTable teachers={teachers} />
+					</div>
+					<Paginationn />
+				</main>
 			) : (
 				<div className="flex items-center justify-center min-h-[50vh]">
 					<p className="text-gray-500">No teachers found.</p>

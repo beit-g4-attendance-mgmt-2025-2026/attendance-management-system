@@ -31,7 +31,7 @@ const semesters = [
 	{ label: "2nd Semester", value: "second semester" },
 ];
 
-const departmentNames = ["IT", "Civil", "MP", "EP", "EC"];
+const departmentNames = ["CEIT", "CIVIL", "MP", "EP", "EC"];
 
 export const days = [
 	{ label: "1", value: "1" },
