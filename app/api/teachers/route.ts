@@ -45,10 +45,13 @@ export async function POST(request: NextRequest) {
 	// const RESET_EXPIRY_MINUTES = 60;
 	const body = await request.json();
 	const auth = await requireAdminOrUserRoles(request, [Role.HOD, Role.ADMIN]);
-
 	if ("response" in auth) return auth.response;
 
-	const assignedRole = "admin" in auth ? Role.HOD : Role.TEACHER;
+	const isAdmin = "admin" in auth;
+	const authUser = "user" in auth ? auth.user : null;
+
+	// Admin creates HOD, HOD creates TEACHER only
+	const assignedRole = isAdmin ? Role.HOD : Role.TEACHER;
 
 	try {
 		const validatedData = validateBody(body, RegisterSchema);
@@ -83,14 +86,34 @@ export async function POST(request: NextRequest) {
 			throw new Error("User already exists");
 		}
 
-		const department = await prisma.department.findFirst({
-			where: { symbol: departmentName },
-		});
+		let department;
 
-		if (!department) throw new Error("Department not found");
-		// one HOD per department
-		if (assignedRole === Role.HOD && department.hodId) {
-			throw new Error("Department already has a HOD");
+		if (isAdmin) {
+			department = await prisma.department.findFirst({
+				where: { symbol: departmentName },
+				select: { id: true, hodId: true },
+			});
+			if (!department) throw new Error("Department not found");
+
+			if (assignedRole === Role.HOD && department.hodId) {
+				throw new Error("Department already has a Head of Department");
+			}
+		} else {
+			// if hod do not have department, he can't add teacher
+			if (!authUser?.departmentId)
+				throw new Error("Head of Department has no department");
+
+			// get department by hod's department
+			department = await prisma.department.findUnique({
+				where: { id: authUser.departmentId },
+				select: { id: true, hodId: true, symbol: true },
+			});
+			if (!department) throw new Error("Department not found");
+
+			// HOD can't create user from other department
+			if (departmentName && department.symbol !== departmentName) {
+				throw new Error("HOD can only create users in own department");
+			}
 		}
 
 		const passwordHashed = await hashPassword(password);
@@ -101,33 +124,38 @@ export async function POST(request: NextRequest) {
 		// 	Date.now() + RESET_EXPIRY_MINUTES * 60 * 1000,
 		// );
 
-		const user = await prisma.user.create({
-			data: {
-				username,
-				fullName,
-				email,
-				password: passwordHashed,
-				// role: role as Role,
-				role: assignedRole,
-				gender: gender as Gender,
-				phoneNumber,
-				department: {
-					connect: { id: department.id },
+		const user = await prisma.$transaction(async (tx) => {
+			const created = await tx.user.create({
+				data: {
+					username,
+					fullName,
+					email,
+					password: passwordHashed,
+					role: assignedRole,
+					gender: gender as Gender,
+					phoneNumber,
+					department: { connect: { id: department!.id } },
+					resetPasswordToken: "",
+					resetPasswordExpireAt: null,
+					// resetPasswordToken: resetTokenHash,
+					// resetPasswordExpireAt: expiresAt,
 				},
-				resetPasswordToken: "",
-				resetPasswordExpireAt: "2026-02-13T23:59:59.000Z",
-				// resetPasswordToken: resetTokenHash,
-				// resetPasswordExpireAt: expiresAt,
-			},
-		});
+			});
 
-		// If the created user is a HOD, assign them as the department HOD
+			if (assignedRole === Role.HOD) {
+				await tx.department.update({
+					where: { id: department!.id },
+					data: { hod: { connect: { id: created.id } } },
+				});
+			}
+
+			return created;
+		});
+		// add hod user to department's hodId
 		if (assignedRole === Role.HOD) {
 			await prisma.department.update({
 				where: { id: department.id },
-				data: {
-					hod: { connect: { id: user.id } },
-				},
+				data: { hod: { connect: { id: user.id } } },
 			});
 		}
 

@@ -51,19 +51,28 @@ export function LoginForm({ url, className, ...props }: LoginFormProps) {
 	} = form;
 
 	async function onSubmit(values: z.infer<typeof LoginSchema>) {
-		const res = await fetchHandler(url, {
-			method: "POST",
-			body: JSON.stringify(values),
-		});
-
-		if (res.success) {
-			router.push("/dashboard");
-			toast.success("Login successful!");
-			console.log("Login successful", res.data);
-		} else {
-			setError(res.message);
-			toast.error(res.message);
+		try {
+			const res = await fetchHandler(url, {
+				method: "POST",
+				body: JSON.stringify(values),
+			});
+			if (res.success) {
+				router.push("/dashboard");
+				toast.success("Login successful!");
+				console.log("Login successful", res.data);
+			}
+		} catch (error: any) {
+			setError(error?.message);
 		}
+		// if (res.success) {
+		// 	router.push("/dashboard");
+		// 	toast.success("Login successful!");
+		// 	console.log("Login successful", res.data);
+		// } else {
+		// 	console.log(res);
+		// 	setError(res.message);
+		// 	toast.error(res.message);
+		// }
 	}
 	return (
 		<div className={cn("flex flex-col gap-6", className)} {...props}>

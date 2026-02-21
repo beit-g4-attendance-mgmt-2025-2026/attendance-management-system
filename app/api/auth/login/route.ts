@@ -39,7 +39,8 @@ export async function POST(request: NextRequest) {
 			return response;
 		}
 
-		return unauthorized("Invalid credentials");
+		throw new Error("Invalid credentials");
+		return;
 	} catch (error: unknown) {
 		return handleErrorResponse(error);
 	}
