@@ -26,15 +26,22 @@ export async function GetTeachers(params: {
 	details?: object | null;
 }> {
 	try {
-		//  Auth user from cookies
-		const userId = await getUserIdFromCookies();
-		if (!userId) return { success: false, message: "Unauthorized" };
+		// Auth from cookies (Admin OR User)
+		const authId = await getUserIdFromCookies();
+		if (!authId) return { success: false, message: "Unauthorized" };
 
-		const user = await prisma.user.findUnique({ where: { id: userId } });
-		if (!user) return { success: false, message: "Unauthorized" };
+		// check Admin table first
+		const admin = await prisma.admin.findUnique({ where: { id: authId } });
 
-		if (user.role !== Role.ADMIN && user.role !== Role.HOD) {
-			return { success: false, message: "Forbidden" };
+		// if not admin, check User table
+		let user: User | null = null;
+		if (!admin) {
+			user = await prisma.user.findUnique({ where: { id: authId } });
+			if (!user) return { success: false, message: "Unauthorized" };
+
+			if (user.role !== Role.ADMIN && user.role !== Role.HOD) {
+				return { success: false, message: "Forbidden" };
+			}
 		}
 
 		const validated = validateBody(params, PaginatedSearchParamsSchema);
@@ -62,8 +69,11 @@ export async function GetTeachers(params: {
 			where.department = { symbol: filter };
 		}
 
-		// role-based restriction
-		if (user.role === "HOD") {
+		//  HOD restriction
+		if (user?.role === Role.HOD) {
+			if (!user.departmentId) {
+				return { success: false, message: "HOD has no department" };
+			}
 			where.departmentId = user.departmentId;
 		}
 

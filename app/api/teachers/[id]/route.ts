@@ -1,4 +1,5 @@
-import { requireAuth } from "@/lib/guard";
+import { Role } from "@/generated/prisma/enums";
+import { requireAdminOrUserRoles, requireAuth } from "@/lib/guard";
 import { prisma } from "@/lib/prisma";
 import { handleErrorResponse, handleSuccessResponse } from "@/lib/response";
 import UserEditSchema from "@/lib/schema/TeacherEditSchema";
@@ -80,24 +81,57 @@ export async function PUT(
 
 export async function DELETE(
 	request: NextRequest,
-	{ params }: { params: { id: string } },
+	{ params }: { params: Promise<{ id: string }> },
 ) {
 	try {
-		const { id } = params;
+		const { id } = await params;
 
-		// const auth = await requireAuth(request, { roles: ["ADMIN", "HOD"] });
-		// if ("response" in auth) return auth.response;
+		const auth = await requireAdminOrUserRoles(request, [
+			Role.HOD,
+			Role.ADMIN,
+		]);
+		if ("response" in auth) return auth.response;
 
-		// const authUser = auth.user;
-		// const isAdmin = authUser.role === "ADMIN";
-		// const isSelf = authUser.id === id;
-		// if (!isAdmin && !isSelf)
-		// 	throw new Error("Access denied! Please contact admin.");
+		const isAdmin = "admin" in auth;
+		const authUser = "user" in auth ? auth.user : null;
 
-		const user = await prisma.user.delete({ where: { id: id } });
-		if (!user) throw new Error("User not found");
+		// HOD cannot delete himself
+		if (authUser?.role === Role.HOD && authUser.id === id) {
+			throw new Error("Head of Department cannot delete yourself");
+		}
 
-		return handleSuccessResponse(toPublicUser(user));
+		const targetUser = await prisma.user.findUnique({ where: { id } });
+		if (!targetUser) throw new Error("User not found");
+
+		// Only admin can delete HOD users
+		if (targetUser.role === Role.HOD && !isAdmin) {
+			throw new Error("Only admin can delete Head of Department");
+		}
+
+		const subjectCount = await prisma.subject.count({
+			where: { userId: id },
+		});
+		if (subjectCount > 0)
+			throw new Error(
+				"Cannot delete teacher with assigned subjects. Reassign or delete subjects first.",
+			);
+
+		const classCount = await prisma.class.count({
+			where: { userId: id },
+		});
+		if (classCount > 0)
+			throw new Error(
+				"Cannot delete teacher assigned to a class. Reassign the class first.",
+			);
+
+		await prisma.department.updateMany({
+			where: { hodId: id },
+			data: { hodId: null },
+		});
+
+		await prisma.user.delete({ where: { id: id } });
+
+		return handleSuccessResponse({ message: "User deleted successfully" });
 	} catch (error: unknown) {
 		return handleErrorResponse(error);
 	}

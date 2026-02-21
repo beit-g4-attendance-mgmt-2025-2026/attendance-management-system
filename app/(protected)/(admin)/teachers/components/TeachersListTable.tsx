@@ -15,19 +15,27 @@ import TeacherForm from "./TeacherForm";
 import { TeacherWithDepartment } from "../page";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export interface TeachersListTableProps {
 	teachers: TeacherWithDepartment[];
 }
 
 const TeachersListTable = ({ teachers }: TeachersListTableProps) => {
+	const router = useRouter();
+	const [loading, setLoading] = useState(false);
 	const handleDelete = async (id: string) => {
 		try {
+			setLoading(true);
 			const res = await api.users.delete(id);
-			if (res.success) toast.success("User deleted successfully!");
+			if (res.success) toast.success(res.data.message);
+			router.refresh();
 		} catch (error: any) {
 			console.log(error);
-			toast.error(error);
+			toast.error(error.message);
+		} finally {
+			setLoading(false);
 		}
 	};
 	return (
@@ -80,6 +88,7 @@ const TeachersListTable = ({ teachers }: TeachersListTableProps) => {
 									onConfirm={() => handleDelete(teacher.id)}
 								>
 									<Button
+										disabled={loading}
 										variant={"ghost"}
 										className="text-red-500 cursor-pointer hover:text-red-700"
 									>
