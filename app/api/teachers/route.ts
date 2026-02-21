@@ -88,6 +88,10 @@ export async function POST(request: NextRequest) {
 		});
 
 		if (!department) throw new Error("Department not found");
+		// one HOD per department
+		if (assignedRole === Role.HOD && department.hodId) {
+			throw new Error("Department already has a HOD");
+		}
 
 		const passwordHashed = await hashPassword(password);
 
