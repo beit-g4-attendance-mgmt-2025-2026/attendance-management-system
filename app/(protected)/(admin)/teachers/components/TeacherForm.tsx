@@ -20,9 +20,11 @@ import { PublicUser } from "@/lib/user";
 const TeacherForm = ({
 	isEdit = false,
 	teacher,
+	onClose,
 }: {
 	isEdit: boolean;
 	teacher?: PublicUser | null;
+	onClose?: () => void;
 }) => {
 	const router = useRouter();
 	const schema = teacher && isEdit ? TeacherSchema.partial() : TeacherSchema;
@@ -56,6 +58,9 @@ const TeacherForm = ({
 	const {
 		formState: { isSubmitting },
 	} = form;
+	const handleClose = () => {
+		router.back();
+	};
 
 	async function onSubmit(values: z.infer<typeof schema>) {
 		try {
@@ -80,7 +85,8 @@ const TeacherForm = ({
 				const res = await api.users.update(teacher.id, updateData);
 				console.log("updated User: ", res);
 				if (res?.success) {
-					window.location.reload();
+					router.refresh();
+					onClose?.();
 					return;
 				}
 			} else {
@@ -98,7 +104,8 @@ const TeacherForm = ({
 				const res = await api.users.create(data);
 				console.log("create user: ", res);
 				if (res?.success) {
-					window.location.reload();
+					router.refresh();
+					onClose?.();
 					return;
 				}
 			}

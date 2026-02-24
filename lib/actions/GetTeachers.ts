@@ -84,6 +84,7 @@ export async function GetTeachers(params: {
 			include: { department: true },
 			skip,
 			take,
+			orderBy: { createdAt: "asc" },
 		});
 		const teachers = users.map(
 			({

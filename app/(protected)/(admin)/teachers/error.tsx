@@ -1,6 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { startTransition } from "react";
 
 export default function Error({
 	error,
@@ -9,6 +11,14 @@ export default function Error({
 	error: Error & { digest?: string };
 	reset: () => void;
 }) {
+	const router = useRouter();
+
+	const handleRetry = () => {
+		startTransition(() => {
+			reset();
+			router.refresh();
+		});
+	};
 	return (
 		<div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
 			<h2 className="text-destructive font-bold text-2xl">
@@ -18,7 +28,7 @@ export default function Error({
 			<Button
 				variant={"destructive"}
 				className="cursor-pointer"
-				onClick={() => reset()} // retry do not refresh the page but re-render the component
+				onClick={handleRetry} // retry do not refresh the page but re-render the component
 			>
 				Try Again
 			</Button>
