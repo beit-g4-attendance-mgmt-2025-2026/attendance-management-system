@@ -19,6 +19,8 @@ import {
 import Header from "./side-header";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import NProgress from "nprogress";
+import { useEffect } from "react";
 
 import Cookies from "js-cookie";
 
@@ -117,6 +119,9 @@ export function AppSidebar() {
 			},
 		],
 	};
+	useEffect(() => {
+		NProgress.done();
+	}, [pathname]);
 	const items = sidebarItemsByRole[role];
 	return (
 		<Sidebar collapsible="icon">
@@ -140,7 +145,12 @@ export function AppSidebar() {
 											tooltip={item.title}
 											asChild
 										>
-											<Link href={item.url}>
+											<Link
+												href={item.url}
+												onClick={() =>
+													NProgress.start()
+												}
+											>
 												<item.icon className="size-4" />
 												<span>{item.title}</span>
 											</Link>
