@@ -61,5 +61,29 @@ export const api = {
 			}),
 	},
 
-	auth: {},
+	auth: {
+		// login user/admin
+		login: (data: { username: string; password: string }) =>
+			fetchHandler(API_URL + "/auth/login", {
+				method: "POST",
+				body: JSON.stringify(data),
+			}),
+
+		// logout
+		logout: () =>
+			fetchHandler(API_URL + "/auth/logout", {
+				method: "POST",
+			}),
+
+		// reset password using token query string
+		resetPassword: (password: string, token: string) =>
+			fetchHandler(
+				API_URL +
+					`/auth/reset-password?token=${encodeURIComponent(token)}`,
+				{
+					method: "POST",
+					body: JSON.stringify({ password }),
+				},
+			),
+	},
 };

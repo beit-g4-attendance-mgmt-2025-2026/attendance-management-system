@@ -26,7 +26,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
-import fetchHandler from "@/lib/fetchHandler";
+import { api } from "@/lib/api";
 import { toast } from "sonner";
 
 export function ResetPasswordForm({
@@ -48,19 +48,22 @@ export function ResetPasswordForm({
 	async function onSubmit(values: z.infer<typeof ResetPasswordSchema>) {
 		console.log(values);
 		const token = new URLSearchParams(window.location.search).get("token");
-		const res = await fetchHandler(
-			`http://localhost:3000/api/auth/reset-password?token=${token}`,
-			{
-				method: "POST",
-				body: JSON.stringify({ password: values.password }),
-			},
-		);
-		if (res.success) {
-			router.push("/");
-			toast.success("Update password successful!");
-			console.log("Update password successful", res.data);
-		} else {
-			setError(res.message);
+		if (!token) {
+			setError("Missing reset token");
+			return;
+		}
+
+		try {
+			const res = await api.auth.resetPassword(values.password, token);
+			if (res.success) {
+				router.push("/");
+				toast.success("Update password successful!");
+				console.log("Update password successful", res.data);
+			} else {
+				setError(res.message);
+			}
+		} catch (err: any) {
+			setError(err.message || "Something went wrong");
 		}
 	}
 	return (
