@@ -248,7 +248,7 @@ export type UserWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
   hod?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
-  class?: Prisma.XOR<Prisma.ClassNullableScalarRelationFilter, Prisma.ClassWhereInput> | null
+  classes?: Prisma.ClassListRelationFilter
   subjects?: Prisma.SubjectListRelationFilter
 }
 
@@ -268,7 +268,7 @@ export type UserOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   department?: Prisma.DepartmentOrderByWithRelationInput
   hod?: Prisma.DepartmentOrderByWithRelationInput
-  class?: Prisma.ClassOrderByWithRelationInput
+  classes?: Prisma.ClassOrderByRelationAggregateInput
   subjects?: Prisma.SubjectOrderByRelationAggregateInput
 }
 
@@ -291,7 +291,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
   hod?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
-  class?: Prisma.XOR<Prisma.ClassNullableScalarRelationFilter, Prisma.ClassWhereInput> | null
+  classes?: Prisma.ClassListRelationFilter
   subjects?: Prisma.SubjectListRelationFilter
 }, "id" | "username" | "email">
 
@@ -348,7 +348,7 @@ export type UserCreateInput = {
   updatedAt?: Date | string
   department: Prisma.DepartmentCreateNestedOneWithoutUsersInput
   hod?: Prisma.DepartmentCreateNestedOneWithoutHodInput
-  class?: Prisma.ClassCreateNestedOneWithoutUserInput
+  classes?: Prisma.ClassCreateNestedManyWithoutUserInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutUserInput
 }
 
@@ -367,7 +367,7 @@ export type UserUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   hod?: Prisma.DepartmentUncheckedCreateNestedOneWithoutHodInput
-  class?: Prisma.ClassUncheckedCreateNestedOneWithoutUserInput
+  classes?: Prisma.ClassUncheckedCreateNestedManyWithoutUserInput
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -386,7 +386,7 @@ export type UserUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   department?: Prisma.DepartmentUpdateOneRequiredWithoutUsersNestedInput
   hod?: Prisma.DepartmentUpdateOneWithoutHodNestedInput
-  class?: Prisma.ClassUpdateOneWithoutUserNestedInput
+  classes?: Prisma.ClassUpdateManyWithoutUserNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutUserNestedInput
 }
 
@@ -405,7 +405,7 @@ export type UserUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hod?: Prisma.DepartmentUncheckedUpdateOneWithoutHodNestedInput
-  class?: Prisma.ClassUncheckedUpdateOneWithoutUserNestedInput
+  classes?: Prisma.ClassUncheckedUpdateManyWithoutUserNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -598,18 +598,20 @@ export type UserUncheckedUpdateManyWithoutDepartmentNestedInput = {
   deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
 }
 
-export type UserCreateNestedOneWithoutClassInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutClassInput, Prisma.UserUncheckedCreateWithoutClassInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutClassInput
+export type UserCreateNestedOneWithoutClassesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutClassesInput, Prisma.UserUncheckedCreateWithoutClassesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutClassesInput
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutClassNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutClassInput, Prisma.UserUncheckedCreateWithoutClassInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutClassInput
-  upsert?: Prisma.UserUpsertWithoutClassInput
+export type UserUpdateOneWithoutClassesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutClassesInput, Prisma.UserUncheckedCreateWithoutClassesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutClassesInput
+  upsert?: Prisma.UserUpsertWithoutClassesInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
   connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutClassInput, Prisma.UserUpdateWithoutClassInput>, Prisma.UserUncheckedUpdateWithoutClassInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutClassesInput, Prisma.UserUpdateWithoutClassesInput>, Prisma.UserUncheckedUpdateWithoutClassesInput>
 }
 
 export type UserCreateNestedOneWithoutSubjectsInput = {
@@ -640,7 +642,7 @@ export type UserCreateWithoutHodInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   department: Prisma.DepartmentCreateNestedOneWithoutUsersInput
-  class?: Prisma.ClassCreateNestedOneWithoutUserInput
+  classes?: Prisma.ClassCreateNestedManyWithoutUserInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutUserInput
 }
 
@@ -658,7 +660,7 @@ export type UserUncheckedCreateWithoutHodInput = {
   departmentId: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  class?: Prisma.ClassUncheckedCreateNestedOneWithoutUserInput
+  classes?: Prisma.ClassUncheckedCreateNestedManyWithoutUserInput
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -681,7 +683,7 @@ export type UserCreateWithoutDepartmentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   hod?: Prisma.DepartmentCreateNestedOneWithoutHodInput
-  class?: Prisma.ClassCreateNestedOneWithoutUserInput
+  classes?: Prisma.ClassCreateNestedManyWithoutUserInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutUserInput
 }
 
@@ -699,7 +701,7 @@ export type UserUncheckedCreateWithoutDepartmentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   hod?: Prisma.DepartmentUncheckedCreateNestedOneWithoutHodInput
-  class?: Prisma.ClassUncheckedCreateNestedOneWithoutUserInput
+  classes?: Prisma.ClassUncheckedCreateNestedManyWithoutUserInput
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -738,7 +740,7 @@ export type UserUpdateWithoutHodInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   department?: Prisma.DepartmentUpdateOneRequiredWithoutUsersNestedInput
-  class?: Prisma.ClassUpdateOneWithoutUserNestedInput
+  classes?: Prisma.ClassUpdateManyWithoutUserNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutUserNestedInput
 }
 
@@ -756,7 +758,7 @@ export type UserUncheckedUpdateWithoutHodInput = {
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  class?: Prisma.ClassUncheckedUpdateOneWithoutUserNestedInput
+  classes?: Prisma.ClassUncheckedUpdateManyWithoutUserNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -795,7 +797,7 @@ export type UserScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
 }
 
-export type UserCreateWithoutClassInput = {
+export type UserCreateWithoutClassesInput = {
   id?: string
   username: string
   password: string
@@ -813,7 +815,7 @@ export type UserCreateWithoutClassInput = {
   subjects?: Prisma.SubjectCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutClassInput = {
+export type UserUncheckedCreateWithoutClassesInput = {
   id?: string
   username: string
   password: string
@@ -831,23 +833,23 @@ export type UserUncheckedCreateWithoutClassInput = {
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutClassInput = {
+export type UserCreateOrConnectWithoutClassesInput = {
   where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutClassInput, Prisma.UserUncheckedCreateWithoutClassInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutClassesInput, Prisma.UserUncheckedCreateWithoutClassesInput>
 }
 
-export type UserUpsertWithoutClassInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutClassInput, Prisma.UserUncheckedUpdateWithoutClassInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutClassInput, Prisma.UserUncheckedCreateWithoutClassInput>
+export type UserUpsertWithoutClassesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutClassesInput, Prisma.UserUncheckedUpdateWithoutClassesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutClassesInput, Prisma.UserUncheckedCreateWithoutClassesInput>
   where?: Prisma.UserWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutClassInput = {
+export type UserUpdateToOneWithWhereWithoutClassesInput = {
   where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutClassInput, Prisma.UserUncheckedUpdateWithoutClassInput>
+  data: Prisma.XOR<Prisma.UserUpdateWithoutClassesInput, Prisma.UserUncheckedUpdateWithoutClassesInput>
 }
 
-export type UserUpdateWithoutClassInput = {
+export type UserUpdateWithoutClassesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
@@ -865,7 +867,7 @@ export type UserUpdateWithoutClassInput = {
   subjects?: Prisma.SubjectUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutClassInput = {
+export type UserUncheckedUpdateWithoutClassesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
@@ -898,7 +900,7 @@ export type UserCreateWithoutSubjectsInput = {
   updatedAt?: Date | string
   department: Prisma.DepartmentCreateNestedOneWithoutUsersInput
   hod?: Prisma.DepartmentCreateNestedOneWithoutHodInput
-  class?: Prisma.ClassCreateNestedOneWithoutUserInput
+  classes?: Prisma.ClassCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSubjectsInput = {
@@ -916,7 +918,7 @@ export type UserUncheckedCreateWithoutSubjectsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   hod?: Prisma.DepartmentUncheckedCreateNestedOneWithoutHodInput
-  class?: Prisma.ClassUncheckedCreateNestedOneWithoutUserInput
+  classes?: Prisma.ClassUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSubjectsInput = {
@@ -950,7 +952,7 @@ export type UserUpdateWithoutSubjectsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   department?: Prisma.DepartmentUpdateOneRequiredWithoutUsersNestedInput
   hod?: Prisma.DepartmentUpdateOneWithoutHodNestedInput
-  class?: Prisma.ClassUpdateOneWithoutUserNestedInput
+  classes?: Prisma.ClassUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSubjectsInput = {
@@ -968,7 +970,7 @@ export type UserUncheckedUpdateWithoutSubjectsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hod?: Prisma.DepartmentUncheckedUpdateOneWithoutHodNestedInput
-  class?: Prisma.ClassUncheckedUpdateOneWithoutUserNestedInput
+  classes?: Prisma.ClassUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyDepartmentInput = {
@@ -1000,7 +1002,7 @@ export type UserUpdateWithoutDepartmentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hod?: Prisma.DepartmentUpdateOneWithoutHodNestedInput
-  class?: Prisma.ClassUpdateOneWithoutUserNestedInput
+  classes?: Prisma.ClassUpdateManyWithoutUserNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutUserNestedInput
 }
 
@@ -1018,7 +1020,7 @@ export type UserUncheckedUpdateWithoutDepartmentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hod?: Prisma.DepartmentUncheckedUpdateOneWithoutHodNestedInput
-  class?: Prisma.ClassUncheckedUpdateOneWithoutUserNestedInput
+  classes?: Prisma.ClassUncheckedUpdateManyWithoutUserNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1043,10 +1045,12 @@ export type UserUncheckedUpdateManyWithoutDepartmentInput = {
  */
 
 export type UserCountOutputType = {
+  classes: number
   subjects: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  classes?: boolean | UserCountOutputTypeCountClassesArgs
   subjects?: boolean | UserCountOutputTypeCountSubjectsArgs
 }
 
@@ -1058,6 +1062,13 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
    * Select specific fields to fetch from the UserCountOutputType
    */
   select?: Prisma.UserCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountClassesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ClassWhereInput
 }
 
 /**
@@ -1084,7 +1095,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedAt?: boolean
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   hod?: boolean | Prisma.User$hodArgs<ExtArgs>
-  class?: boolean | Prisma.User$classArgs<ExtArgs>
+  classes?: boolean | Prisma.User$classesArgs<ExtArgs>
   subjects?: boolean | Prisma.User$subjectsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
@@ -1143,7 +1154,7 @@ export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   hod?: boolean | Prisma.User$hodArgs<ExtArgs>
-  class?: boolean | Prisma.User$classArgs<ExtArgs>
+  classes?: boolean | Prisma.User$classesArgs<ExtArgs>
   subjects?: boolean | Prisma.User$subjectsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1159,7 +1170,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     department: Prisma.$DepartmentPayload<ExtArgs>
     hod: Prisma.$DepartmentPayload<ExtArgs> | null
-    class: Prisma.$ClassPayload<ExtArgs> | null
+    classes: Prisma.$ClassPayload<ExtArgs>[]
     subjects: Prisma.$SubjectPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1572,7 +1583,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   department<T extends Prisma.DepartmentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DepartmentDefaultArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   hod<T extends Prisma.User$hodArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$hodArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  class<T extends Prisma.User$classArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$classArgs<ExtArgs>>): Prisma.Prisma__ClassClient<runtime.Types.Result.GetResult<Prisma.$ClassPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  classes<T extends Prisma.User$classesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$classesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ClassPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   subjects<T extends Prisma.User$subjectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$subjectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2031,9 +2042,9 @@ export type User$hodArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 }
 
 /**
- * User.class
+ * User.classes
  */
-export type User$classArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$classesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Class
    */
@@ -2047,6 +2058,11 @@ export type User$classArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    */
   include?: Prisma.ClassInclude<ExtArgs> | null
   where?: Prisma.ClassWhereInput
+  orderBy?: Prisma.ClassOrderByWithRelationInput | Prisma.ClassOrderByWithRelationInput[]
+  cursor?: Prisma.ClassWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ClassScalarFieldEnum | Prisma.ClassScalarFieldEnum[]
 }
 
 /**

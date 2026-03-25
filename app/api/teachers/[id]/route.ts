@@ -22,7 +22,7 @@ export async function GET(
 
 	const user = await prisma.user.findUnique({
 		where: { id: params.id },
-		include: { department: true, class: true, subjects: true },
+		include: { department: true, classes: true, subjects: true },
 	});
 	if (!user) return handleErrorResponse("User not found");
 	return handleSuccessResponse({ user: toPublicUser(user) });
@@ -68,7 +68,7 @@ export async function PUT(
 		const user = await prisma.user.update({
 			where: { id },
 			data: updateData,
-			include: { department: true, class: true, subjects: true },
+			include: { department: true, classes: true, subjects: true },
 		});
 
 		//! Note: Department and HOD status are not modified during teacher edit
