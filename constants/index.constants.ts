@@ -18,17 +18,17 @@ const roles = [
   { label: "HOD", value: "HOD" },
   { label: "TEACHER", value: "TEACHER" },
 ] as const;
-const acedamicYears = [
-  { label: "First Year", value: "first year" },
-  { label: "Second Year", value: "second year" },
-  { label: "Third Year", value: "third year" },
-  { label: "Fourth Year", value: "fourth year" },
-  { label: "Fifth Year", value: "fifth year" },
-  { label: "Sixth Year", value: "sixth year" },
+const Years = [
+  { label: "First Year", value: "FIRST" },
+  { label: "Second Year", value: "SECOND" },
+  { label: "Third Year", value: "THIRD" },
+  { label: "Fourth Year", value: "FOURTH" },
+  { label: "Fifth Year", value: "FIFTH" },
+  { label: "Final Year", value: "FINAL" },
 ];
 const semesters = [
-  { label: "1st Semester", value: "first semester" },
-  { label: "2nd Semester", value: "second semester" },
+  { label: "1st Semester", value: "first_semester" },
+  { label: "2nd Semester", value: "second_semester" },
 ];
 
 const departmentNames = ["CEIT", "CIVIL", "MP", "EP", "EC"];
@@ -481,7 +481,7 @@ export {
   genders,
   departments,
   roles,
-  acedamicYears,
+  Years,
   semesters,
   departmentNames,
   TEACHERS,

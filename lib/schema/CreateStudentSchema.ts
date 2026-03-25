@@ -8,6 +8,17 @@ export const CreateStudentSchema = z.object({
 
   rollNo: z.string().min(2, { message: "Please enter roll number" }),
 
+  dateOfBirth: z.preprocess(
+    (value) => (value === "" ? null : value),
+    z
+      .string()
+      .refine((value) => !Number.isNaN(Date.parse(value)), {
+        message: "Please enter a valid date of birth",
+      })
+      .optional()
+      .nullable(),
+  ),
+
   phoneNumber: z.string().min(6, {
     message: "Phone number must be at least 6 characters",
   }),

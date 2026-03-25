@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
 
 	try {
 		const users = await prisma.user.findMany({
-			include: { department: true, class: true, subjects: true },
+			include: { department: true, classes: true, subjects: true },
 			orderBy: [
 				{
 					fullName: "asc",

@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
 			data: {
 				name: data.name,
 				rollNo: data.rollNo,
+				dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
 				phoneNumber: data.phoneNumber,
 				gender: data.gender,
 				email: data.email,

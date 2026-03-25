@@ -28,6 +28,7 @@ export type StudentMinAggregateOutputType = {
   id: string | null
   name: string | null
   rollNo: string | null
+  dateOfBirth: Date | null
   phoneNumber: string | null
   gender: $Enums.Gender | null
   email: string | null
@@ -41,6 +42,7 @@ export type StudentMaxAggregateOutputType = {
   id: string | null
   name: string | null
   rollNo: string | null
+  dateOfBirth: Date | null
   phoneNumber: string | null
   gender: $Enums.Gender | null
   email: string | null
@@ -54,6 +56,7 @@ export type StudentCountAggregateOutputType = {
   id: number
   name: number
   rollNo: number
+  dateOfBirth: number
   phoneNumber: number
   gender: number
   email: number
@@ -69,6 +72,7 @@ export type StudentMinAggregateInputType = {
   id?: true
   name?: true
   rollNo?: true
+  dateOfBirth?: true
   phoneNumber?: true
   gender?: true
   email?: true
@@ -82,6 +86,7 @@ export type StudentMaxAggregateInputType = {
   id?: true
   name?: true
   rollNo?: true
+  dateOfBirth?: true
   phoneNumber?: true
   gender?: true
   email?: true
@@ -95,6 +100,7 @@ export type StudentCountAggregateInputType = {
   id?: true
   name?: true
   rollNo?: true
+  dateOfBirth?: true
   phoneNumber?: true
   gender?: true
   email?: true
@@ -181,6 +187,7 @@ export type StudentGroupByOutputType = {
   id: string
   name: string
   rollNo: string
+  dateOfBirth: Date | null
   phoneNumber: string
   gender: $Enums.Gender
   email: string
@@ -215,6 +222,7 @@ export type StudentWhereInput = {
   id?: Prisma.UuidFilter<"Student"> | string
   name?: Prisma.StringFilter<"Student"> | string
   rollNo?: Prisma.StringFilter<"Student"> | string
+  dateOfBirth?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
   phoneNumber?: Prisma.StringFilter<"Student"> | string
   gender?: Prisma.EnumGenderFilter<"Student"> | $Enums.Gender
   email?: Prisma.StringFilter<"Student"> | string
@@ -232,6 +240,7 @@ export type StudentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   rollNo?: Prisma.SortOrder
+  dateOfBirth?: Prisma.SortOrderInput | Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   email?: Prisma.SortOrder
@@ -253,6 +262,7 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.StudentWhereInput[]
   NOT?: Prisma.StudentWhereInput | Prisma.StudentWhereInput[]
   name?: Prisma.StringFilter<"Student"> | string
+  dateOfBirth?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
   phoneNumber?: Prisma.StringFilter<"Student"> | string
   gender?: Prisma.EnumGenderFilter<"Student"> | $Enums.Gender
   year?: Prisma.EnumYearFilter<"Student"> | $Enums.Year
@@ -269,6 +279,7 @@ export type StudentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   rollNo?: Prisma.SortOrder
+  dateOfBirth?: Prisma.SortOrderInput | Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   email?: Prisma.SortOrder
@@ -288,6 +299,7 @@ export type StudentScalarWhereWithAggregatesInput = {
   id?: Prisma.UuidWithAggregatesFilter<"Student"> | string
   name?: Prisma.StringWithAggregatesFilter<"Student"> | string
   rollNo?: Prisma.StringWithAggregatesFilter<"Student"> | string
+  dateOfBirth?: Prisma.DateTimeNullableWithAggregatesFilter<"Student"> | Date | string | null
   phoneNumber?: Prisma.StringWithAggregatesFilter<"Student"> | string
   gender?: Prisma.EnumGenderWithAggregatesFilter<"Student"> | $Enums.Gender
   email?: Prisma.StringWithAggregatesFilter<"Student"> | string
@@ -301,6 +313,7 @@ export type StudentCreateInput = {
   id?: string
   name: string
   rollNo: string
+  dateOfBirth?: Date | string | null
   phoneNumber: string
   gender: $Enums.Gender
   email: string
@@ -316,6 +329,7 @@ export type StudentUncheckedCreateInput = {
   id?: string
   name: string
   rollNo: string
+  dateOfBirth?: Date | string | null
   phoneNumber: string
   gender: $Enums.Gender
   email: string
@@ -331,6 +345,7 @@ export type StudentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -346,6 +361,7 @@ export type StudentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -361,6 +377,7 @@ export type StudentCreateManyInput = {
   id?: string
   name: string
   rollNo: string
+  dateOfBirth?: Date | string | null
   phoneNumber: string
   gender: $Enums.Gender
   email: string
@@ -374,6 +391,7 @@ export type StudentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -385,6 +403,7 @@ export type StudentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -408,6 +427,7 @@ export type StudentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   rollNo?: Prisma.SortOrder
+  dateOfBirth?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   email?: Prisma.SortOrder
@@ -421,6 +441,7 @@ export type StudentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   rollNo?: Prisma.SortOrder
+  dateOfBirth?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   email?: Prisma.SortOrder
@@ -434,6 +455,7 @@ export type StudentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   rollNo?: Prisma.SortOrder
+  dateOfBirth?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   email?: Prisma.SortOrder
@@ -571,6 +593,7 @@ export type StudentCreateWithoutDepartmentInput = {
   id?: string
   name: string
   rollNo: string
+  dateOfBirth?: Date | string | null
   phoneNumber: string
   gender: $Enums.Gender
   email: string
@@ -585,6 +608,7 @@ export type StudentUncheckedCreateWithoutDepartmentInput = {
   id?: string
   name: string
   rollNo: string
+  dateOfBirth?: Date | string | null
   phoneNumber: string
   gender: $Enums.Gender
   email: string
@@ -628,6 +652,7 @@ export type StudentScalarWhereInput = {
   id?: Prisma.UuidFilter<"Student"> | string
   name?: Prisma.StringFilter<"Student"> | string
   rollNo?: Prisma.StringFilter<"Student"> | string
+  dateOfBirth?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
   phoneNumber?: Prisma.StringFilter<"Student"> | string
   gender?: Prisma.EnumGenderFilter<"Student"> | $Enums.Gender
   email?: Prisma.StringFilter<"Student"> | string
@@ -641,6 +666,7 @@ export type StudentCreateWithoutClassInput = {
   id?: string
   name: string
   rollNo: string
+  dateOfBirth?: Date | string | null
   phoneNumber: string
   gender: $Enums.Gender
   email: string
@@ -655,6 +681,7 @@ export type StudentUncheckedCreateWithoutClassInput = {
   id?: string
   name: string
   rollNo: string
+  dateOfBirth?: Date | string | null
   phoneNumber: string
   gender: $Enums.Gender
   email: string
@@ -695,6 +722,7 @@ export type StudentCreateWithoutDailyAttendanceInput = {
   id?: string
   name: string
   rollNo: string
+  dateOfBirth?: Date | string | null
   phoneNumber: string
   gender: $Enums.Gender
   email: string
@@ -709,6 +737,7 @@ export type StudentUncheckedCreateWithoutDailyAttendanceInput = {
   id?: string
   name: string
   rollNo: string
+  dateOfBirth?: Date | string | null
   phoneNumber: string
   gender: $Enums.Gender
   email: string
@@ -739,6 +768,7 @@ export type StudentUpdateWithoutDailyAttendanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -753,6 +783,7 @@ export type StudentUncheckedUpdateWithoutDailyAttendanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -767,6 +798,7 @@ export type StudentCreateWithoutMonthlySubAttendanceInput = {
   id?: string
   name: string
   rollNo: string
+  dateOfBirth?: Date | string | null
   phoneNumber: string
   gender: $Enums.Gender
   email: string
@@ -781,6 +813,7 @@ export type StudentUncheckedCreateWithoutMonthlySubAttendanceInput = {
   id?: string
   name: string
   rollNo: string
+  dateOfBirth?: Date | string | null
   phoneNumber: string
   gender: $Enums.Gender
   email: string
@@ -811,6 +844,7 @@ export type StudentUpdateWithoutMonthlySubAttendanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -825,6 +859,7 @@ export type StudentUncheckedUpdateWithoutMonthlySubAttendanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -839,6 +874,7 @@ export type StudentCreateManyDepartmentInput = {
   id?: string
   name: string
   rollNo: string
+  dateOfBirth?: Date | string | null
   phoneNumber: string
   gender: $Enums.Gender
   email: string
@@ -851,6 +887,7 @@ export type StudentUpdateWithoutDepartmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -865,6 +902,7 @@ export type StudentUncheckedUpdateWithoutDepartmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -879,6 +917,7 @@ export type StudentUncheckedUpdateManyWithoutDepartmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -891,6 +930,7 @@ export type StudentCreateManyClassInput = {
   id?: string
   name: string
   rollNo: string
+  dateOfBirth?: Date | string | null
   phoneNumber: string
   gender: $Enums.Gender
   email: string
@@ -903,6 +943,7 @@ export type StudentUpdateWithoutClassInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -917,6 +958,7 @@ export type StudentUncheckedUpdateWithoutClassInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -931,6 +973,7 @@ export type StudentUncheckedUpdateManyWithoutClassInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   rollNo?: Prisma.StringFieldUpdateOperationsInput | string
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -983,6 +1026,7 @@ export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   id?: boolean
   name?: boolean
   rollNo?: boolean
+  dateOfBirth?: boolean
   phoneNumber?: boolean
   gender?: boolean
   email?: boolean
@@ -1001,6 +1045,7 @@ export type StudentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   name?: boolean
   rollNo?: boolean
+  dateOfBirth?: boolean
   phoneNumber?: boolean
   gender?: boolean
   email?: boolean
@@ -1016,6 +1061,7 @@ export type StudentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   name?: boolean
   rollNo?: boolean
+  dateOfBirth?: boolean
   phoneNumber?: boolean
   gender?: boolean
   email?: boolean
@@ -1031,6 +1077,7 @@ export type StudentSelectScalar = {
   id?: boolean
   name?: boolean
   rollNo?: boolean
+  dateOfBirth?: boolean
   phoneNumber?: boolean
   gender?: boolean
   email?: boolean
@@ -1040,7 +1087,7 @@ export type StudentSelectScalar = {
   classId?: boolean
 }
 
-export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "rollNo" | "phoneNumber" | "gender" | "email" | "year" | "semester" | "departmentId" | "classId", ExtArgs["result"]["student"]>
+export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "rollNo" | "dateOfBirth" | "phoneNumber" | "gender" | "email" | "year" | "semester" | "departmentId" | "classId", ExtArgs["result"]["student"]>
 export type StudentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   class?: boolean | Prisma.ClassDefaultArgs<ExtArgs>
@@ -1069,6 +1116,7 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     id: string
     name: string
     rollNo: string
+    dateOfBirth: Date | null
     phoneNumber: string
     gender: $Enums.Gender
     email: string
@@ -1506,6 +1554,7 @@ export interface StudentFieldRefs {
   readonly id: Prisma.FieldRef<"Student", 'String'>
   readonly name: Prisma.FieldRef<"Student", 'String'>
   readonly rollNo: Prisma.FieldRef<"Student", 'String'>
+  readonly dateOfBirth: Prisma.FieldRef<"Student", 'DateTime'>
   readonly phoneNumber: Prisma.FieldRef<"Student", 'String'>
   readonly gender: Prisma.FieldRef<"Student", 'Gender'>
   readonly email: Prisma.FieldRef<"Student", 'String'>

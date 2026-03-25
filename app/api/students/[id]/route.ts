@@ -131,10 +131,18 @@ export async function PUT(
 
     const body = await request.json();
     const validatedData = CreateStudentSchema.partial().parse(body);
+    const updateData = {
+      ...validatedData,
+      ...(validatedData.dateOfBirth !== undefined && {
+        dateOfBirth: validatedData.dateOfBirth
+          ? new Date(validatedData.dateOfBirth)
+          : null,
+      }),
+    };
 
     const student = await prisma.student.updateMany({
       where: { id: id, departmentId: user.departmentId },
-      data: validatedData,
+      data: updateData,
     });
 
     if (!student) {
