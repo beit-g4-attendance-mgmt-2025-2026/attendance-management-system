@@ -1,9 +1,10 @@
+import { Role } from "@/generated/prisma/enums";
+import { requireAdminOrUserRoles } from "@/lib/guard";
+import { prisma } from "@/lib/prisma";
 import { handleErrorResponse, handleSuccessResponse } from "@/lib/response";
 import { CreateStudentSchema } from "@/lib/schema/CreateStudentSchema";
 import { NextRequest } from "next/server";
 import z from "zod";
-import { prisma } from "@/lib/prisma";
-import { requireAuth } from "@/lib/guard";
 
 const paramsSchema = z.object({
   id: z.string().uuid(),
@@ -14,36 +15,31 @@ export async function GET(
   { params }: { params: { id: string } },
 ) {
   try {
-    const auth = await requireAuth(request);
+    const auth = await requireAdminOrUserRoles(request, [Role.HOD, Role.ADMIN]);
     if ("response" in auth) {
       return auth.response;
     }
 
-    const { user } = auth;
-    if (user.role !== "HOD") {
-      throw new Error("You are not authorized to view students");
+    const isAdmin = "admin" in auth;
+    const authUser = "user" in auth ? auth.user : null;
+    if (!isAdmin && !authUser?.departmentId) {
+      throw new Error("Department not found");
     }
 
     const { id } = await params;
-    const validatedId = paramsSchema.safeParse(id);
-    if (!validatedId) {
+    const validatedId = paramsSchema.safeParse({ id });
+    if (!validatedId.success) {
       throw new Error("Invalid id format!");
     }
 
-    const isValid = await prisma.student.findFirst({
+    const student = await prisma.student.findFirst({
       where: {
         id,
-        departmentId: user.departmentId,
+        ...(isAdmin ? {} : { departmentId: authUser.departmentId }),
       },
-    });
-
-    if (!isValid) {
-      throw new Error("Unauthorized");
-    }
-    const student = await prisma.student.findFirst({
-      where: { id: id, departmentId: user.departmentId },
       include: { department: true, class: true },
     });
+
     if (!student) {
       throw new Error("Student not found or unauthorized!");
     }
@@ -58,34 +54,28 @@ export async function DELETE(
   { params }: { params: { id: string } },
 ) {
   try {
-    const auth = await requireAuth(request);
+    const auth = await requireAdminOrUserRoles(request, [Role.HOD, Role.ADMIN]);
     if ("response" in auth) {
       return auth.response;
     }
 
-    const { user } = auth;
-    if (user.role !== "HOD") {
-      throw new Error("You are not authorized to delete students");
+    const isAdmin = "admin" in auth;
+    const authUser = "user" in auth ? auth.user : null;
+    if (!isAdmin && !authUser?.departmentId) {
+      throw new Error("Department not found");
     }
 
     const { id } = await params;
-    const validatedId = paramsSchema.safeParse(id);
-    if (!validatedId) {
+    const validatedId = paramsSchema.safeParse({ id });
+    if (!validatedId.success) {
       throw new Error("Invalid id format!");
     }
 
-    const isValid = await prisma.student.findFirst({
+    const student = await prisma.student.deleteMany({
       where: {
         id,
-        departmentId: user.departmentId,
+        ...(isAdmin ? {} : { departmentId: authUser.departmentId }),
       },
-    });
-
-    if (!isValid) {
-      throw new Error("Unauthorized");
-    }
-    const student = await prisma.student.deleteMany({
-      where: { id: id, departmentId: user.departmentId },
     });
 
     if (!student.count) {
@@ -102,37 +92,60 @@ export async function PUT(
   { params }: { params: { id: string } },
 ) {
   try {
-    const auth = await requireAuth(request);
+    const auth = await requireAdminOrUserRoles(request, [Role.HOD, Role.ADMIN]);
     if ("response" in auth) {
       return auth.response;
     }
 
-    const { user } = auth;
-    if (user.role !== "HOD") {
-      throw new Error("You are not authorized to update students");
+    const isAdmin = "admin" in auth;
+    const authUser = "user" in auth ? auth.user : null;
+    if (!isAdmin && !authUser?.departmentId) {
+      throw new Error("Department not found");
     }
 
     const { id } = await params;
-    const validatedId = paramsSchema.safeParse(id);
-    if (!validatedId) {
+    const validatedId = paramsSchema.safeParse({ id });
+    if (!validatedId.success) {
       throw new Error("Invalid id format!");
     }
 
-    const isValid = await prisma.student.findFirst({
+    const existingStudent = await prisma.student.findFirst({
       where: {
         id,
-        departmentId: user.departmentId,
+        ...(isAdmin ? {} : { departmentId: authUser.departmentId }),
       },
+      select: { id: true, departmentId: true },
     });
 
-    if (!isValid) {
-      throw new Error("Unauthorized");
+    if (!existingStudent) {
+      throw new Error("Student not found or unauthorized!");
     }
 
     const body = await request.json();
     const validatedData = CreateStudentSchema.partial().parse(body);
+
+    let nextDepartmentId = existingStudent.departmentId;
+    if (validatedData.classId) {
+      const classRecord = await prisma.class.findFirst({
+        where: {
+          id: validatedData.classId,
+          ...(isAdmin ? {} : { departmentId: authUser.departmentId }),
+        },
+        select: { id: true, departmentId: true },
+      });
+
+      if (!classRecord) {
+        throw new Error(
+          isAdmin ? "Class not found" : "Class not found for your department",
+        );
+      }
+
+      nextDepartmentId = classRecord.departmentId;
+    }
+
     const updateData = {
       ...validatedData,
+      departmentId: nextDepartmentId,
       ...(validatedData.dateOfBirth !== undefined && {
         dateOfBirth: validatedData.dateOfBirth
           ? new Date(validatedData.dateOfBirth)
@@ -140,14 +153,12 @@ export async function PUT(
       }),
     };
 
-    const student = await prisma.student.updateMany({
-      where: { id: id, departmentId: user.departmentId },
+    const student = await prisma.student.update({
+      where: { id },
       data: updateData,
+      include: { department: true, class: true },
     });
 
-    if (!student) {
-      throw new Error("Student not found or unauthorized!");
-    }
     return handleSuccessResponse(student);
   } catch (e) {
     return handleErrorResponse(e);

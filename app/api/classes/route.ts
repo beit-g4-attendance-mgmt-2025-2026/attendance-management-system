@@ -1,4 +1,5 @@
-import { requireAuth } from "@/lib/guard";
+import { Role } from "@/generated/prisma/client";
+import { requireAdminOrUserRoles } from "@/lib/guard";
 import { prisma } from "@/lib/prisma";
 import { handleErrorResponse, handleSuccessResponse } from "@/lib/response";
 import { CreateClassSchema } from "@/lib/schema/CreateClassSchema";
@@ -7,38 +8,67 @@ import type { NextRequest } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const auth = await requireAuth(request);
+    const auth = await requireAdminOrUserRoles(request, [Role.HOD, Role.ADMIN]);
     if ("response" in auth) return auth.response;
 
-    const { user } = auth;
-    if (user.role !== "HOD") {
-      throw new Error("You are not authorized to create classes");
+    const isAdmin = "admin" in auth;
+    const authUser = "user" in auth ? auth.user : null;
+
+    if (!isAdmin && !authUser?.departmentId) {
+      throw new Error("Department not found");
     }
 
     const body = await request.json();
     const validatedData = validateBody(body, CreateClassSchema);
     const data = validatedData.data;
 
+    let resolvedDepartmentId = isAdmin
+      ? data.departmentId
+      : authUser!.departmentId;
+
     if (data.userId) {
       const teacher = await prisma.user.findFirst({
         where: {
           id: data.userId,
-          departmentId: user.departmentId,
-          role: "TEACHER",
+          role: Role.TEACHER,
         },
-        select: { id: true },
+        select: { id: true, departmentId: true },
       });
 
       if (!teacher) {
-        throw new Error("Assigned class teacher must be a teacher in your department");
+        throw new Error("Assigned class teacher must be a valid teacher");
       }
+
+      if (
+        resolvedDepartmentId &&
+        teacher.departmentId !== resolvedDepartmentId
+      ) {
+        throw new Error(
+          "Assigned class teacher must belong to the selected department",
+        );
+      }
+
+      resolvedDepartmentId = teacher.departmentId;
+    }
+
+    if (!resolvedDepartmentId) {
+      throw new Error("Department is required");
+    }
+
+    const department = await prisma.department.findUnique({
+      where: { id: resolvedDepartmentId },
+      select: { id: true },
+    });
+
+    if (!department) {
+      throw new Error("Department not found");
     }
 
     const existingClass = await prisma.class.findFirst({
       where: {
         semester: data.semester,
         year: data.year,
-        departmentId: user.departmentId,
+        departmentId: resolvedDepartmentId,
       },
     });
 
@@ -53,8 +83,8 @@ export async function POST(request: NextRequest) {
         name: data.name,
         semester: data.semester,
         year: data.year,
-        departmentId: user.departmentId,
-        academicYearId: data?.academicYearId,
+        departmentId: resolvedDepartmentId,
+        academicYearId: data.academicYearId,
         userId: data.userId ?? null,
       },
       include: {
@@ -72,21 +102,23 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const auth = await requireAuth(request);
+    const auth = await requireAdminOrUserRoles(request, [Role.HOD, Role.ADMIN]);
     if ("response" in auth) return auth.response;
 
-    const { user } = auth;
-    if (user.role !== "HOD") {
-      throw new Error("You are not authorized to view classes");
+    const isAdmin = "admin" in auth;
+    const authUser = "user" in auth ? auth.user : null;
+
+    if (!isAdmin && !authUser?.departmentId) {
+      throw new Error("Department not found");
     }
 
     const classes = await prisma.class.findMany({
-      where: { departmentId: user.departmentId },
+      where: isAdmin ? {} : { departmentId: authUser!.departmentId },
       include: { department: true, user: true, academicYear: true },
     });
 
     return handleSuccessResponse({
-      classes: classes,
+      classes,
       status: 200,
     });
   } catch (error: unknown) {
