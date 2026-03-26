@@ -63,7 +63,12 @@ const SubjectListTable = ({ subjects }: SubjectListTableProps) => {
 					>
 						<TableCell>{subject.name}</TableCell>
 						<TableCell>{subject.subCode}</TableCell>
-						<TableCell>{subject.class.year}</TableCell>
+						<TableCell>
+							{subject.class.year.charAt(0).toUpperCase() +
+								subject.class.year.slice(1).toLowerCase() +
+								" "}
+							Year
+						</TableCell>
 						<TableCell>{subject.class.semester}</TableCell>
 						<TableCell>{subject.user?.fullName}</TableCell>
 
