@@ -1,24 +1,46 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
 	Table,
 	TableBody,
-	TableCaption,
 	TableCell,
 	TableHead,
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { SubjectListTableProps } from "@/types/index.types";
 
-import { Edit2Icon, TrashIcon } from "lucide-react";
-import Link from "next/link";
+import { Edit, TrashIcon } from "lucide-react";
+import { SubjectWithDetails } from "../../../../../lib/actions/GetSubjects.actions";
+import { DialogCardBtn } from "@/components/DialogCardBtn";
+import SubjectForm from "./SubjectForm";
+import { ConfirmBtn } from "@/components/ConfirmBtn";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { api } from "@/lib/api";
+import { toast } from "sonner";
+export interface SubjectListTableProps {
+	subjects: SubjectWithDetails[];
+}
 
 const SubjectListTable = ({ subjects }: SubjectListTableProps) => {
+	const router = useRouter();
+	const [loading, setLoading] = useState(false);
+	const handleDelete = async (id: string) => {
+		try {
+			setLoading(true);
+			const res = await api.subjects.delete(id);
+			if (res.success) toast.success(res.data.message);
+			router.refresh();
+		} catch (error: any) {
+			console.log(error);
+			toast.error(error.message);
+		} finally {
+			setLoading(false);
+		}
+	};
 	return (
 		<Table className="overflow-hidden">
-			{/* <TableCaption className="text-gray-300">
-        subjects List
-      </TableCaption> */}
 			<TableHeader>
 				<TableRow className="font-semibold">
 					<TableHead className="">Name</TableHead>
@@ -40,23 +62,34 @@ const SubjectListTable = ({ subjects }: SubjectListTableProps) => {
 						}`}
 					>
 						<TableCell>{subject.name}</TableCell>
-						<TableCell>{subject.code}</TableCell>
-						<TableCell>{subject.year}</TableCell>
-						<TableCell>{subject.semester}</TableCell>
-						<TableCell>{subject.teacher_name}</TableCell>
+						<TableCell>{subject.subCode}</TableCell>
+						<TableCell>{subject.class.year}</TableCell>
+						<TableCell>{subject.class.semester}</TableCell>
+						<TableCell>{subject.user?.fullName}</TableCell>
+
 						<TableCell className="flex items-center gap-1">
-							<Link
-								href={"/subjects/edit"}
-								className="text-blue-500"
+							<DialogCardBtn
+								triggerIcon={<Edit />}
+								title="Edit Teacher"
+								description=""
 							>
-								<Edit2Icon size={16} />
-							</Link>
-							<Button
-								variant={"ghost"}
-								className="text-red-500 hover:text-red-700 cursor-pointer"
+								<SubjectForm isEdit={true} subject={subject} />
+							</DialogCardBtn>
+
+							<ConfirmBtn
+								title="Delete subject?"
+								description="This action cannot be undone."
+								confirmLabel="Delete"
+								onConfirm={() => handleDelete(subject.id)}
 							>
-								<TrashIcon />
-							</Button>
+								<Button
+									disabled={loading}
+									variant={"ghost"}
+									className="text-red-500 cursor-pointer hover:text-red-700"
+								>
+									<TrashIcon />
+								</Button>
+							</ConfirmBtn>
 						</TableCell>
 					</TableRow>
 				))}

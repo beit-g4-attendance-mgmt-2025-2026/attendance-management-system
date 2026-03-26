@@ -69,7 +69,7 @@ export function FormSelect<TFormValues extends FieldValues>({
 							</SelectTrigger>
 
 							<SelectContent position="item-aligned">
-								{options.map((o) => (
+								{options?.map((o) => (
 									<SelectItem key={o.value} value={o.value}>
 										{o.label}
 									</SelectItem>
