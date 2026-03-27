@@ -1,26 +1,22 @@
-import ClassCard from "@/components/ClassCard";
 import React from "react";
-import ClassForm from "@/components/ClassForm";
 import SearchInput from "@/components/inputs/SearchInput";
-import { DialogCardBtn } from "@/components/DialogCardBtn";
+import { ExportCsvBtn } from "@/components/ExportCsvBtn";
+import { GetMyClass, type MyClassItem } from "@/lib/actions/GetMyClass.actions";
+import MyClassCards from "./components/MyClassCards";
 
-export interface ClassItem {
-	id: string;
-	name: string;
-	familyTeacher: string;
-	male: number;
-	female: number;
-	total: number;
-}
-const page = () => {
-	const myclass: ClassItem = {
-		id: "first-year-first-sem",
-		name: "First Year (First Semester)",
-		familyTeacher: "Dr. Thida Khaing",
-		male: 32,
-		female: 24,
-		total: 56,
-	};
+const page = async ({
+	searchParams,
+}: {
+	searchParams: Promise<{
+		[key: string]: string; //don't need to specify exact keys
+	}>;
+}) => {
+	const { search } = await searchParams;
+
+	const { data } = await GetMyClass({
+		search: search || "",
+	});
+	const myClasses: MyClassItem[] = data?.myClasses ?? [];
 
 	return (
 		<>
@@ -30,14 +26,16 @@ const page = () => {
 					className="bg-gray-200 rounded-2xl  dark:bg-[#172139]"
 				/>
 				<div className="flex gap-3">
-					<DialogCardBtn triggerName="Add Class" title="Add Class">
-						<ClassForm isEdit={false} />
-					</DialogCardBtn>
+					<ExportCsvBtn
+						endpoint="/api/my-class/export"
+						allowedParams={["search"]}
+						disabled={myClasses.length === 0}
+					/>
 				</div>
 			</header>
-			<div className="grid md:grid-cols-3 gap-10">
-				<ClassCard classItem={myclass} variant="my-class" />
-			</div>
+			<main className="space-y-8">
+				<MyClassCards classes={myClasses} />
+			</main>
 		</>
 	);
 };

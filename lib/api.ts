@@ -4,146 +4,207 @@ import fetchHandler from "./fetchHandler";
 const API_URL = "http://localhost:3000/api";
 
 export const api = {
-  users: {
-    // GET all teachers
-    getAll: () => fetchHandler(API_URL + "/teachers"),
+	users: {
+		// GET all teachers
+		getAll: () => fetchHandler(API_URL + "/teachers"),
 
-    // CREATE teacher
-    create: (data: {
-      fullName: string;
-      username: string;
-      email: string;
-      password: string;
-      phoneNumber: string;
-      gender: "MALE" | "FEMALE" | "OTHER";
-      role: "ADMIN" | "HOD" | "TEACHER";
-      departmentName: "CIVIL" | "CEIT" | "EC" | "MP" | "EP";
-      resetPasswordToken?: string | null;
-      resetPasswordExpireAt?: Date | null;
-    }) =>
-      fetchHandler(API_URL + "/teachers", {
-        method: "POST",
-        body: JSON.stringify(data),
-      }),
+		// CREATE teacher
+		create: (data: {
+			fullName: string;
+			username: string;
+			email: string;
+			password: string;
+			phoneNumber: string;
+			gender: "MALE" | "FEMALE" | "OTHER";
+			role: "ADMIN" | "HOD" | "TEACHER";
+			departmentName: "CIVIL" | "CEIT" | "EC" | "MP" | "EP";
+			resetPasswordToken?: string | null;
+			resetPasswordExpireAt?: Date | null;
+		}) =>
+			fetchHandler(API_URL + "/teachers", {
+				method: "POST",
+				body: JSON.stringify(data),
+			}),
 
-    // GET teacher by id
-    getById: (id: string) => fetchHandler(API_URL + `/teachers/${id}`),
+		// GET teacher by id
+		getById: (id: string) => fetchHandler(API_URL + `/teachers/${id}`),
 
-    // GET teacher by email
-    getByEmail: (email: string) =>
-      fetchHandler(API_URL + `/teachers/email`, {
-        method: "POST",
-        body: JSON.stringify({ email }),
-      }),
+		// GET teacher by email
+		getByEmail: (email: string) =>
+			fetchHandler(API_URL + `/teachers/email`, {
+				method: "POST",
+				body: JSON.stringify({ email }),
+			}),
 
-    // UPDATE teacher
-    update: (
-      id: string,
-      data: Partial<{
-        fullName: string;
-        username: string;
-        email: string;
-        phoneNumber: string;
-        gender: Gender;
-        role: Role;
-        // departmentName: "Civil" | "CEIT" | "EC" | "MP" | "EP";
-      }>,
-    ) =>
-      fetchHandler(API_URL + `/teachers/${id}`, {
-        method: "PUT",
-        body: JSON.stringify(data),
-      }),
+		// UPDATE teacher
+		update: (
+			id: string,
+			data: Partial<{
+				fullName: string;
+				username: string;
+				email: string;
+				phoneNumber: string;
+				gender: Gender;
+				role: Role;
+				// departmentName: "Civil" | "CEIT" | "EC" | "MP" | "EP";
+			}>,
+		) =>
+			fetchHandler(API_URL + `/teachers/${id}`, {
+				method: "PUT",
+				body: JSON.stringify(data),
+			}),
 
-    // DELETE teacher
-    delete: (id: string) =>
-      fetchHandler(API_URL + `/teachers/${id}`, {
-        method: "DELETE",
-      }),
-  },
+		// DELETE teacher
+		delete: (id: string) =>
+			fetchHandler(API_URL + `/teachers/${id}`, {
+				method: "DELETE",
+			}),
+	},
 
-  students: {
-    // Get All Students
-    getAll: () => fetchHandler(API_URL + `/students`),
+	students: {
+		// Get All Students
+		getAll: () => fetchHandler(API_URL + `/students`),
 
-    // CREATE student
-    create: (data: {
-      name: string;
-      rollNo: string;
-      semester: "first_semester" | "second_semester";
-      year: "FIRST" | "SECOND" | "THIRD" | "FOURTH" | "FIFTH" | "FINAL";
-      gender: "MALE" | "FEMALE" | "OTHER";
-      classId: string;
-      email: string;
-    }) =>
-      fetchHandler(API_URL + "/students", {
-        method: "POST",
-        body: JSON.stringify(data),
-      }),
+		// CREATE student
+		create: (data: {
+			name: string;
+			rollNo: string;
+			semester: "first_semester" | "second_semester";
+			year: "FIRST" | "SECOND" | "THIRD" | "FOURTH" | "FIFTH" | "FINAL";
+			gender: "MALE" | "FEMALE" | "OTHER";
+			classId: string;
+			email: string;
+		}) =>
+			fetchHandler(API_URL + "/students", {
+				method: "POST",
+				body: JSON.stringify(data),
+			}),
 
-    // UPDATE student
-    update: (
-      id: string,
-      data: Partial<{
-        name: string;
-        rollNo: string;
-        semester: Semester;
-        year: Year;
-        gender: Gender;
-        classId: string;
-        email: string;
-      }>,
-    ) =>
-      fetchHandler(API_URL + `/students/${id}`, {
-        method: "PUT",
-        body: JSON.stringify(data),
-      }),
+		// UPDATE student
+		update: (
+			id: string,
+			data: Partial<{
+				name: string;
+				rollNo: string;
+				semester: Semester;
+				year: Year;
+				gender: Gender;
+				classId: string;
+				email: string;
+			}>,
+		) =>
+			fetchHandler(API_URL + `/students/${id}`, {
+				method: "PUT",
+				body: JSON.stringify(data),
+			}),
 
-    // DELETE student
-    delete: (id: string) =>
-      fetchHandler(API_URL + `/students/${id}`, {
-        method: "DELETE",
-      }),
-  },
+		// DELETE student
+		delete: (id: string) =>
+			fetchHandler(API_URL + `/students/${id}`, {
+				method: "DELETE",
+			}),
+	},
 
-  classes: {
-    getAll: () => fetchHandler(API_URL + "/classes"),
+	classes: {
+		getAll: () => fetchHandler(API_URL + "/classes"),
 
-    getById: (id: string) => fetchHandler(API_URL + `/classes/${id}`),
+		getById: (id: string) => fetchHandler(API_URL + `/classes/${id}`),
 
-    create: (data: {
-      name: string;
-      semester: "first_semester" | "second_semester";
-      year: "FIRST" | "SECOND" | "THIRD" | "FOURTH" | "FIFTH" | "FINAL";
-      academicYearId?: string | null;
-      departmentId?: string;
-      userId?: string | null;
-    }) =>
-      fetchHandler(API_URL + "/classes", {
-        method: "POST",
-        body: JSON.stringify(data),
-      }),
+		create: (data: {
+			name: string;
+			semester: "first_semester" | "second_semester";
+			year: "FIRST" | "SECOND" | "THIRD" | "FOURTH" | "FIFTH" | "FINAL";
+			academicYearId?: string | null;
+			departmentId?: string;
+			userId?: string | null;
+		}) =>
+			fetchHandler(API_URL + "/classes", {
+				method: "POST",
+				body: JSON.stringify(data),
+			}),
 
-    update: (
-      id: string,
-      data: Partial<{
-        name: string;
-        semester: Semester;
-        year: Year;
-        academicYearId: string | null;
-        departmentId: string;
-        userId: string | null;
-      }>,
-    ) =>
-      fetchHandler(API_URL + `/classes/${id}`, {
-        method: "PUT",
-        body: JSON.stringify(data),
-      }),
+		update: (
+			id: string,
+			data: Partial<{
+				name: string;
+				semester: Semester;
+				year: Year;
+				academicYearId: string | null;
+				departmentId: string;
+				userId: string | null;
+			}>,
+		) =>
+			fetchHandler(API_URL + `/classes/${id}`, {
+				method: "PUT",
+				body: JSON.stringify(data),
+			}),
 
-    delete: (id: string) =>
-      fetchHandler(API_URL + `/classes/${id}`, {
-        method: "DELETE",
-      }),
-  },
+		delete: (id: string) =>
+			fetchHandler(API_URL + `/classes/${id}`, {
+				method: "DELETE",
+			}),
+	},
 
-  auth: {},
+	auth: {
+		// login user/admin
+		login: (data: { username: string; password: string }) =>
+			fetchHandler(API_URL + "/auth/login", {
+				method: "POST",
+				body: JSON.stringify(data),
+			}),
+
+		// logout
+		logout: () =>
+			fetchHandler(API_URL + "/auth/logout", {
+				method: "POST",
+			}),
+
+		// reset password using token query string
+		resetPassword: (password: string, token: string) =>
+			fetchHandler(
+				API_URL +
+					`/auth/reset-password?token=${encodeURIComponent(token)}`,
+				{
+					method: "POST",
+					body: JSON.stringify({ password }),
+				},
+			),
+	},
+
+	subjects: {
+		getAll: () => fetchHandler(API_URL + `/subjects`),
+
+		create: (data: {
+			name: string;
+			subCode: string;
+			teacher_name: string;
+			year: string;
+			semester: string;
+		}) =>
+			fetchHandler(API_URL + "/subjects", {
+				method: "POST",
+				body: JSON.stringify(data),
+			}),
+
+		// UPDATE subject
+		update: (
+			id: string,
+			data: Partial<{
+				name: string;
+				code: string;
+				teacher_name: string;
+				acedamic_year: string;
+				semester: string;
+			}>,
+		) =>
+			fetchHandler(API_URL + `/subjects/${id}`, {
+				method: "PUT",
+				body: JSON.stringify(data),
+			}),
+
+		delete: (id: string) =>
+			fetchHandler(API_URL + `/subjects/${id}`, {
+				method: "DELETE",
+			}),
+	},
 };

@@ -28,39 +28,34 @@ const TeacherForm = ({
 }) => {
 	const router = useRouter();
 	const schema = teacher && isEdit ? TeacherSchema.partial() : TeacherSchema;
-	if (teacher && isEdit) console.log(teacher);
 
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
 		defaultValues: {
-			fullName: "",
-			username: "",
-			email: "",
-			password: "",
-			phoneNumber: "",
-			gender: genders[0].value,
-			role: roles[2].value,
+			fullName: teacher?.fullName || "",
+			username: teacher?.username || "",
+			email: teacher?.email || "",
+			phoneNumber: teacher?.phoneNumber || "",
+			gender: teacher?.gender || genders[0].value,
+			role: teacher?.role || roles[2].value,
 			departmentName: undefined as any,
 		},
 	});
-	useEffect(() => {
-		if (!teacher) return;
+	// useEffect(() => {
+	// 	if (!teacher) return;
 
-		form.reset({
-			fullName: teacher.fullName,
-			username: teacher.username,
-			email: teacher.email,
-			phoneNumber: teacher.phoneNumber,
-			gender: teacher.gender,
-		});
-	}, [teacher, form]);
+	// 	form.reset({
+	// 		fullName: teacher.fullName,
+	// 		username: teacher.username,
+	// 		email: teacher.email,
+	// 		phoneNumber: teacher.phoneNumber,
+	// 		gender: teacher.gender,
+	// 	});
+	// }, [teacher, form]);
 
 	const {
 		formState: { isSubmitting },
 	} = form;
-	const handleClose = () => {
-		router.back();
-	};
 
 	async function onSubmit(values: z.infer<typeof schema>) {
 		try {

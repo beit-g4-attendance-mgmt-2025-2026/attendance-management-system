@@ -1,5 +1,5 @@
 import { days, months, times, totalTimes } from "@/constants/index.constants";
-import { Gender, Role } from "@/generated/prisma/enums";
+import { Gender, Role, Semester, Year } from "@/generated/prisma/enums";
 import { z } from "zod";
 import { ResetPasswordForm } from "../app/(auth)/components/reset-password";
 
@@ -174,28 +174,18 @@ export const SubjectSchema = z.object({
 	name: z.string().min(2, {
 		message: "Please enter subject name",
 	}),
-	code: z.string().min(2, {
+	subCode: z.string().min(2, {
 		message: "Please enter subject code",
 	}),
 	teacher_name: z.string().min(2, {
 		message: "Please enter username of teacher",
 	}),
-	semester: z.enum(["first semester", "second semester"], {
+	semester: z.enum(Semester, {
 		message: "Please choose semester",
 	}),
-	acedamic_year: z.enum(
-		[
-			"first year",
-			"second year",
-			"third year",
-			"fourth year",
-			"fifth year",
-			"sixth year",
-		],
-		{
-			message: "Please choose year",
-		},
-	),
+	year: z.enum(Year, {
+		message: "Please choose year",
+	}),
 });
 
 export const ClassSchema = z.object({

@@ -5,175 +5,228 @@ import { handleErrorResponse, handleSuccessResponse } from "@/lib/response";
 import { CreateSubjectSchema } from "@/lib/schema/CreateSubjectSchema";
 import { NextRequest } from "next/server";
 import z from "zod";
+import validateBody from "@/lib/validateBody";
 
 const paramsSchema = z.object({
-  id: z.string().uuid(),
+	id: z.string().uuid(),
 });
 
 export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } },
+	request: NextRequest,
+	{ params }: { params: { id: string } },
 ) {
-  try {
-    const auth = await requireAdminOrUserRoles(request, [Role.HOD, Role.ADMIN]);
-    if ("response" in auth) {
-      return auth.response;
-    }
+	try {
+		const auth = await requireAdminOrUserRoles(request, [
+			Role.HOD,
+			Role.ADMIN,
+		]);
+		if ("response" in auth) {
+			return auth.response;
+		}
+		const authUser = "user" in auth ? auth.user : null;
 
-    const isAdmin = "admin" in auth;
-    const authUser = "user" in auth ? auth.user : null;
-    if (!isAdmin && !authUser?.departmentId) {
-      throw new Error("Department not found");
-    }
+		if (authUser?.role !== "HOD") {
+			throw new Error("You are not authorized to view subjects");
+		}
+		const { id } = await params;
+		const validatedId = paramsSchema.safeParse(id);
+		if (!validatedId) {
+			throw new Error("Invalid id format!");
+		}
 
-    const { id } = await params;
-    const validatedId = paramsSchema.safeParse({ id });
-    if (!validatedId.success) {
-      throw new Error("Invalid id format!");
-    }
+		const isValid = await prisma.subject.findFirst({
+			where: {
+				id,
+				departmentId: authUser.departmentId,
+			},
+		});
 
-    const subject = await prisma.subject.findFirst({
-      where: {
-        id,
-        ...(isAdmin ? {} : { departmentId: authUser.departmentId }),
-      },
-      include: { department: true, class: true },
-    });
-    if (!subject) {
-      throw new Error("Subject not found!");
-    }
-    return handleSuccessResponse(subject);
-  } catch (e) {
-    return handleErrorResponse(e);
-  }
+		if (!isValid) {
+			throw new Error("Unauthorized");
+		}
+
+		const subject = await prisma.subject.findUnique({
+			where: { id: id, departmentId: authUser.departmentId },
+			include: { department: true, class: true },
+		});
+		if (!subject) {
+			throw new Error("Subject not found!");
+		}
+		return handleSuccessResponse(subject);
+	} catch (e) {
+		return handleErrorResponse(e);
+	}
 }
 
 export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } },
+	request: NextRequest,
+	{ params }: { params: { id: string } },
 ) {
-  try {
-    const auth = await requireAdminOrUserRoles(request, [Role.HOD, Role.ADMIN]);
-    if ("response" in auth) {
-      return auth.response;
-    }
+	try {
+		const auth = await requireAdminOrUserRoles(request, [Role.HOD]);
+		if ("response" in auth) {
+			return auth.response;
+		}
+		const authUser = "user" in auth ? auth.user : null;
 
-    const isAdmin = "admin" in auth;
-    const authUser = "user" in auth ? auth.user : null;
-    if (!isAdmin && !authUser?.departmentId) {
-      throw new Error("Department not found");
-    }
+		if (authUser?.role !== "HOD") {
+			throw new Error("You are not authorized to delete subjects");
+		}
+		const { id } = await params;
+		const validatedId = paramsSchema.safeParse(id);
+		if (!validatedId) {
+			throw new Error("Invalid id format!");
+		}
 
-    const { id } = await params;
-    const validatedId = paramsSchema.safeParse({ id });
-    if (!validatedId.success) {
-      throw new Error("Invalid id format!");
-    }
+		const isValid = await prisma.subject.findFirst({
+			where: {
+				id,
+				departmentId: authUser.departmentId,
+			},
+		});
 
-    const existingSubject = await prisma.subject.findFirst({
-      where: {
-        id,
-        ...(isAdmin ? {} : { departmentId: authUser.departmentId }),
-      },
-      select: { id: true },
-    });
+		if (!isValid) {
+			throw new Error("Unauthorized");
+		}
 
-    if (!existingSubject) {
-      throw new Error("Subject not found or unauthorized!");
-    }
+		const subject = await prisma.subject.delete({
+			where: { id: id, departmentId: authUser.departmentId },
+			include: { department: true, class: true },
+		});
 
-    const subject = await prisma.subject.delete({
-      where: { id },
-      include: { department: true, class: true },
-    });
-
-    return handleSuccessResponse(subject);
-  } catch (e) {
-    return handleErrorResponse(e);
-  }
+		if (!subject) {
+			throw new Error("Subject not found!");
+		}
+		return handleSuccessResponse(subject);
+	} catch (e) {
+		return handleErrorResponse(e);
+	}
 }
 
 export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } },
+	request: NextRequest,
+	{ params }: { params: { id: string } },
 ) {
-  try {
-    const auth = await requireAdminOrUserRoles(request, [Role.HOD, Role.ADMIN]);
-    if ("response" in auth) {
-      return auth.response;
-    }
+	try {
+		const auth = await requireAdminOrUserRoles(request, [Role.HOD]);
+		if ("response" in auth) return auth.response;
 
-    const isAdmin = "admin" in auth;
-    const authUser = "user" in auth ? auth.user : null;
-    if (!isAdmin && !authUser?.departmentId) {
-      throw new Error("Department not found");
-    }
+		const authUser = "user" in auth ? auth.user : null;
+		const isAdmin = "admin" in auth ? auth.admin : null;
 
-    const { id } = await params;
-    const validatedId = paramsSchema.safeParse({ id });
-    if (!validatedId.success) {
-      throw new Error("Invalid id format!");
-    }
+		if (!authUser || authUser.role !== "HOD" || !authUser.departmentId) {
+			throw new Error("You are not authorized to update subjects");
+		}
+		if (isAdmin) {
+			throw new Error("You are not authorized to update subjects");
+		}
 
-    const existingSubject = await prisma.subject.findFirst({
-      where: {
-        id,
-        ...(isAdmin ? {} : { departmentId: authUser.departmentId }),
-      },
-      select: { id: true, departmentId: true, classId: true, userId: true },
-    });
+		const parsedParams = paramsSchema.safeParse(params);
+		if (!parsedParams.success) throw new Error("Invalid id format");
+		const subjectId = parsedParams.data.id;
 
-    if (!existingSubject) {
-      throw new Error("Subject not found or unauthorized!");
-    }
+		// authorize by department first
+		const existingSubject = await prisma.subject.findFirst({
+			where: {
+				id: subjectId,
+				departmentId: authUser.departmentId,
+			},
+			include: {
+				class: {
+					select: { year: true, semester: true },
+				},
+			},
+		});
+		if (!existingSubject) throw new Error("Unauthorized");
 
-    const body = await request.json();
-    const validatedData = CreateSubjectSchema.partial().parse(body);
+		const body = await request.json();
+		const validated = validateBody(body, CreateSubjectSchema.partial());
+		const data = validated.data as Partial<{
+			name: string;
+			subCode: string;
+			teacher_name: string;
+			year: "FIRST" | "SECOND" | "THIRD" | "FOURTH" | "FIFTH" | "FINAL";
+			semester: "first_semester" | "second_semester";
+		}>;
 
-    let nextDepartmentId = existingSubject.departmentId;
-    const nextClassId = validatedData.classId ?? existingSubject.classId;
-    const nextUserId = validatedData.userId ?? existingSubject.userId;
+		if (data.name) {
+			const existsName = await prisma.subject.findFirst({
+				where: {
+					name: data.name,
+					departmentId: authUser.departmentId,
+					NOT: { id: subjectId },
+				},
+				select: { id: true },
+			});
+			if (existsName) throw new Error("Subject name already exists");
+		}
 
-    const classRecord = await prisma.class.findFirst({
-      where: {
-        id: nextClassId,
-        ...(isAdmin ? {} : { departmentId: authUser.departmentId }),
-      },
-      select: { id: true, departmentId: true },
-    });
+		if (data.subCode) {
+			const existsCode = await prisma.subject.findFirst({
+				where: {
+					subCode: data.subCode,
+					departmentId: authUser.departmentId,
+					NOT: { id: subjectId },
+				},
+				select: { id: true },
+			});
+			if (existsCode) throw new Error("Subject code already exists");
+		}
 
-    if (!classRecord) {
-      throw new Error(
-        isAdmin ? "Class not found" : "Class not found for your department",
-      );
-    }
+		const updateData: any = {};
 
-    nextDepartmentId = classRecord.departmentId;
+		if (data.name !== undefined) updateData.name = data.name;
+		if (data.subCode !== undefined) updateData.subCode = data.subCode;
 
-    const teacher = await prisma.user.findFirst({
-      where: {
-        id: nextUserId,
-        role: Role.TEACHER,
-        departmentId: nextDepartmentId,
-      },
-      select: { id: true },
-    });
+		if (data.teacher_name) {
+			const teacher = await prisma.user.findFirst({
+				where: {
+					departmentId: authUser.departmentId,
+					OR: [{ username: data.teacher_name }],
+				},
+				select: { id: true },
+			});
 
-    if (!teacher) {
-      throw new Error("Assigned teacher must be a teacher in the same department");
-    }
+			if (!teacher) {
+				throw new Error("Teacher not found in your department");
+			}
+			updateData.userId = teacher.id;
+		}
 
-    const subject = await prisma.subject.update({
-      where: { id },
-      data: {
-        ...validatedData,
-        departmentId: nextDepartmentId,
-      },
-      include: { department: true, class: true },
-    });
+		// year/semester -> resolve to classId
+		const nextYear = data.year ?? existingSubject.class.year;
+		const nextSemester = data.semester ?? existingSubject.class.semester;
 
-    return handleSuccessResponse(subject);
-  } catch (e) {
-    return handleErrorResponse(e);
-  }
+		if (data.year !== undefined || data.semester !== undefined) {
+			const classRecord = await prisma.class.findFirst({
+				where: {
+					departmentId: authUser.departmentId,
+					year: nextYear,
+					semester: nextSemester,
+				},
+				select: { id: true },
+			});
+
+			if (!classRecord) {
+				throw new Error(
+					`Class not found for ${nextYear} (${nextSemester}) in your department`,
+				);
+			}
+			updateData.classId = classRecord.id;
+		}
+
+		const subject = await prisma.subject.update({
+			where: { id: subjectId }, // only unique field here
+			data: updateData,
+			include: {
+				department: true,
+				class: true,
+				user: { select: { id: true, fullName: true, username: true } },
+			},
+		});
+
+		return handleSuccessResponse(subject);
+	} catch (e) {
+		return handleErrorResponse(e);
+	}
 }
