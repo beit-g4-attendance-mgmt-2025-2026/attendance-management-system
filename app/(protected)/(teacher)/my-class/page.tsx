@@ -1,10 +1,9 @@
-import ClassCard from "@/components/ClassCard";
 import React from "react";
-import ClassForm from "@/components/ClassForm";
 import SearchInput from "@/components/inputs/SearchInput";
-import { DialogCardBtn } from "@/components/DialogCardBtn";
 import { ExportCsvBtn } from "@/components/ExportCsvBtn";
 import { GetMyClass, type MyClassItem } from "@/lib/actions/GetMyClass.actions";
+import MyClassCards from "./components/MyClassCards";
+
 const page = async ({
 	searchParams,
 }: {
@@ -17,10 +16,6 @@ const page = async ({
 	const { data } = await GetMyClass({
 		search: search || "",
 	});
-	// const total = data?.total ?? 0;
-
-	// const user = await auth();
-
 	const myClasses: MyClassItem[] = data?.myClasses ?? [];
 
 	return (
@@ -34,27 +29,13 @@ const page = async ({
 					<ExportCsvBtn
 						endpoint="/api/my-class/export"
 						allowedParams={["search"]}
+						disabled={myClasses.length === 0}
 					/>
-					{/* <DialogCardBtn triggerName="Add Class" title="Add Class">
-						<ClassForm isEdit={false} />
-					</DialogCardBtn> */}
 				</div>
 			</header>
-			{myClasses.length > 0 ? (
-				<div className="grid md:grid-cols-3 gap-10">
-					{myClasses.map((classItem) => (
-						<ClassCard
-							key={classItem.id}
-							classItem={classItem}
-							variant="my-class"
-						/>
-					))}
-				</div>
-			) : (
-				<div className="flex items-center justify-center min-h-[50vh]">
-					<p className="text-gray-500">Class not found!</p>
-				</div>
-			)}
+			<main className="space-y-8">
+				<MyClassCards classes={myClasses} />
+			</main>
 		</>
 	);
 };

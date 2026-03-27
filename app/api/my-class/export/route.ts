@@ -74,38 +74,48 @@ export async function GET(request: NextRequest) {
 		return csvResponse(header.join(","));
 	}
 
-	const rows = await Promise.all(
-		classRecords.map(async (classRecord) => {
-			const [male, female, other, total] = await Promise.all([
-				prisma.student.count({
-					where: { classId: classRecord.id, gender: Gender.MALE },
-				}),
-				prisma.student.count({
-					where: { classId: classRecord.id, gender: Gender.FEMALE },
-				}),
-				prisma.student.count({
-					where: { classId: classRecord.id, gender: Gender.OTHER },
-				}),
-				prisma.student.count({
-					where: { classId: classRecord.id },
-				}),
-			]);
-
-			return [
-				csvEscape(classRecord.id),
-				csvEscape(classRecord.name),
-				csvEscape(classRecord.year),
-				csvEscape(classRecord.semester),
-				csvEscape(teacher.fullName),
-				csvEscape(male),
-				csvEscape(female),
-				csvEscape(other),
-				csvEscape(total),
-				csvEscape(classRecord.department?.symbol ?? ""),
-				csvEscape(classRecord.department?.name ?? ""),
-			];
+	const classIds = classRecords.map((c) => c.id);
+	const [genderGrouped, totalGrouped] = await Promise.all([
+		prisma.student.groupBy({
+			by: ["classId", "gender"],
+			where: { classId: { in: classIds } },
+			_count: { _all: true },
 		}),
-	);
+		prisma.student.groupBy({
+			by: ["classId"],
+			where: { classId: { in: classIds } },
+			_count: { _all: true },
+		}),
+	]);
+
+	const maleByClass = new Map<string, number>();
+	const femaleByClass = new Map<string, number>();
+	const otherByClass = new Map<string, number>();
+	const totalByClass = new Map<string, number>();
+
+	for (const row of genderGrouped) {
+		if (row.gender === Gender.MALE) maleByClass.set(row.classId, row._count._all);
+		if (row.gender === Gender.FEMALE)
+			femaleByClass.set(row.classId, row._count._all);
+		if (row.gender === Gender.OTHER) otherByClass.set(row.classId, row._count._all);
+	}
+	for (const row of totalGrouped) {
+		totalByClass.set(row.classId, row._count._all);
+	}
+
+	const rows = classRecords.map((classRecord) => [
+		csvEscape(classRecord.id),
+		csvEscape(classRecord.name),
+		csvEscape(classRecord.year),
+		csvEscape(classRecord.semester),
+		csvEscape(teacher.fullName),
+		csvEscape(maleByClass.get(classRecord.id) ?? 0),
+		csvEscape(femaleByClass.get(classRecord.id) ?? 0),
+		csvEscape(otherByClass.get(classRecord.id) ?? 0),
+		csvEscape(totalByClass.get(classRecord.id) ?? 0),
+		csvEscape(classRecord.department?.symbol ?? ""),
+		csvEscape(classRecord.department?.name ?? ""),
+	]);
 
 	const csv = [header.join(","), ...rows.map((row) => row.join(","))].join(
 		"\n",
