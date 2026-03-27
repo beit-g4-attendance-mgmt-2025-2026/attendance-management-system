@@ -144,7 +144,7 @@ export async function PUT(
 		const data = validated.data as Partial<{
 			name: string;
 			subCode: string;
-			teacher_name: string;
+			userId: string;
 			year: "FIRST" | "SECOND" | "THIRD" | "FOURTH" | "FIFTH" | "FINAL";
 			semester: "first_semester" | "second_semester";
 		}>;
@@ -178,11 +178,12 @@ export async function PUT(
 		if (data.name !== undefined) updateData.name = data.name;
 		if (data.subCode !== undefined) updateData.subCode = data.subCode;
 
-		if (data.teacher_name) {
+		if (data.userId) {
 			const teacher = await prisma.user.findFirst({
 				where: {
 					departmentId: authUser.departmentId,
-					OR: [{ username: data.teacher_name }],
+					id: data.userId,
+					role: Role.TEACHER,
 				},
 				select: { id: true },
 			});

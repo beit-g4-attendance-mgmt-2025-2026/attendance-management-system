@@ -177,9 +177,9 @@ export const api = {
 		create: (data: {
 			name: string;
 			subCode: string;
-			teacher_name: string;
-			year: string;
-			semester: string;
+			userId: string;
+			year: Year;
+			semester: Semester;
 		}) =>
 			fetchHandler(API_URL + "/subjects", {
 				method: "POST",
@@ -191,10 +191,10 @@ export const api = {
 			id: string,
 			data: Partial<{
 				name: string;
-				code: string;
-				teacher_name: string;
-				acedamic_year: string;
-				semester: string;
+				subCode: string;
+				userId: string;
+				year: Year;
+				semester: Semester;
 			}>,
 		) =>
 			fetchHandler(API_URL + `/subjects/${id}`, {

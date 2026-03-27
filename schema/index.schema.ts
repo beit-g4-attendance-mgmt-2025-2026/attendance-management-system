@@ -177,8 +177,8 @@ export const SubjectSchema = z.object({
 	subCode: z.string().min(2, {
 		message: "Please enter subject code",
 	}),
-	teacher_name: z.string().min(2, {
-		message: "Please enter username of teacher",
+	userId: z.string().uuid({
+		message: "Please choose teacher",
 	}),
 	semester: z.enum(Semester, {
 		message: "Please choose semester",

@@ -11,6 +11,7 @@ const subjectWithDetailsArgs = {
 	include: {
 		user: {
 			select: {
+				id: true,
 				fullName: true,
 			},
 		},

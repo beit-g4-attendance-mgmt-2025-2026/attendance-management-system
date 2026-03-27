@@ -1,5 +1,5 @@
 import { Role } from "@/generated/prisma/enums";
-import { requireAdminOrUserRoles, requireAuth } from "@/lib/guard";
+import { requireAdminOrUserRoles } from "@/lib/guard";
 import { prisma } from "@/lib/prisma";
 import { handleErrorResponse, handleSuccessResponse } from "@/lib/response";
 import { CreateSubjectSchema } from "@/lib/schema/CreateSubjectSchema";
@@ -103,52 +103,53 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
 	try {
-		const auth = await requireAdminOrUserRoles(request, [Role.HOD]);
+		const auth = await requireAdminOrUserRoles(request, [
+			Role.HOD,
+			Role.ADMIN,
+		]);
 		if ("response" in auth) {
 			return auth.response;
 		}
 		const user = "user" in auth ? auth.user : null;
-		const isAdmin = "admin" in auth ? auth.admin : null;
+		const isAdmin = "admin" in auth;
 
-		if (isAdmin)
-			throw new Error("You are not authorized to delete subjects");
-
-		if (user?.role !== "HOD")
-			throw new Error("You are not authorized to delete subjects");
-
-		if (user.role !== "HOD")
-			throw new Error("Only HOD can create subjects");
-
-		if (!user.departmentId) throw new Error("HOD has no department");
+		if (!isAdmin && (!user || user.role !== "HOD")) {
+			throw new Error("You are not authorized to create subjects");
+		}
 
 		const body = await request.json();
 		const validated = validateBody(body, CreateSubjectSchema);
-		const { name, subCode, teacher_name, semester, year } = validated.data;
+		const { name, subCode, userId, semester, year } = validated.data;
 
-		const teacherCandidates = await prisma.user.findMany({
+		const teacher = await prisma.user.findFirst({
 			where: {
-				departmentId: user.departmentId,
-				OR: [{ username: teacher_name }],
+				id: userId,
+				role: Role.TEACHER,
 			},
-			select: { id: true, username: true, fullName: true },
-			take: 2,
+			select: { id: true, fullName: true, departmentId: true },
 		});
-
-		if (teacherCandidates.length === 0) {
-			throw new Error("Teacher not found in your department");
-		}
-
-		const teacher =
-			teacherCandidates.find((t) => t.username === teacher_name) ??
-			teacherCandidates[0];
 
 		if (!teacher) {
 			throw new Error("Teacher not found");
 		}
 
+		if (!isAdmin) {
+			if (!user?.departmentId) {
+				throw new Error("HOD has no department");
+			}
+
+			if (teacher.departmentId !== user.departmentId) {
+				throw new Error(
+					"HOD can only assign a teacher from own department",
+				);
+			}
+		}
+
+		const departmentId = teacher.departmentId;
+
 		const classRecord = await prisma.class.findFirst({
 			where: {
-				departmentId: user.departmentId,
+				departmentId,
 				year: year,
 				semester: semester,
 			},
@@ -163,7 +164,7 @@ export async function POST(request: NextRequest) {
 
 		const existingSubject = await prisma.subject.findFirst({
 			where: {
-				departmentId: user.departmentId,
+				departmentId,
 				OR: [{ name: name }, { subCode: subCode }],
 			},
 			select: { id: true, name: true, subCode: true },
@@ -189,7 +190,7 @@ export async function POST(request: NextRequest) {
 				subCode: subCode,
 				userId: teacher.id,
 				classId: classRecord.id,
-				departmentId: user.departmentId,
+				departmentId,
 			},
 			include: {
 				user: { select: { id: true, username: true, fullName: true } },

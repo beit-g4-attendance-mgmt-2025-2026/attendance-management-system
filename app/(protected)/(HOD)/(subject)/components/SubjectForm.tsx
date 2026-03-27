@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import z from "zod";
 import FormSelect from "@/components/inputs/FormSelect";
 import { Years, semesters } from "@/constants/index.constants";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
 import { SubjectWithDetails } from "@/lib/actions/GetSubjects.actions";
@@ -26,6 +26,10 @@ const SubjectForm = ({
 	onClose?: () => void;
 }) => {
 	const router = useRouter();
+	const [teacherOptions, setTeacherOptions] = useState<
+		{ label: string; value: string }[]
+	>([]);
+	const [isLoadingTeachers, setIsLoadingTeachers] = useState(false);
 	const schema = (
 		subject && isEdit ? SubjectSchema.partial() : SubjectSchema
 	).extend({
@@ -35,14 +39,54 @@ const SubjectForm = ({
 
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
-		values: {
-			name: subject?.name || "",
-			subCode: subject?.subCode || "",
-			teacher_name: subject?.user?.fullName || "",
-			year: subject?.class?.year as Year,
-			semester: subject?.class?.semester as Semester,
+		defaultValues: {
+			name: "",
+			subCode: "",
+			userId: "",
+			year: undefined as any,
+			semester: undefined as any,
 		},
 	});
+	useEffect(() => {
+		if (!subject) return;
+		form.reset({
+			name: subject.name,
+			subCode: subject.subCode,
+			userId: subject.user?.id ?? "",
+			year: subject.class?.year as Year,
+			semester: subject.class?.semester as Semester,
+		});
+	}, [subject, form]);
+
+	useEffect(() => {
+		let mounted = true;
+		const loadTeachers = async () => {
+			setIsLoadingTeachers(true);
+			try {
+				const res = await api.users.getAll();
+				const users = res?.data?.users ?? [];
+				const options = users
+					.filter((user: any) => user.role === "TEACHER")
+					.map((user: any) => ({
+						value: user.id,
+						label: user.department?.symbol
+							? `${user.fullName} (${user.department.symbol})`
+							: user.fullName,
+					}));
+
+				if (mounted) setTeacherOptions(options);
+			} catch (error: any) {
+				toast.error(error.message ?? "Failed to load teachers");
+			} finally {
+				if (mounted) setIsLoadingTeachers(false);
+			}
+		};
+
+		loadTeachers();
+		return () => {
+			mounted = false;
+		};
+	}, []);
 
 	const {
 		formState: { isSubmitting },
@@ -55,7 +99,7 @@ const SubjectForm = ({
 				const updateData = {
 					name: values.name,
 					subCode: values.subCode,
-					teacher_name: values.teacher_name,
+					userId: values.userId,
 					year: values.year,
 					semester: values.semester,
 				};
@@ -72,7 +116,7 @@ const SubjectForm = ({
 				const data = {
 					name: values.name as string,
 					subCode: values.subCode as string,
-					teacher_name: values.teacher_name as string,
+					userId: values.userId as string,
 					year: values.year,
 					semester: values.semester,
 				};
@@ -123,12 +167,18 @@ const SubjectForm = ({
 						placeholder="Enter subject code"
 						className="w-full"
 					/>
-					<FormInput
+					<FormSelect
 						form={form}
-						name="teacher_name"
-						label="Teacher Name"
-						placeholder="Enter teacher's username"
-						className="w-full"
+						name="userId"
+						placeholder={
+							isLoadingTeachers
+								? "Loading teachers..."
+								: "Select teacher"
+						}
+						options={teacherOptions}
+						id="form-rhf-select-teacher"
+						disabled={isSubmitting || isLoadingTeachers}
+						triggerClassName="w-full cursor-pointer"
 					/>
 					<FormSelect
 						form={form}

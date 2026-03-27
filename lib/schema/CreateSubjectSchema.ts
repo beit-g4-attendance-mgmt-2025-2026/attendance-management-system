@@ -10,9 +10,7 @@ export const CreateSubjectSchema = z.object({
 		message: "Subject code must be at least 2 characters",
 	}),
 
-	teacher_name: z.string().min(2, {
-		message: "Teacher's username must be at least 2 characters",
-	}),
+	userId: z.string().uuid("Please select a valid teacher"),
 	semester: z.enum(Semester),
 	year: z.enum(Year),
 });
