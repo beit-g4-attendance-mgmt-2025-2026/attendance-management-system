@@ -1,4 +1,5 @@
-import { requireAuth } from "@/lib/guard";
+import { Role } from "@/generated/prisma/client";
+import { requireAdminOrUserRoles } from "@/lib/guard";
 import { prisma } from "@/lib/prisma";
 import { handleErrorResponse, handleSuccessResponse } from "@/lib/response";
 import { CreateSubjectSchema } from "@/lib/schema/CreateSubjectSchema";
@@ -7,12 +8,14 @@ import { NextRequest } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const auth = await requireAuth(request);
+    const auth = await requireAdminOrUserRoles(request, [Role.HOD, Role.ADMIN]);
     if ("response" in auth) return auth.response;
 
-    const { user } = auth;
-    if (user.role !== "HOD") {
-      throw new Error("You are not authorized to create subjects");
+    const isAdmin = "admin" in auth;
+    const authUser = "user" in auth ? auth.user : null;
+
+    if (!isAdmin && !authUser?.departmentId) {
+      throw new Error("Department not found");
     }
 
     const body = await request.json();
@@ -39,20 +42,37 @@ export async function POST(request: NextRequest) {
     const classRecord = await prisma.class.findFirst({
       where: {
         id: data.classId,
-        departmentId: auth.user.departmentId,
+        ...(isAdmin ? {} : { departmentId: authUser!.departmentId }),
+      },
+      select: { id: true, departmentId: true },
+    });
+
+    if (!classRecord) {
+      throw new Error(
+        isAdmin ? "Class not found" : "Class not found for your department",
+      );
+    }
+
+    const teacher = await prisma.user.findFirst({
+      where: {
+        id: data.userId,
+        role: Role.TEACHER,
+        departmentId: classRecord.departmentId,
       },
       select: { id: true },
     });
 
-    if (!classRecord) {
-      throw new Error("Class not found for your department");
+    if (!teacher) {
+      throw new Error(
+        "Assigned teacher must be a teacher in the same department",
+      );
     }
 
     const subject = await prisma.subject.create({
       data: {
         name: data.name,
         subCode: data.subCode,
-        departmentId: auth.user.departmentId,
+        departmentId: classRecord.departmentId,
         userId: data.userId,
         classId: data.classId,
       },
@@ -70,22 +90,22 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const auth = await requireAuth(request);
+    const auth = await requireAdminOrUserRoles(request, [Role.HOD, Role.ADMIN]);
     if ("response" in auth) return auth.response;
 
-    const { user } = auth;
-    if (user.role !== "HOD") {
-      throw new Error("You are not authorized to view subjects");
+    const isAdmin = "admin" in auth;
+    const authUser = "user" in auth ? auth.user : null;
+
+    if (!isAdmin && !authUser?.departmentId) {
+      throw new Error("Department not found");
     }
 
     const subjects = await prisma.subject.findMany({
-      where: {
-        departmentId: user.departmentId,
-      },
+      where: isAdmin ? {} : { departmentId: authUser!.departmentId },
       include: { department: true, class: true },
     });
 
-    return handleSuccessResponse({ subjects: subjects, status: 200 });
+    return handleSuccessResponse({ subjects, status: 200 });
   } catch (error) {
     return handleErrorResponse(error);
   }

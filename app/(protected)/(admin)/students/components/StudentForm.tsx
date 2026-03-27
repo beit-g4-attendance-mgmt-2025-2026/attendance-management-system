@@ -31,15 +31,17 @@ const StudentForm = ({
   const form = useForm<z.infer<typeof CreateStudentSchema>>({
     resolver: zodResolver(CreateStudentSchema),
     defaultValues: {
-      name: "",
-      rollNo: "",
-      dateOfBirth: "",
-      semester: undefined,
-      year: undefined,
-      gender: undefined,
-      email: "",
-      phoneNumber: "",
-      classId: "",
+      name: student?.name ?? "",
+      rollNo: student?.rollNo ?? "",
+      dateOfBirth: student?.dateOfBirth
+        ? new Date(student.dateOfBirth).toISOString().split("T")[0]
+        : "",
+      semester: (student?.semester as Semester | undefined) ?? undefined,
+      year: (student?.year as Year | undefined) ?? undefined,
+      gender: (student?.gender as Gender | undefined) ?? undefined,
+      email: student?.email ?? "",
+      phoneNumber: student?.phoneNumber ?? "",
+      classId: student?.classId ?? "",
     },
   });
 
@@ -52,9 +54,9 @@ const StudentForm = ({
       dateOfBirth: student.dateOfBirth
         ? new Date(student.dateOfBirth).toISOString().split("T")[0]
         : "",
-      semester: student.semester,
-      year: student.year,
-      gender: student.gender,
+      semester: student.semester as Semester,
+      year: student.year as Year,
+      gender: student.gender as Gender,
       email: student.email,
       phoneNumber: student.phoneNumber,
       classId: student.classId,
@@ -136,7 +138,7 @@ const StudentForm = ({
   }
 
   const handleCancel = () => {
-    router.back();
+    onClose?.();
   };
   return (
     <div className="flex items-center justify-center">

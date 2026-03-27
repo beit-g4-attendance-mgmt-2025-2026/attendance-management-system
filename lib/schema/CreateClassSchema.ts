@@ -18,6 +18,7 @@ export const CreateClassSchema = z.object({
     .uuid("Invalid Academic Year")
     .optional()
     .nullable(),
+  departmentId: z.string().uuid("Invalid department").optional(),
   userId: z.string().uuid("Invalid class teacher").optional().nullable(),
 });
 

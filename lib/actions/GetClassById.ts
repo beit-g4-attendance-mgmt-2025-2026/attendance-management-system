@@ -1,28 +1,38 @@
 "use server";
 
-import { Prisma, Role, User } from "@/generated/prisma/client";
+import { Role, type Prisma, type User } from "@/generated/prisma/client";
+import { StudentWithDetails } from "@/types/index.types";
 import { getUserIdFromCookies } from "../jwt";
 import { prisma } from "../prisma";
 import { handleActionErrorResponse } from "../response";
-import { GetStudentsResponse } from "@/types/index.types";
 import validateBody from "../validateBody";
 import PaginatedSearchParamsSchema from "../schema/PaginatedSearchParamsSchema";
 
-export async function GetStudents(params: {
-  page?: number;
-  pageSize?: number;
-  search?: string;
-  filter?: string;
-}): Promise<GetStudentsResponse> {
+export async function GetClassById(
+  id: string,
+  params: {
+    page?: number;
+    pageSize?: number;
+    search?: string;
+  } = {},
+): Promise<{
+  success: boolean;
+  data?: {
+    id: string;
+    name: string;
+    students: StudentWithDetails[];
+    total: number;
+    isNext: boolean;
+  };
+  message?: string;
+  details?: object | null;
+}> {
   try {
-    // Auth from cookies (Admin OR User)
     const authId = await getUserIdFromCookies();
     if (!authId) return { success: false, message: "Unauthorized" };
 
-    // check Admin table first
     const admin = await prisma.admin.findUnique({ where: { id: authId } });
 
-    // if not admin, check User table
     let user: User | null = null;
     if (!admin) {
       user = await prisma.user.findUnique({ where: { id: authId } });
@@ -33,13 +43,30 @@ export async function GetStudents(params: {
       }
     }
 
-    const validated = validateBody(params, PaginatedSearchParamsSchema);
-    const { page = 1, pageSize = 10, search, filter } = validated.data;
-
+    const validated = validateBody(params, PaginatedSearchParamsSchema.partial());
+    const { page = 1, pageSize = 10, search } = validated.data;
     const skip = (Number(page) - 1) * Number(pageSize);
     const take = Number(pageSize);
 
-    const where: Prisma.StudentWhereInput = {};
+    const classRecord = await prisma.class.findFirst({
+      where: {
+        id,
+        ...(user?.role === Role.HOD ? { departmentId: user.departmentId } : {}),
+      },
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+
+    if (!classRecord) {
+      return { success: false, message: "Class not found" };
+    }
+
+    const where: Prisma.StudentWhereInput = {
+      classId: id,
+      ...(user?.role === Role.HOD ? { departmentId: user.departmentId } : {}),
+    };
 
     if (search) {
       where.OR = [
@@ -50,33 +77,27 @@ export async function GetStudents(params: {
       ];
     }
 
-    if (filter) {
-      where.department = { symbol: filter };
-    }
-
-    //  HOD restriction
-    if (user?.role === Role.HOD) {
-      if (!user.departmentId) {
-        return { success: false, message: "HOD has no department" };
-      }
-      where.departmentId = user.departmentId;
-    }
-
     const total = await prisma.student.count({ where });
-
     const students = await prisma.student.findMany({
       where,
-      include: { department: true, class: true },
+      include: {
+        department: true,
+        class: true,
+      },
       skip,
       take,
       orderBy: { name: "asc" },
     });
 
-    const isNext = total > skip + students.length;
-
     return {
       success: true,
-      data: { students, total, isNext },
+      data: {
+        id: classRecord.id,
+        name: classRecord.name,
+        students,
+        total,
+        isNext: total > skip + students.length,
+      },
     };
   } catch (error) {
     return handleActionErrorResponse(error);

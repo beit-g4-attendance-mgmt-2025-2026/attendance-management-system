@@ -82,6 +82,7 @@ const StudentsListTable = ({ students }: StudentsListTableProps) => {
                 description=""
               >
                 <StudentForm
+                  key={student.id}
                   isEdit={true}
                   student={student}
                   onClose={() => {}}

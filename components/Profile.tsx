@@ -1,8 +1,11 @@
+"use client";
+
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 import { FaUserEdit } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 interface UserInfo {
 	avator: string;
@@ -16,7 +19,9 @@ interface ProfileWithPopupProps {
 
 const ProfileWithPopup: React.FC<ProfileWithPopupProps> = ({ userInfo }) => {
 	const [isOpen, setIsOpen] = useState<boolean>(false);
+	const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
 	const popupRef = useRef<HTMLDivElement>(null);
+	const router = useRouter();
 
 	useEffect(() => {
 		function handleClickOutside(event: MouseEvent) {
@@ -36,6 +41,25 @@ const ProfileWithPopup: React.FC<ProfileWithPopupProps> = ({ userInfo }) => {
 			document.removeEventListener("mousedown", handleClickOutside);
 		};
 	}, [isOpen]);
+
+	const handleLogout = async () => {
+		try {
+			setIsLoggingOut(true);
+			const response = await fetch("/api/auth/logout", {
+				method: "POST",
+			});
+
+			if (!response.ok) {
+				throw new Error("Logout failed");
+			}
+
+			setIsOpen(false);
+			router.replace("/login");
+			router.refresh();
+		} finally {
+			setIsLoggingOut(false);
+		}
+	};
 
 	return (
 		<div className="relative inline-block">
@@ -70,10 +94,12 @@ const ProfileWithPopup: React.FC<ProfileWithPopupProps> = ({ userInfo }) => {
 						</p>
 						<Button
 							type="button"
+							onClick={handleLogout}
+							disabled={isLoggingOut}
 							className="mt-4 w-full py-2 px-4 border rounded  transition-colors 
                   cursor-pointer"
 						>
-							Logout
+							{isLoggingOut ? "Logging out..." : "Logout"}
 						</Button>
 					</div>
 				</div>

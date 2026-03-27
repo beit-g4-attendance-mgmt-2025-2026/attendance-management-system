@@ -105,28 +105,45 @@ export const api = {
       }),
   },
 
-  auth: {
-    // login user/admin
-    login: (data: { username: string; password: string }) =>
-      fetchHandler(API_URL + "/auth/login", {
+  classes: {
+    getAll: () => fetchHandler(API_URL + "/classes"),
+
+    getById: (id: string) => fetchHandler(API_URL + `/classes/${id}`),
+
+    create: (data: {
+      name: string;
+      semester: "first_semester" | "second_semester";
+      year: "FIRST" | "SECOND" | "THIRD" | "FOURTH" | "FIFTH" | "FINAL";
+      academicYearId?: string | null;
+      departmentId?: string;
+      userId?: string | null;
+    }) =>
+      fetchHandler(API_URL + "/classes", {
         method: "POST",
         body: JSON.stringify(data),
       }),
 
-    // logout
-    logout: () =>
-      fetchHandler(API_URL + "/auth/logout", {
-        method: "POST",
+    update: (
+      id: string,
+      data: Partial<{
+        name: string;
+        semester: Semester;
+        year: Year;
+        academicYearId: string | null;
+        departmentId: string;
+        userId: string | null;
+      }>,
+    ) =>
+      fetchHandler(API_URL + `/classes/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(data),
       }),
 
-    // reset password using token query string
-    resetPassword: (password: string, token: string) =>
-      fetchHandler(
-        API_URL + `/auth/reset-password?token=${encodeURIComponent(token)}`,
-        {
-          method: "POST",
-          body: JSON.stringify({ password }),
-        },
-      ),
+    delete: (id: string) =>
+      fetchHandler(API_URL + `/classes/${id}`, {
+        method: "DELETE",
+      }),
   },
+
+  auth: {},
 };

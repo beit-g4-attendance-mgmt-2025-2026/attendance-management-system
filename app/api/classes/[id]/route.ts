@@ -1,4 +1,5 @@
-import { requireAuth } from "@/lib/guard";
+import { Role } from "@/generated/prisma/client";
+import { requireAdminOrUserRoles } from "@/lib/guard";
 import { prisma } from "@/lib/prisma";
 import { handleErrorResponse, handleSuccessResponse } from "@/lib/response";
 import { CreateClassSchema } from "@/lib/schema/CreateClassSchema";
@@ -15,12 +16,13 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const auth = await requireAuth(request);
+    const auth = await requireAdminOrUserRoles(request, [Role.HOD, Role.ADMIN]);
     if ("response" in auth) return auth.response;
 
-    const { user } = auth;
-    if (user.role !== "HOD") {
-      throw new Error("You are not authorized to view classes");
+    const isAdmin = "admin" in auth;
+    const authUser = "user" in auth ? auth.user : null;
+    if (!isAdmin && !authUser?.departmentId) {
+      throw new Error("Department not found");
     }
 
     const { id } = await params;
@@ -32,7 +34,7 @@ export async function GET(
     const classRecord = await prisma.class.findFirst({
       where: {
         id,
-        departmentId: user.departmentId,
+        ...(isAdmin ? {} : { departmentId: authUser!.departmentId }),
       },
       include: {
         department: true,
@@ -58,12 +60,13 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const auth = await requireAuth(request);
+    const auth = await requireAdminOrUserRoles(request, [Role.HOD, Role.ADMIN]);
     if ("response" in auth) return auth.response;
 
-    const { user } = auth;
-    if (user.role !== "HOD") {
-      throw new Error("You are not authorized to update classes");
+    const isAdmin = "admin" in auth;
+    const authUser = "user" in auth ? auth.user : null;
+    if (!isAdmin && !authUser?.departmentId) {
+      throw new Error("Department not found");
     }
 
     const { id } = await params;
@@ -75,13 +78,14 @@ export async function PUT(
     const existingClass = await prisma.class.findFirst({
       where: {
         id,
-        departmentId: user.departmentId,
+        ...(isAdmin ? {} : { departmentId: authUser!.departmentId }),
       },
       select: {
         id: true,
         year: true,
         semester: true,
         academicYearId: true,
+        departmentId: true,
       },
     });
 
@@ -93,19 +97,37 @@ export async function PUT(
     const validatedData = validateBody(body, CreateClassSchema, true);
     const data = validatedData.data;
 
+    let nextDepartmentId = isAdmin
+      ? (data.departmentId ?? existingClass.departmentId)
+      : authUser!.departmentId;
+
     if (data.userId) {
-      const teacher = await prisma.user.findFirst({
+      const familyTeacher = await prisma.user.findFirst({
         where: {
           id: data.userId,
-          departmentId: user.departmentId,
-          role: "TEACHER",
+          role: { in: [Role.TEACHER, Role.HOD] },
         },
-        select: { id: true },
+        select: { id: true, departmentId: true },
       });
 
-      if (!teacher) {
-        throw new Error("Assigned class teacher must be a teacher in your department");
+      if (!familyTeacher) {
+        throw new Error("Assigned family teacher must be a valid HOD or teacher");
       }
+
+      if (familyTeacher.departmentId !== nextDepartmentId) {
+        throw new Error(
+          "Assigned family teacher must belong to the selected department",
+        );
+      }
+    }
+
+    const department = await prisma.department.findUnique({
+      where: { id: nextDepartmentId },
+      select: { id: true },
+    });
+
+    if (!department) {
+      throw new Error("Department not found");
     }
 
     if (data.academicYearId) {
@@ -125,7 +147,7 @@ export async function PUT(
     const duplicateClass = await prisma.class.findFirst({
       where: {
         id: { not: id },
-        departmentId: user.departmentId,
+        departmentId: nextDepartmentId,
         year: nextYear,
         semester: nextSemester,
       },
@@ -142,6 +164,7 @@ export async function PUT(
       where: { id },
       data: {
         ...data,
+        departmentId: nextDepartmentId,
       },
       include: {
         department: true,
@@ -161,12 +184,13 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const auth = await requireAuth(request);
+    const auth = await requireAdminOrUserRoles(request, [Role.HOD, Role.ADMIN]);
     if ("response" in auth) return auth.response;
 
-    const { user } = auth;
-    if (user.role !== "HOD") {
-      throw new Error("You are not authorized to delete classes");
+    const isAdmin = "admin" in auth;
+    const authUser = "user" in auth ? auth.user : null;
+    if (!isAdmin && !authUser?.departmentId) {
+      throw new Error("Department not found");
     }
 
     const { id } = await params;
@@ -178,7 +202,7 @@ export async function DELETE(
     const classRecord = await prisma.class.findFirst({
       where: {
         id,
-        departmentId: user.departmentId,
+        ...(isAdmin ? {} : { departmentId: authUser!.departmentId }),
       },
       select: {
         id: true,

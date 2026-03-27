@@ -52,8 +52,27 @@ export interface Subject {
   code: string;
   year: string;
   semester: string;
-  teacher_name: string;
+  userId: string;
 }
+
+export interface ClassCardItem {
+  id: string;
+  name: string;
+  familyTeacher: string;
+  male: number;
+  female: number;
+  total: number;
+}
+
+export type GetClassesResponse = {
+  success: boolean;
+  data?: {
+    classes: ClassCardItem[];
+    total: number;
+    isNext: boolean;
+  };
+  message?: string;
+};
 
 export interface DepartmentTableItem {
   id: string;
