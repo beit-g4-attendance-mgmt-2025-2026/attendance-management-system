@@ -119,7 +119,9 @@ export async function POST(request: NextRequest) {
 
 		const body = await request.json();
 		const validated = validateBody(body, CreateSubjectSchema);
-		const { name, subCode, userId, semester, year } = validated.data;
+		const { name, subCode, userId, roomName, semester, year } =
+			validated.data;
+		const normalizedRoomName = roomName?.trim() || null;
 
 		const teacher = await prisma.user.findFirst({
 			where: {
@@ -191,6 +193,7 @@ export async function POST(request: NextRequest) {
 				userId: teacher.id,
 				classId: classRecord.id,
 				departmentId,
+				roomName: normalizedRoomName,
 			},
 			include: {
 				user: { select: { id: true, username: true, fullName: true } },

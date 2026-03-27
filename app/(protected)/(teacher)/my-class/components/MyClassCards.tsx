@@ -9,7 +9,7 @@ const MyClassCards = ({ classes }: Props) => {
 	if (classes.length === 0) {
 		return (
 			<div className="flex items-center justify-center min-h-[20vh]">
-				<p className="text-gray-500">Class not found!</p>
+				<p className="text-gray-500">You have no class!</p>
 			</div>
 		);
 	}
@@ -17,7 +17,11 @@ const MyClassCards = ({ classes }: Props) => {
 	return (
 		<div className="grid md:grid-cols-3 gap-10">
 			{classes.map((classItem) => (
-				<ClassCard key={classItem.id} classItem={classItem} variant="my-class" />
+				<ClassCard
+					key={classItem.id}
+					classItem={classItem}
+					variant="my-class"
+				/>
 			))}
 		</div>
 	);

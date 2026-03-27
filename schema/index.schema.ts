@@ -180,6 +180,13 @@ export const SubjectSchema = z.object({
 	userId: z.string().uuid({
 		message: "Please choose teacher",
 	}),
+	roomName: z
+		.string()
+		.trim()
+		.max(50, {
+			message: "Room number must be less than 50 characters",
+		})
+		.optional(),
 	semester: z.enum(Semester, {
 		message: "Please choose semester",
 	}),

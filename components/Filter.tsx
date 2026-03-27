@@ -58,7 +58,9 @@ export function Filter({ filterName }: { filterName: string[] }) {
 				</button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent className="w-56">
-				<DropdownMenuLabel>Filter</DropdownMenuLabel>
+				<DropdownMenuLabel className="font-semibold">
+					Filter
+				</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				{filterName?.map((dept) => (
 					<DropdownMenuCheckboxItem
@@ -66,7 +68,7 @@ export function Filter({ filterName }: { filterName: string[] }) {
 						onCheckedChange={setShowStatusBar}
 						key={dept}
 						onClick={() => handleFilter(dept)}
-						className="cursor-pointer"
+						className={`${filter === dept ? "text-blue-600" : ""} cursor-pointer font-semibold`}
 					>
 						{dept}
 					</DropdownMenuCheckboxItem>

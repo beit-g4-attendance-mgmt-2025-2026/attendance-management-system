@@ -178,6 +178,7 @@ export const api = {
 			name: string;
 			subCode: string;
 			userId: string;
+			roomName?: string | null;
 			year: Year;
 			semester: Semester;
 		}) =>
@@ -193,6 +194,7 @@ export const api = {
 				name: string;
 				subCode: string;
 				userId: string;
+				roomName?: string | null;
 				year: Year;
 				semester: Semester;
 			}>,

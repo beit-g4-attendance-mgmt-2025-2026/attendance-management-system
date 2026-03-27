@@ -28,6 +28,7 @@ export type SubjectMinAggregateOutputType = {
   id: string | null
   name: string | null
   subCode: string | null
+  roomName: string | null
   departmentId: string | null
   userId: string | null
   classId: string | null
@@ -37,6 +38,7 @@ export type SubjectMaxAggregateOutputType = {
   id: string | null
   name: string | null
   subCode: string | null
+  roomName: string | null
   departmentId: string | null
   userId: string | null
   classId: string | null
@@ -46,6 +48,7 @@ export type SubjectCountAggregateOutputType = {
   id: number
   name: number
   subCode: number
+  roomName: number
   departmentId: number
   userId: number
   classId: number
@@ -57,6 +60,7 @@ export type SubjectMinAggregateInputType = {
   id?: true
   name?: true
   subCode?: true
+  roomName?: true
   departmentId?: true
   userId?: true
   classId?: true
@@ -66,6 +70,7 @@ export type SubjectMaxAggregateInputType = {
   id?: true
   name?: true
   subCode?: true
+  roomName?: true
   departmentId?: true
   userId?: true
   classId?: true
@@ -75,6 +80,7 @@ export type SubjectCountAggregateInputType = {
   id?: true
   name?: true
   subCode?: true
+  roomName?: true
   departmentId?: true
   userId?: true
   classId?: true
@@ -157,6 +163,7 @@ export type SubjectGroupByOutputType = {
   id: string
   name: string
   subCode: string
+  roomName: string | null
   departmentId: string
   userId: string
   classId: string
@@ -187,6 +194,7 @@ export type SubjectWhereInput = {
   id?: Prisma.UuidFilter<"Subject"> | string
   name?: Prisma.StringFilter<"Subject"> | string
   subCode?: Prisma.StringFilter<"Subject"> | string
+  roomName?: Prisma.StringNullableFilter<"Subject"> | string | null
   departmentId?: Prisma.UuidFilter<"Subject"> | string
   userId?: Prisma.UuidFilter<"Subject"> | string
   classId?: Prisma.UuidFilter<"Subject"> | string
@@ -201,6 +209,7 @@ export type SubjectOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   subCode?: Prisma.SortOrder
+  roomName?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   classId?: Prisma.SortOrder
@@ -218,6 +227,7 @@ export type SubjectWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.SubjectWhereInput | Prisma.SubjectWhereInput[]
   name?: Prisma.StringFilter<"Subject"> | string
   subCode?: Prisma.StringFilter<"Subject"> | string
+  roomName?: Prisma.StringNullableFilter<"Subject"> | string | null
   departmentId?: Prisma.UuidFilter<"Subject"> | string
   userId?: Prisma.UuidFilter<"Subject"> | string
   classId?: Prisma.UuidFilter<"Subject"> | string
@@ -232,6 +242,7 @@ export type SubjectOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   subCode?: Prisma.SortOrder
+  roomName?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   classId?: Prisma.SortOrder
@@ -247,6 +258,7 @@ export type SubjectScalarWhereWithAggregatesInput = {
   id?: Prisma.UuidWithAggregatesFilter<"Subject"> | string
   name?: Prisma.StringWithAggregatesFilter<"Subject"> | string
   subCode?: Prisma.StringWithAggregatesFilter<"Subject"> | string
+  roomName?: Prisma.StringNullableWithAggregatesFilter<"Subject"> | string | null
   departmentId?: Prisma.UuidWithAggregatesFilter<"Subject"> | string
   userId?: Prisma.UuidWithAggregatesFilter<"Subject"> | string
   classId?: Prisma.UuidWithAggregatesFilter<"Subject"> | string
@@ -256,6 +268,7 @@ export type SubjectCreateInput = {
   id?: string
   name: string
   subCode: string
+  roomName?: string | null
   department: Prisma.DepartmentCreateNestedOneWithoutSubjectsInput
   user: Prisma.UserCreateNestedOneWithoutSubjectsInput
   class: Prisma.ClassCreateNestedOneWithoutSubjectsInput
@@ -267,6 +280,7 @@ export type SubjectUncheckedCreateInput = {
   id?: string
   name: string
   subCode: string
+  roomName?: string | null
   departmentId: string
   userId: string
   classId: string
@@ -278,6 +292,7 @@ export type SubjectUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  roomName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   department?: Prisma.DepartmentUpdateOneRequiredWithoutSubjectsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutSubjectsNestedInput
   class?: Prisma.ClassUpdateOneRequiredWithoutSubjectsNestedInput
@@ -289,6 +304,7 @@ export type SubjectUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  roomName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -300,6 +316,7 @@ export type SubjectCreateManyInput = {
   id?: string
   name: string
   subCode: string
+  roomName?: string | null
   departmentId: string
   userId: string
   classId: string
@@ -309,12 +326,14 @@ export type SubjectUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  roomName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type SubjectUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  roomName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -334,6 +353,7 @@ export type SubjectCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   subCode?: Prisma.SortOrder
+  roomName?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   classId?: Prisma.SortOrder
@@ -343,6 +363,7 @@ export type SubjectMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   subCode?: Prisma.SortOrder
+  roomName?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   classId?: Prisma.SortOrder
@@ -352,6 +373,7 @@ export type SubjectMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   subCode?: Prisma.SortOrder
+  roomName?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   classId?: Prisma.SortOrder
@@ -520,6 +542,7 @@ export type SubjectCreateWithoutUserInput = {
   id?: string
   name: string
   subCode: string
+  roomName?: string | null
   department: Prisma.DepartmentCreateNestedOneWithoutSubjectsInput
   class: Prisma.ClassCreateNestedOneWithoutSubjectsInput
   dailyAttendance?: Prisma.DailyAttendanceCreateNestedManyWithoutSubjectInput
@@ -530,6 +553,7 @@ export type SubjectUncheckedCreateWithoutUserInput = {
   id?: string
   name: string
   subCode: string
+  roomName?: string | null
   departmentId: string
   classId: string
   dailyAttendance?: Prisma.DailyAttendanceUncheckedCreateNestedManyWithoutSubjectInput
@@ -569,6 +593,7 @@ export type SubjectScalarWhereInput = {
   id?: Prisma.UuidFilter<"Subject"> | string
   name?: Prisma.StringFilter<"Subject"> | string
   subCode?: Prisma.StringFilter<"Subject"> | string
+  roomName?: Prisma.StringNullableFilter<"Subject"> | string | null
   departmentId?: Prisma.UuidFilter<"Subject"> | string
   userId?: Prisma.UuidFilter<"Subject"> | string
   classId?: Prisma.UuidFilter<"Subject"> | string
@@ -578,6 +603,7 @@ export type SubjectCreateWithoutDepartmentInput = {
   id?: string
   name: string
   subCode: string
+  roomName?: string | null
   user: Prisma.UserCreateNestedOneWithoutSubjectsInput
   class: Prisma.ClassCreateNestedOneWithoutSubjectsInput
   dailyAttendance?: Prisma.DailyAttendanceCreateNestedManyWithoutSubjectInput
@@ -588,6 +614,7 @@ export type SubjectUncheckedCreateWithoutDepartmentInput = {
   id?: string
   name: string
   subCode: string
+  roomName?: string | null
   userId: string
   classId: string
   dailyAttendance?: Prisma.DailyAttendanceUncheckedCreateNestedManyWithoutSubjectInput
@@ -624,6 +651,7 @@ export type SubjectCreateWithoutClassInput = {
   id?: string
   name: string
   subCode: string
+  roomName?: string | null
   department: Prisma.DepartmentCreateNestedOneWithoutSubjectsInput
   user: Prisma.UserCreateNestedOneWithoutSubjectsInput
   dailyAttendance?: Prisma.DailyAttendanceCreateNestedManyWithoutSubjectInput
@@ -634,6 +662,7 @@ export type SubjectUncheckedCreateWithoutClassInput = {
   id?: string
   name: string
   subCode: string
+  roomName?: string | null
   departmentId: string
   userId: string
   dailyAttendance?: Prisma.DailyAttendanceUncheckedCreateNestedManyWithoutSubjectInput
@@ -670,6 +699,7 @@ export type SubjectCreateWithoutDailyAttendanceInput = {
   id?: string
   name: string
   subCode: string
+  roomName?: string | null
   department: Prisma.DepartmentCreateNestedOneWithoutSubjectsInput
   user: Prisma.UserCreateNestedOneWithoutSubjectsInput
   class: Prisma.ClassCreateNestedOneWithoutSubjectsInput
@@ -680,6 +710,7 @@ export type SubjectUncheckedCreateWithoutDailyAttendanceInput = {
   id?: string
   name: string
   subCode: string
+  roomName?: string | null
   departmentId: string
   userId: string
   classId: string
@@ -706,6 +737,7 @@ export type SubjectUpdateWithoutDailyAttendanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  roomName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   department?: Prisma.DepartmentUpdateOneRequiredWithoutSubjectsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutSubjectsNestedInput
   class?: Prisma.ClassUpdateOneRequiredWithoutSubjectsNestedInput
@@ -716,6 +748,7 @@ export type SubjectUncheckedUpdateWithoutDailyAttendanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  roomName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -726,6 +759,7 @@ export type SubjectCreateWithoutMonthlySubAttendanceInput = {
   id?: string
   name: string
   subCode: string
+  roomName?: string | null
   department: Prisma.DepartmentCreateNestedOneWithoutSubjectsInput
   user: Prisma.UserCreateNestedOneWithoutSubjectsInput
   class: Prisma.ClassCreateNestedOneWithoutSubjectsInput
@@ -736,6 +770,7 @@ export type SubjectUncheckedCreateWithoutMonthlySubAttendanceInput = {
   id?: string
   name: string
   subCode: string
+  roomName?: string | null
   departmentId: string
   userId: string
   classId: string
@@ -762,6 +797,7 @@ export type SubjectUpdateWithoutMonthlySubAttendanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  roomName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   department?: Prisma.DepartmentUpdateOneRequiredWithoutSubjectsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutSubjectsNestedInput
   class?: Prisma.ClassUpdateOneRequiredWithoutSubjectsNestedInput
@@ -772,6 +808,7 @@ export type SubjectUncheckedUpdateWithoutMonthlySubAttendanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  roomName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -782,6 +819,7 @@ export type SubjectCreateManyUserInput = {
   id?: string
   name: string
   subCode: string
+  roomName?: string | null
   departmentId: string
   classId: string
 }
@@ -790,6 +828,7 @@ export type SubjectUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  roomName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   department?: Prisma.DepartmentUpdateOneRequiredWithoutSubjectsNestedInput
   class?: Prisma.ClassUpdateOneRequiredWithoutSubjectsNestedInput
   dailyAttendance?: Prisma.DailyAttendanceUpdateManyWithoutSubjectNestedInput
@@ -800,6 +839,7 @@ export type SubjectUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  roomName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
   dailyAttendance?: Prisma.DailyAttendanceUncheckedUpdateManyWithoutSubjectNestedInput
@@ -810,6 +850,7 @@ export type SubjectUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  roomName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -818,6 +859,7 @@ export type SubjectCreateManyDepartmentInput = {
   id?: string
   name: string
   subCode: string
+  roomName?: string | null
   userId: string
   classId: string
 }
@@ -826,6 +868,7 @@ export type SubjectUpdateWithoutDepartmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  roomName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutSubjectsNestedInput
   class?: Prisma.ClassUpdateOneRequiredWithoutSubjectsNestedInput
   dailyAttendance?: Prisma.DailyAttendanceUpdateManyWithoutSubjectNestedInput
@@ -836,6 +879,7 @@ export type SubjectUncheckedUpdateWithoutDepartmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  roomName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
   dailyAttendance?: Prisma.DailyAttendanceUncheckedUpdateManyWithoutSubjectNestedInput
@@ -846,6 +890,7 @@ export type SubjectUncheckedUpdateManyWithoutDepartmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  roomName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   classId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -854,6 +899,7 @@ export type SubjectCreateManyClassInput = {
   id?: string
   name: string
   subCode: string
+  roomName?: string | null
   departmentId: string
   userId: string
 }
@@ -862,6 +908,7 @@ export type SubjectUpdateWithoutClassInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  roomName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   department?: Prisma.DepartmentUpdateOneRequiredWithoutSubjectsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutSubjectsNestedInput
   dailyAttendance?: Prisma.DailyAttendanceUpdateManyWithoutSubjectNestedInput
@@ -872,6 +919,7 @@ export type SubjectUncheckedUpdateWithoutClassInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  roomName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   dailyAttendance?: Prisma.DailyAttendanceUncheckedUpdateManyWithoutSubjectNestedInput
@@ -882,6 +930,7 @@ export type SubjectUncheckedUpdateManyWithoutClassInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   subCode?: Prisma.StringFieldUpdateOperationsInput | string
+  roomName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -930,6 +979,7 @@ export type SubjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   id?: boolean
   name?: boolean
   subCode?: boolean
+  roomName?: boolean
   departmentId?: boolean
   userId?: boolean
   classId?: boolean
@@ -945,6 +995,7 @@ export type SubjectSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   name?: boolean
   subCode?: boolean
+  roomName?: boolean
   departmentId?: boolean
   userId?: boolean
   classId?: boolean
@@ -957,6 +1008,7 @@ export type SubjectSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   name?: boolean
   subCode?: boolean
+  roomName?: boolean
   departmentId?: boolean
   userId?: boolean
   classId?: boolean
@@ -969,12 +1021,13 @@ export type SubjectSelectScalar = {
   id?: boolean
   name?: boolean
   subCode?: boolean
+  roomName?: boolean
   departmentId?: boolean
   userId?: boolean
   classId?: boolean
 }
 
-export type SubjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "subCode" | "departmentId" | "userId" | "classId", ExtArgs["result"]["subject"]>
+export type SubjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "subCode" | "roomName" | "departmentId" | "userId" | "classId", ExtArgs["result"]["subject"]>
 export type SubjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1007,6 +1060,7 @@ export type $SubjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     id: string
     name: string
     subCode: string
+    roomName: string | null
     departmentId: string
     userId: string
     classId: string
@@ -1441,6 +1495,7 @@ export interface SubjectFieldRefs {
   readonly id: Prisma.FieldRef<"Subject", 'String'>
   readonly name: Prisma.FieldRef<"Subject", 'String'>
   readonly subCode: Prisma.FieldRef<"Subject", 'String'>
+  readonly roomName: Prisma.FieldRef<"Subject", 'String'>
   readonly departmentId: Prisma.FieldRef<"Subject", 'String'>
   readonly userId: Prisma.FieldRef<"Subject", 'String'>
   readonly classId: Prisma.FieldRef<"Subject", 'String'>

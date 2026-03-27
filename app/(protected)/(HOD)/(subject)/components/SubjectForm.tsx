@@ -43,6 +43,7 @@ const SubjectForm = ({
 			name: "",
 			subCode: "",
 			userId: "",
+			roomName: "",
 			year: undefined as any,
 			semester: undefined as any,
 		},
@@ -53,6 +54,7 @@ const SubjectForm = ({
 			name: subject.name,
 			subCode: subject.subCode,
 			userId: subject.user?.id ?? "",
+			roomName: subject.roomName ?? "",
 			year: subject.class?.year as Year,
 			semester: subject.class?.semester as Semester,
 		});
@@ -100,6 +102,7 @@ const SubjectForm = ({
 					name: values.name,
 					subCode: values.subCode,
 					userId: values.userId,
+					roomName: values.roomName?.trim() ?? "",
 					year: values.year,
 					semester: values.semester,
 				};
@@ -117,6 +120,7 @@ const SubjectForm = ({
 					name: values.name as string,
 					subCode: values.subCode as string,
 					userId: values.userId as string,
+					roomName: values.roomName?.trim() || undefined,
 					year: values.year,
 					semester: values.semester,
 				};
@@ -165,6 +169,13 @@ const SubjectForm = ({
 						name="subCode"
 						label="Code"
 						placeholder="Enter subject code"
+						className="w-full"
+					/>
+					<FormInput
+						form={form}
+						name="roomName"
+						label="Room Number (Optional)"
+						placeholder="Enter room number"
 						className="w-full"
 					/>
 					<FormSelect

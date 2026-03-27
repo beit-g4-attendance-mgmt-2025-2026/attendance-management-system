@@ -48,6 +48,7 @@ const SubjectListTable = ({ subjects }: SubjectListTableProps) => {
 					<TableHead>Year</TableHead>
 					<TableHead>Semester</TableHead>
 					<TableHead>Teacher</TableHead>
+					<TableHead>Room</TableHead>
 					<TableHead>Action</TableHead>
 				</TableRow>
 			</TableHeader>
@@ -63,6 +64,7 @@ const SubjectListTable = ({ subjects }: SubjectListTableProps) => {
 					>
 						<TableCell>{subject.name}</TableCell>
 						<TableCell>{subject.subCode}</TableCell>
+
 						<TableCell>
 							{subject.class.year.charAt(0).toUpperCase() +
 								subject.class.year.slice(1).toLowerCase() +
@@ -71,6 +73,11 @@ const SubjectListTable = ({ subjects }: SubjectListTableProps) => {
 						</TableCell>
 						<TableCell>{subject.class.semester}</TableCell>
 						<TableCell>{subject.user?.fullName}</TableCell>
+						<TableCell
+							className={`${subject.roomName ? "" : "text-amber-600"} `}
+						>
+							{subject.roomName ?? "Not assigned"}
+						</TableCell>
 
 						<TableCell className="flex items-center gap-1">
 							<DialogCardBtn

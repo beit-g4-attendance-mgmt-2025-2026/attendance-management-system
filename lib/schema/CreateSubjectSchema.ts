@@ -11,6 +11,11 @@ export const CreateSubjectSchema = z.object({
 	}),
 
 	userId: z.string().uuid("Please select a valid teacher"),
+	roomName: z
+		.string()
+		.trim()
+		.max(50, "Room number must be less than 50 characters")
+		.optional(),
 	semester: z.enum(Semester),
 	year: z.enum(Year),
 });

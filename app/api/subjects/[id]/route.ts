@@ -145,6 +145,7 @@ export async function PUT(
 			name: string;
 			subCode: string;
 			userId: string;
+			roomName: string;
 			year: "FIRST" | "SECOND" | "THIRD" | "FOURTH" | "FIFTH" | "FINAL";
 			semester: "first_semester" | "second_semester";
 		}>;
@@ -177,6 +178,10 @@ export async function PUT(
 
 		if (data.name !== undefined) updateData.name = data.name;
 		if (data.subCode !== undefined) updateData.subCode = data.subCode;
+		if (data.roomName !== undefined) {
+			const nextRoomName = data.roomName.trim();
+			updateData.roomName = nextRoomName.length ? nextRoomName : null;
+		}
 
 		if (data.userId) {
 			const teacher = await prisma.user.findFirst({

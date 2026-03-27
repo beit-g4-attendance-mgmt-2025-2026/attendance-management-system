@@ -166,6 +166,7 @@ model Subject {
   id      String @id @default(uuid()) @db.Uuid
   name    String
   subCode String
+  roomName  String?
 
   departmentId String @db.Uuid
   department Department @relation(fields: [departmentId], references: [id])
