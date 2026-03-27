@@ -1,6 +1,6 @@
 "use server";
 
-import { Gender, Role } from "@/generated/prisma/client";
+import { Gender, Role, type Prisma } from "@/generated/prisma/client";
 import { getUserIdFromCookies } from "@/lib/jwt";
 import { prisma } from "@/lib/prisma";
 import { handleActionErrorResponse } from "@/lib/response";
@@ -16,7 +16,7 @@ export type MyClassItem = {
 
 export async function GetMyClass(params?: { search?: string }): Promise<{
 	success: boolean;
-	data?: { myClass: MyClassItem | null };
+	data?: { myClasses: MyClassItem[] };
 	message?: string;
 	details?: object | null;
 }> {
@@ -42,54 +42,63 @@ export async function GetMyClass(params?: { search?: string }): Promise<{
 			return { success: false, message: "Forbidden" };
 		}
 
-		const classRecord = await prisma.class.findFirst({
-			where: { userId: user.id },
+		const where: Prisma.ClassWhereInput = {
+			userId: user.id,
+		};
+		if (search) {
+			where.name = { contains: search, mode: "insensitive" };
+		}
+
+		const classes = await prisma.class.findMany({
+			where,
 			select: {
 				id: true,
 				name: true,
 			},
+			orderBy: {
+				name: "asc",
+			},
 		});
 
-		if (!classRecord) {
+		if (classes.length === 0) {
 			return {
 				success: true,
-				data: { myClass: null },
+				data: { myClasses: [] },
 			};
 		}
 
-		if (
-			search &&
-			!classRecord.name.toLowerCase().includes(search.toLowerCase())
-		) {
-			return {
-				success: true,
-				data: { myClass: null },
-			};
-		}
+		const myClasses = await Promise.all(
+			classes.map(async (classRecord) => {
+				const [male, female, total] = await Promise.all([
+					prisma.student.count({
+						where: { classId: classRecord.id, gender: Gender.MALE },
+					}),
+					prisma.student.count({
+						where: {
+							classId: classRecord.id,
+							gender: Gender.FEMALE,
+						},
+					}),
+					prisma.student.count({
+						where: { classId: classRecord.id },
+					}),
+				]);
 
-		const [male, female, total] = await Promise.all([
-			prisma.student.count({
-				where: { classId: classRecord.id, gender: Gender.MALE },
-			}),
-			prisma.student.count({
-				where: { classId: classRecord.id, gender: Gender.FEMALE },
-			}),
-			prisma.student.count({
-				where: { classId: classRecord.id },
-			}),
-		]);
-
-		return {
-			success: true,
-			data: {
-				myClass: {
+				return {
 					id: classRecord.id,
 					name: classRecord.name,
 					familyTeacher: user.fullName,
 					male,
 					female,
 					total,
-				},
+				};
+			}),
+		);
+
+		return {
+			success: true,
+			data: {
+				myClasses,
 			},
 		};
 	} catch (error) {

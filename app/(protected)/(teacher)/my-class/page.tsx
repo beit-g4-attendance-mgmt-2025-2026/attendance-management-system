@@ -4,16 +4,7 @@ import ClassForm from "@/components/ClassForm";
 import SearchInput from "@/components/inputs/SearchInput";
 import { DialogCardBtn } from "@/components/DialogCardBtn";
 import { ExportCsvBtn } from "@/components/ExportCsvBtn";
-import { GetMyClass } from "@/lib/actions/GetMyClass.actions";
-
-export interface MyClassItem {
-	id: string;
-	name: string;
-	familyTeacher: string;
-	male: number;
-	female: number;
-	total: number;
-}
+import { GetMyClass, type MyClassItem } from "@/lib/actions/GetMyClass.actions";
 const page = async ({
 	searchParams,
 }: {
@@ -30,16 +21,7 @@ const page = async ({
 
 	// const user = await auth();
 
-	const myClass: MyClassItem | null = data?.myClass ?? null;
-	console.log("server myClass ", myClass);
-	// const myclass: ClassItem = {
-	// 	id: "first-year-first-sem",
-	// 	name: "First Year (First Semester)",
-	// 	familyTeacher: "Dr. Thida Khaing",
-	// 	male: 32,
-	// 	female: 24,
-	// 	total: 56,
-	// };
+	const myClasses: MyClassItem[] = data?.myClasses ?? [];
 
 	return (
 		<>
@@ -53,14 +35,20 @@ const page = async ({
 						endpoint="/api/my-class/export"
 						allowedParams={["search"]}
 					/>
-					<DialogCardBtn triggerName="Add Class" title="Add Class">
+					{/* <DialogCardBtn triggerName="Add Class" title="Add Class">
 						<ClassForm isEdit={false} />
-					</DialogCardBtn>
+					</DialogCardBtn> */}
 				</div>
 			</header>
-			{myClass ? (
+			{myClasses.length > 0 ? (
 				<div className="grid md:grid-cols-3 gap-10">
-					<ClassCard classItem={myClass} variant="my-class" />
+					{myClasses.map((classItem) => (
+						<ClassCard
+							key={classItem.id}
+							classItem={classItem}
+							variant="my-class"
+						/>
+					))}
 				</div>
 			) : (
 				<div className="flex items-center justify-center min-h-[50vh]">

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Gender, Role } from "@/generated/prisma/client";
+import { Gender, Role, type Prisma } from "@/generated/prisma/client";
 import { requireAuth } from "@/lib/guard";
 import { prisma } from "@/lib/prisma";
 
@@ -30,10 +30,15 @@ export async function GET(request: NextRequest) {
 	const { searchParams } = new URL(request.url);
 	const search = searchParams.get("search")?.trim().toLowerCase() || "";
 
-	const classRecord = await prisma.class.findFirst({
-		where: {
-			userId: teacher.id,
-		},
+	const where: Prisma.ClassWhereInput = {
+		userId: teacher.id,
+	};
+	if (search) {
+		where.name = { contains: search, mode: "insensitive" };
+	}
+
+	const classRecords = await prisma.class.findMany({
+		where,
 		select: {
 			id: true,
 			name: true,
@@ -45,6 +50,9 @@ export async function GET(request: NextRequest) {
 					name: true,
 				},
 			},
+		},
+		orderBy: {
+			name: "asc",
 		},
 	});
 
@@ -62,42 +70,45 @@ export async function GET(request: NextRequest) {
 		"Department Name",
 	];
 
-	if (
-		!classRecord ||
-		(search && !classRecord.name.toLowerCase().includes(search))
-	) {
+	if (classRecords.length === 0) {
 		return csvResponse(header.join(","));
 	}
 
-	const [male, female, other, total] = await Promise.all([
-		prisma.student.count({
-			where: { classId: classRecord.id, gender: Gender.MALE },
-		}),
-		prisma.student.count({
-			where: { classId: classRecord.id, gender: Gender.FEMALE },
-		}),
-		prisma.student.count({
-			where: { classId: classRecord.id, gender: Gender.OTHER },
-		}),
-		prisma.student.count({
-			where: { classId: classRecord.id },
-		}),
-	]);
+	const rows = await Promise.all(
+		classRecords.map(async (classRecord) => {
+			const [male, female, other, total] = await Promise.all([
+				prisma.student.count({
+					where: { classId: classRecord.id, gender: Gender.MALE },
+				}),
+				prisma.student.count({
+					where: { classId: classRecord.id, gender: Gender.FEMALE },
+				}),
+				prisma.student.count({
+					where: { classId: classRecord.id, gender: Gender.OTHER },
+				}),
+				prisma.student.count({
+					where: { classId: classRecord.id },
+				}),
+			]);
 
-	const row = [
-		csvEscape(classRecord.id),
-		csvEscape(classRecord.name),
-		csvEscape(classRecord.year),
-		csvEscape(classRecord.semester),
-		csvEscape(teacher.fullName),
-		csvEscape(male),
-		csvEscape(female),
-		csvEscape(other),
-		csvEscape(total),
-		csvEscape(classRecord.department?.symbol ?? ""),
-		csvEscape(classRecord.department?.name ?? ""),
-	];
+			return [
+				csvEscape(classRecord.id),
+				csvEscape(classRecord.name),
+				csvEscape(classRecord.year),
+				csvEscape(classRecord.semester),
+				csvEscape(teacher.fullName),
+				csvEscape(male),
+				csvEscape(female),
+				csvEscape(other),
+				csvEscape(total),
+				csvEscape(classRecord.department?.symbol ?? ""),
+				csvEscape(classRecord.department?.name ?? ""),
+			];
+		}),
+	);
 
-	const csv = [header.join(","), row.join(",")].join("\n");
+	const csv = [header.join(","), ...rows.map((row) => row.join(","))].join(
+		"\n",
+	);
 	return csvResponse(csv);
 }
