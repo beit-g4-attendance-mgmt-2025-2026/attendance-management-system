@@ -19,12 +19,14 @@ export function DialogCardBtn({
 	triggerIcon,
 	title,
 	description,
+	contentClassName,
 }: {
 	children: React.ReactNode;
 	triggerName?: string;
 	triggerIcon?: React.ReactElement;
 	title: string;
 	description?: string;
+	contentClassName?: string;
 }) {
 	const [open, setOpen] = useState(false);
 	return (
@@ -36,7 +38,11 @@ export function DialogCardBtn({
 						{triggerIcon}
 					</Button>
 				</DialogTrigger>
-				<DialogContent className="sm:max-w-[425px]">
+				<DialogContent
+					className={
+						contentClassName ?? "sm:max-w-[425px] max-h-[80vh] overflow-y-auto"
+					}
+				>
 					<DialogHeader>
 						<DialogTitle>{title}</DialogTitle>
 						<DialogDescription>{description}</DialogDescription>

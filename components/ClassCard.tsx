@@ -1,6 +1,5 @@
 import React from "react";
 import { Button } from "./ui/button";
-// Define the ClassItem type here or import it from the correct location
 interface ClassItem {
   id: string;
   name: string;

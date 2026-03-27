@@ -16,11 +16,25 @@ import {
 import { revalidatePath } from "next/cache";
 
 export async function GET(request: NextRequest) {
-	// const auth = await requireAuth(request);
-	// if ("response" in auth) return auth.response;
-
 	try {
+		const auth = await requireAdminOrUserRoles(request, [
+			Role.HOD,
+			Role.ADMIN,
+		]);
+		if ("response" in auth) return auth.response;
+
+		const isAdmin = "admin" in auth;
+		const authUser = "user" in auth ? auth.user : null;
+
+		const where = {
+			role: {
+				in: [Role.TEACHER, Role.HOD],
+			},
+			...(isAdmin ? {} : { departmentId: authUser!.departmentId }),
+		};
+
 		const users = await prisma.user.findMany({
+			where,
 			include: { department: true, classes: true, subjects: true },
 			orderBy: [
 				{

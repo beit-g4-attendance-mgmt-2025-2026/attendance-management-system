@@ -54,7 +54,7 @@ export function FormSelect<TFormValues extends FieldValues>({
 						<Select
 							disabled={disabled}
 							name={field.name}
-							value={field.value as any}
+							value={(field.value ?? undefined) as any}
 							onValueChange={(value) => {
 								field.onChange(value);
 								onValueChange?.(value);

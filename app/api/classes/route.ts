@@ -27,28 +27,28 @@ export async function POST(request: NextRequest) {
       : authUser!.departmentId;
 
     if (data.userId) {
-      const teacher = await prisma.user.findFirst({
+      const familyTeacher = await prisma.user.findFirst({
         where: {
           id: data.userId,
-          role: Role.TEACHER,
+          role: { in: [Role.TEACHER, Role.HOD] },
         },
         select: { id: true, departmentId: true },
       });
 
-      if (!teacher) {
-        throw new Error("Assigned class teacher must be a valid teacher");
+      if (!familyTeacher) {
+        throw new Error("Assigned family teacher must be a valid HOD or teacher");
       }
 
       if (
         resolvedDepartmentId &&
-        teacher.departmentId !== resolvedDepartmentId
+        familyTeacher.departmentId !== resolvedDepartmentId
       ) {
         throw new Error(
-          "Assigned class teacher must belong to the selected department",
+          "Assigned family teacher must belong to the selected department",
         );
       }
 
-      resolvedDepartmentId = teacher.departmentId;
+      resolvedDepartmentId = familyTeacher.departmentId;
     }
 
     if (!resolvedDepartmentId) {

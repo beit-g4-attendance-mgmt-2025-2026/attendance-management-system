@@ -35,7 +35,7 @@ export async function GET(
     const student = await prisma.student.findFirst({
       where: {
         id,
-        ...(isAdmin ? {} : { departmentId: authUser.departmentId }),
+        ...(isAdmin ? {} : { departmentId: authUser!.departmentId }),
       },
       include: { department: true, class: true },
     });
@@ -74,7 +74,7 @@ export async function DELETE(
     const student = await prisma.student.deleteMany({
       where: {
         id,
-        ...(isAdmin ? {} : { departmentId: authUser.departmentId }),
+        ...(isAdmin ? {} : { departmentId: authUser!.departmentId }),
       },
     });
 
@@ -112,7 +112,7 @@ export async function PUT(
     const existingStudent = await prisma.student.findFirst({
       where: {
         id,
-        ...(isAdmin ? {} : { departmentId: authUser.departmentId }),
+        ...(isAdmin ? {} : { departmentId: authUser!.departmentId }),
       },
       select: { id: true, departmentId: true },
     });
@@ -129,7 +129,7 @@ export async function PUT(
       const classRecord = await prisma.class.findFirst({
         where: {
           id: validatedData.classId,
-          ...(isAdmin ? {} : { departmentId: authUser.departmentId }),
+          ...(isAdmin ? {} : { departmentId: authUser!.departmentId }),
         },
         select: { id: true, departmentId: true },
       });

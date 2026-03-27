@@ -34,7 +34,7 @@ export async function GET(
     const classRecord = await prisma.class.findFirst({
       where: {
         id,
-        ...(isAdmin ? {} : { departmentId: authUser.departmentId }),
+        ...(isAdmin ? {} : { departmentId: authUser!.departmentId }),
       },
       include: {
         department: true,
@@ -78,7 +78,7 @@ export async function PUT(
     const existingClass = await prisma.class.findFirst({
       where: {
         id,
-        ...(isAdmin ? {} : { departmentId: authUser.departmentId }),
+        ...(isAdmin ? {} : { departmentId: authUser!.departmentId }),
       },
       select: {
         id: true,
@@ -98,24 +98,26 @@ export async function PUT(
     const data = validatedData.data;
 
     let nextDepartmentId = isAdmin
-      ? data.departmentId ?? existingClass.departmentId
-      : authUser.departmentId;
+      ? (data.departmentId ?? existingClass.departmentId)
+      : authUser!.departmentId;
 
     if (data.userId) {
-      const teacher = await prisma.user.findFirst({
+      const familyTeacher = await prisma.user.findFirst({
         where: {
           id: data.userId,
-          role: Role.TEACHER,
+          role: { in: [Role.TEACHER, Role.HOD] },
         },
         select: { id: true, departmentId: true },
       });
 
-      if (!teacher) {
-        throw new Error("Assigned class teacher must be a valid teacher");
+      if (!familyTeacher) {
+        throw new Error("Assigned family teacher must be a valid HOD or teacher");
       }
 
-      if (teacher.departmentId !== nextDepartmentId) {
-        throw new Error("Assigned class teacher must belong to the selected department");
+      if (familyTeacher.departmentId !== nextDepartmentId) {
+        throw new Error(
+          "Assigned family teacher must belong to the selected department",
+        );
       }
     }
 
@@ -200,7 +202,7 @@ export async function DELETE(
     const classRecord = await prisma.class.findFirst({
       where: {
         id,
-        ...(isAdmin ? {} : { departmentId: authUser.departmentId }),
+        ...(isAdmin ? {} : { departmentId: authUser!.departmentId }),
       },
       select: {
         id: true,
