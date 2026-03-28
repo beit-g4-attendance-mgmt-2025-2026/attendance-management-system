@@ -40,25 +40,14 @@ const SubjectForm = ({
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
 		defaultValues: {
-			name: "",
-			subCode: "",
-			userId: "",
-			roomName: "",
-			year: undefined as any,
-			semester: undefined as any,
+			name: subject?.name || "",
+			subCode: subject?.subCode || "",
+			userId: subject?.user?.id ?? "",
+			roomName: subject?.roomName ?? "",
+			year: subject?.class?.year as Year,
+			semester: subject?.class?.semester as Semester,
 		},
 	});
-	useEffect(() => {
-		if (!subject) return;
-		form.reset({
-			name: subject.name,
-			subCode: subject.subCode,
-			userId: subject.user?.id ?? "",
-			roomName: subject.roomName ?? "",
-			year: subject.class?.year as Year,
-			semester: subject.class?.semester as Semester,
-		});
-	}, [subject, form]);
 
 	useEffect(() => {
 		let mounted = true;
@@ -67,14 +56,12 @@ const SubjectForm = ({
 			try {
 				const res = await api.users.getAll();
 				const users = res?.data?.users ?? [];
-				const options = users
-					.filter((user: any) => user.role === "TEACHER")
-					.map((user: any) => ({
-						value: user.id,
-						label: user.department?.symbol
-							? `${user.fullName} (${user.department.symbol})`
-							: user.fullName,
-					}));
+				const options = users.map((user: any) => ({
+					value: user.id,
+					label: user.department?.symbol
+						? `${user.fullName}`
+						: user.fullName,
+				}));
 
 				if (mounted) setTeacherOptions(options);
 			} catch (error: any) {

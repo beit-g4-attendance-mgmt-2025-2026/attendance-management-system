@@ -69,9 +69,9 @@ export const api = {
 		create: (data: {
 			name: string;
 			rollNo: string;
-			semester: "first_semester" | "second_semester";
-			year: "FIRST" | "SECOND" | "THIRD" | "FOURTH" | "FIFTH" | "FINAL";
+			dateOfBirth?: string | null;
 			gender: "MALE" | "FEMALE" | "OTHER";
+			phoneNumber: string;
 			classId: string;
 			email: string;
 		}) =>
@@ -86,9 +86,9 @@ export const api = {
 			data: Partial<{
 				name: string;
 				rollNo: string;
-				semester: Semester;
-				year: Year;
+				dateOfBirth?: string | null;
 				gender: Gender;
+				phoneNumber: string;
 				classId: string;
 				email: string;
 			}>,

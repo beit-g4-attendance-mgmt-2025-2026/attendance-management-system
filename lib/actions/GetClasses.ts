@@ -98,6 +98,10 @@ export async function GetClasses(params: {
         male,
         female,
         total,
+        year: cls.year,
+        semester: cls.semester,
+        academicYearId: cls.academicYearId,
+        userId: cls.userId,
       };
     });
 

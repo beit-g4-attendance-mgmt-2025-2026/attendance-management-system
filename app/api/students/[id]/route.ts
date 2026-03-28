@@ -114,7 +114,12 @@ export async function PUT(
         id,
         ...(isAdmin ? {} : { departmentId: authUser!.departmentId }),
       },
-      select: { id: true, departmentId: true },
+      select: {
+        id: true,
+        departmentId: true,
+        year: true,
+        semester: true,
+      },
     });
 
     if (!existingStudent) {
@@ -125,13 +130,15 @@ export async function PUT(
     const validatedData = CreateStudentSchema.partial().parse(body);
 
     let nextDepartmentId = existingStudent.departmentId;
+    let nextYear = existingStudent.year;
+    let nextSemester = existingStudent.semester;
     if (validatedData.classId) {
       const classRecord = await prisma.class.findFirst({
         where: {
           id: validatedData.classId,
           ...(isAdmin ? {} : { departmentId: authUser!.departmentId }),
         },
-        select: { id: true, departmentId: true },
+        select: { id: true, departmentId: true, year: true, semester: true },
       });
 
       if (!classRecord) {
@@ -141,11 +148,15 @@ export async function PUT(
       }
 
       nextDepartmentId = classRecord.departmentId;
+      nextYear = classRecord.year;
+      nextSemester = classRecord.semester;
     }
 
     const updateData = {
       ...validatedData,
       departmentId: nextDepartmentId,
+      year: nextYear,
+      semester: nextSemester,
       ...(validatedData.dateOfBirth !== undefined && {
         dateOfBirth: validatedData.dateOfBirth
           ? new Date(validatedData.dateOfBirth)

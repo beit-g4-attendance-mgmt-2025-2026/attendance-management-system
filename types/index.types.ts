@@ -1,4 +1,4 @@
-import { Department, User } from "@/generated/prisma/client";
+import { Department, Semester, User, Year } from "@/generated/prisma/client";
 import { Prisma } from "@/generated/prisma/client";
 
 export interface Teacher {
@@ -62,6 +62,10 @@ export interface ClassCardItem {
   male: number;
   female: number;
   total: number;
+  year?: Year;
+  semester?: Semester;
+  academicYearId?: string | null;
+  userId?: string | null;
 }
 
 export type GetClassesResponse = {

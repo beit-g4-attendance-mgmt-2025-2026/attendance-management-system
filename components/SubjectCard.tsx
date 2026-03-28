@@ -13,7 +13,7 @@ const SubjectCard = ({ subject }: CardProps) => {
 				{subject.name}
 			</h2>
 			<h5 className="text-sm font-semibold text-text-color">
-				{subject.room}
+				{subject.className}
 			</h5>
 			<div className="flex justify-between">
 				<div className="flex flex-col items-center">

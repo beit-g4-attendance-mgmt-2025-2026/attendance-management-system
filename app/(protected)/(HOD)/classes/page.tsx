@@ -1,8 +1,5 @@
 import ClassCard from "@/components/ClassCard";
-import { DialogCardBtn } from "@/components/DialogCardBtn";
-import SearchInput from "@/components/inputs/SearchInput";
 import React from "react";
-import ClassForm from "@/components/ClassForm";
 import { GetClasses } from "@/lib/actions/GetClasses";
 
 const page = async ({
@@ -12,7 +9,6 @@ const page = async ({
     [key: string]: string;
   }>;
 }) => {
-  const URL = "http://localhost:3000";
   const { page, pageSize, search, filter } = await searchParams;
 
   const { data } = await GetClasses({
@@ -22,7 +18,6 @@ const page = async ({
     filter,
   });
 
-  const total = data?.total ?? 0;
   const { classes = [] } = data || {};
   return (
     <>

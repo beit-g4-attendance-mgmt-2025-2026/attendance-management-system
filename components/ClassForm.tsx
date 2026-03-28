@@ -34,25 +34,13 @@ const ClassForm = ({
 	const form = useForm<ClassFormValues>({
 		resolver: zodResolver(CreateClassSchema),
 		defaultValues: {
-			name: "",
-			semester: undefined,
-			year: undefined,
-			academicYearId: null,
-			userId: null,
+			name: classData?.name ?? "",
+			semester: classData?.semester as Semester | undefined,
+			year: classData?.year as Year | undefined,
+			academicYearId: classData?.academicYearId ?? null,
+			userId: classData?.userId ?? undefined,
 		},
 	});
-
-	useEffect(() => {
-		if (!classData) return;
-
-		form.reset({
-			name: classData.name ?? "",
-			semester: classData.semester as Semester | undefined,
-			year: classData.year as Year | undefined,
-			academicYearId: classData.academicYearId ?? null,
-			userId: classData.userId ?? null,
-		});
-	}, [classData, form]);
 
 	useEffect(() => {
 		const loadTeachers = async () => {

@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
         id: data.classId,
         ...(isAdmin ? {} : { departmentId: authUser!.departmentId }),
       },
-      select: { id: true, departmentId: true },
+      select: { id: true, departmentId: true, year: true, semester: true },
     });
 
     if (!classRecord) {
@@ -61,8 +61,8 @@ export async function POST(request: NextRequest) {
         phoneNumber: data.phoneNumber,
         gender: data.gender,
         email: data.email,
-        year: data.year,
-        semester: data.semester,
+        year: classRecord.year,
+        semester: classRecord.semester,
         departmentId: classRecord.departmentId,
         classId: data.classId,
       },
