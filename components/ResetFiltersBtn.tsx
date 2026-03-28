@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import queryString from "query-string";
+import type { StringifiableRecord } from "query-string";
 
 type ResetFiltersBtnProps = {
 	keys: string[];
@@ -25,7 +26,7 @@ export function ResetFiltersBtn({
 
 	const handleReset = () => {
 		const currentQuery = queryString.parse(searchParams.toString());
-		const updatedQuery = { ...currentQuery } as Record<string, unknown>;
+		const updatedQuery = { ...currentQuery } as StringifiableRecord;
 
 		keys.forEach((key) => {
 			delete updatedQuery[key];
