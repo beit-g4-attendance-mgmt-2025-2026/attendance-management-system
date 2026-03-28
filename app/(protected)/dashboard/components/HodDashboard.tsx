@@ -10,7 +10,7 @@ const HodDashboard = () => {
 			<div className="flex gap-4 w-full flex-wrap">
 				<UserCard type="students" count="500" />
 				<UserCard type="teachers" count="52" />
-				<UserCard type="Critical Absentees" count="9" />
+				<UserCard type="subjects" count="9" />
 				<UserCard type="Pending Reports" count="3" />
 			</div>
 			{/* Middle Charts */}
