@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import { ThemeProvider } from "../components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -59,6 +59,8 @@ export default function RootLayout({
 						<Toaster />
 					</ThemeProvider>
 				</ProgressBarProvider>
+				{/* vercel analytics  */}
+				<Analytics />
 			</body>
 		</html>
 	);
