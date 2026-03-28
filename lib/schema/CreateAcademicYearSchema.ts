@@ -10,5 +10,8 @@ export const CreateAcademicYearSchema = z.object({
   isActive: z.boolean().optional().default(false),
 });
 
-export type CreateAcademicYearInput = z.infer<typeof CreateAcademicYearSchema>;
+// Form/input type (before Zod applies defaults)
+export type CreateAcademicYearInput = z.input<typeof CreateAcademicYearSchema>;
 
+// Parsed type (after Zod applies defaults)
+export type CreateAcademicYearParsed = z.output<typeof CreateAcademicYearSchema>;

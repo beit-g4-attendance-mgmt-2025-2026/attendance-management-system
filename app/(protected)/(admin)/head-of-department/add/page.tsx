@@ -8,23 +8,19 @@ const page = () => {
 	const router = useRouter();
 	return (
 		<div>
-			<div className="flex justify-between items-center mb-10">
+			<header className="flex justify-between items-center">
 				<div className="flex items-center space-x-3">
 					<IoChevronBackSharp
 						className="size-6 mt-1 cursor-pointer"
 						onClick={() => router.back()}
 					/>
-
-					<span className="text-2xl">Add Head Of Department</span>
+					<span className="text-2xl">Add Head of Department</span>
 				</div>
-				<Button
-					variant={"link"}
-					className="text-[#2D88D4] underline cursor-pointer"
-				>
+				<Button variant={"link"} className="text-sky-600">
 					Import CSV
 				</Button>
-			</div>
-			<main>
+			</header>
+			<main className="mt-6 max-w-3xl mx-auto">
 				<TeacherForm isEdit={false} />
 			</main>
 		</div>
