@@ -145,6 +145,20 @@ export const api = {
 			}),
 	},
 
+	academicYears: {
+		getAll: () => fetchHandler(API_URL + "/academic-years"),
+		create: (data: {
+			name: string;
+			startDate: string;
+			endDate: string;
+			isActive?: boolean;
+		}) =>
+			fetchHandler(API_URL + "/academic-years", {
+				method: "POST",
+				body: JSON.stringify(data),
+			}),
+	},
+
 	auth: {
 		// login user/admin
 		login: (data: { username: string; password: string }) =>

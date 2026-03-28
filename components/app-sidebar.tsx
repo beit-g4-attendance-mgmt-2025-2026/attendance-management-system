@@ -6,6 +6,7 @@ import { IoMdSettings } from "react-icons/io";
 import { BsBook } from "react-icons/bs";
 import { SiGoogleclassroom } from "react-icons/si";
 import { LuBook } from "react-icons/lu";
+import { MdDateRange } from "react-icons/md";
 
 import {
 	Sidebar,
@@ -57,6 +58,11 @@ export function AppSidebar() {
 				title: "Students",
 				url: "/students",
 				icon: PiStudentFill,
+			},
+			{
+				title: "Academic Years",
+				url: "/academic-years",
+				icon: MdDateRange,
 			},
 			{
 				title: "Settings",

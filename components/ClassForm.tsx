@@ -30,6 +30,10 @@ const ClassForm = ({
 	const [teacherOptions, setTeacherOptions] = useState<
 		{ label: string; value: string }[]
 	>([]);
+	const [academicYearOptions, setAcademicYearOptions] = useState<
+		{ label: string; value: string }[]
+	>([]);
+	const [isLoadingAcademicYears, setIsLoadingAcademicYears] = useState(false);
 
 	const form = useForm<ClassFormValues>({
 		resolver: zodResolver(CreateClassSchema),
@@ -37,7 +41,7 @@ const ClassForm = ({
 			name: classData?.name ?? "",
 			semester: classData?.semester as Semester | undefined,
 			year: classData?.year as Year | undefined,
-			academicYearId: classData?.academicYearId ?? null,
+			academicYearId: classData?.academicYearId ?? undefined,
 			userId: classData?.userId ?? undefined,
 		},
 	});
@@ -59,6 +63,29 @@ const ClassForm = ({
 		};
 
 		loadTeachers();
+	}, []);
+
+	useEffect(() => {
+		const loadAcademicYears = async () => {
+			try {
+				setIsLoadingAcademicYears(true);
+				const res = await api.academicYears.getAll();
+				const years = res?.data?.academicYears ?? [];
+				const mapped = years.map((academicYear: any) => ({
+					label: academicYear.isActive
+						? `${academicYear.name} (Active)`
+						: academicYear.name,
+					value: academicYear.id,
+				}));
+				setAcademicYearOptions(mapped);
+			} catch (error: any) {
+				toast.error(error.message ?? "Failed to load academic years");
+			} finally {
+				setIsLoadingAcademicYears(false);
+			}
+		};
+
+		loadAcademicYears();
 	}, []);
 
 	const {
@@ -128,6 +155,23 @@ const ClassForm = ({
 							placeholder="Semester"
 							options={semesters as any}
 							id="form-rhf-select-semester"
+							triggerClassName="w-full cursor-pointer"
+						/>
+					</div>
+
+					<div className="space-y-2">
+						<p className="text-sm font-medium">Academic Year</p>
+						<FormSelect
+							disabled={isSubmitting || isLoadingAcademicYears}
+							form={form}
+							name="academicYearId"
+							placeholder={
+								isLoadingAcademicYears
+									? "Loading academic years..."
+									: "Select academic year (optional)"
+							}
+							options={academicYearOptions}
+							id="form-rhf-select-academic-year"
 							triggerClassName="w-full cursor-pointer"
 						/>
 					</div>

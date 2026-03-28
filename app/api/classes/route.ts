@@ -64,6 +64,17 @@ export async function POST(request: NextRequest) {
       throw new Error("Department not found");
     }
 
+    if (data.academicYearId) {
+      const academicYear = await prisma.academicYear.findUnique({
+        where: { id: data.academicYearId },
+        select: { id: true },
+      });
+
+      if (!academicYear) {
+        throw new Error("Academic year not found");
+      }
+    }
+
     const existingClass = await prisma.class.findFirst({
       where: {
         semester: data.semester,

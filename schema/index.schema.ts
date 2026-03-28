@@ -137,7 +137,7 @@ export const StudentSchema = z.object({
 	}),
 	role_no: z.string().min(2, { message: "Please enter role number" }),
 
-	acedamic_year: z.enum(
+	academic_year: z.enum(
 		[
 			"first year",
 			"second year",
@@ -147,7 +147,7 @@ export const StudentSchema = z.object({
 			"sixth year",
 		],
 		{
-			message: "Please choose acedamic year",
+			message: "Please choose academic year",
 		},
 	),
 	semester: z.enum(["first semester", "second semester"], {
@@ -205,7 +205,7 @@ export const ClassSchema = z.object({
 	semester: z.enum(["first semester", "second semester"], {
 		message: "Please choose semester",
 	}),
-	acedamic_year: z.enum(
+	academic_year: z.enum(
 		[
 			"first year",
 			"second year",

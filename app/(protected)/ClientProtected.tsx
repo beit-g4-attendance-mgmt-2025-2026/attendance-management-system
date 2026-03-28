@@ -12,6 +12,7 @@ const ROLE_ACCESS: Record<Role, string[]> = {
     "departments",
     "teachers",
     "students",
+    "academic-years",
     "head-of-department",
     "settings",
   ],
