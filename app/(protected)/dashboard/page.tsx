@@ -2,7 +2,6 @@
 
 import AdminDashboard from "./components/AdminDashboard";
 import HodDashboard from "./components/HodDashboard";
-import TeacherDashboard from "./components/TeacherDashboard";
 import { useAuthStore } from "@/lib/stores/auth-store";
 
 export default function DashboardPage() {
@@ -14,6 +13,5 @@ export default function DashboardPage() {
 	}
 
 	if (uiRole === "admin") return <AdminDashboard />;
-	if (uiRole === "department") return <HodDashboard />;
-	return <TeacherDashboard />;
+	return <HodDashboard />;
 }
