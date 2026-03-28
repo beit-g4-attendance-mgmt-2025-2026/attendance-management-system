@@ -223,4 +223,8 @@ export const api = {
 				method: "DELETE",
 			}),
 	},
+
+	dashboard: {
+		getHodStats: () => fetchHandler(API_URL + "/dashboard/hod/stats"),
+	},
 };
