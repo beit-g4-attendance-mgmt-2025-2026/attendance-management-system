@@ -8,11 +8,19 @@ const PUBLIC_API_PREFIXES = ["/api/auth"];
 export function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
 	const token = request.cookies.get("token")?.value;
+	const requestHeaders = new Headers(request.headers);
+	requestHeaders.set("x-pathname", pathname);
+	const nextWithPathname = () =>
+		NextResponse.next({
+			request: {
+				headers: requestHeaders,
+			},
+		});
 
 	// for login, register and auth api request
 	if (pathname.startsWith("/api")) {
 		if (PUBLIC_API_PREFIXES.some((prefix) => pathname.startsWith(prefix))) {
-			return NextResponse.next();
+			return nextWithPathname();
 		}
 
 		if (!token) {
@@ -21,7 +29,7 @@ export function middleware(request: NextRequest) {
 				{ status: 401 },
 			);
 		}
-		return NextResponse.next();
+		return nextWithPathname();
 	}
 
 	// for frontend page request
@@ -38,7 +46,7 @@ export function middleware(request: NextRequest) {
 		return NextResponse.redirect(dashboardUrl);
 	}
 
-	return NextResponse.next();
+	return nextWithPathname();
 }
 
 /*
