@@ -1,3 +1,5 @@
+"use client";
+
 import { MdOutlineDashboard } from "react-icons/md";
 import { PiChalkboardTeacherFill } from "react-icons/pi";
 import { PiStudentFill } from "react-icons/pi";
@@ -23,7 +25,8 @@ import { usePathname } from "next/navigation";
 import NProgress from "nprogress";
 import { useEffect } from "react";
 
-import Cookies from "js-cookie";
+import type { UiRole } from "@/lib/auth-ui";
+import { useAuthStore } from "@/lib/stores/auth-store";
 
 type SidebarItem = {
 	title: string;
@@ -31,13 +34,11 @@ type SidebarItem = {
 	icon: React.ElementType;
 };
 
-type Role = "admin" | "department" | "teacher";
-
 export function AppSidebar() {
 	const pathname = usePathname();
-	const role: Role = Cookies.get("role") as Role;
+	const uiRole = useAuthStore((s) => s.uiRole);
 
-	const sidebarItemsByRole: Record<Role, SidebarItem[]> = {
+	const sidebarItemsByRole: Record<UiRole, SidebarItem[]> = {
 		admin: [
 			{
 				title: "Dashboard",
@@ -128,7 +129,7 @@ export function AppSidebar() {
 	useEffect(() => {
 		NProgress.done();
 	}, [pathname]);
-	const items = sidebarItemsByRole[role];
+	const items = uiRole ? sidebarItemsByRole[uiRole] : [];
 	return (
 		<Sidebar collapsible="icon">
 			<SidebarContent className="text-white">

@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import ClientProtected from "./ClientProtected";
-import { useTheme } from "next-themes";
 import Nav from "@/components/Nav";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";

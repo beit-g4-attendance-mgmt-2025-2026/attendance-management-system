@@ -3,9 +3,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import Link from "next/link";
 import { FaUserEdit } from "react-icons/fa";
+import { useAuthStore } from "@/lib/stores/auth-store";
 import { useRouter } from "next/navigation";
+import { getInitialsName } from "@/lib/GenerateUsernameInitial";
 
 interface UserInfo {
 	avator: string;
@@ -53,6 +54,7 @@ const ProfileWithPopup: React.FC<ProfileWithPopupProps> = ({ userInfo }) => {
 				throw new Error("Logout failed");
 			}
 
+			useAuthStore.getState().clear();
 			setIsOpen(false);
 			router.replace("/login");
 			router.refresh();
@@ -69,7 +71,9 @@ const ProfileWithPopup: React.FC<ProfileWithPopupProps> = ({ userInfo }) => {
 				className="cursor-pointer"
 			>
 				<AvatarImage src={userInfo.avator} />
-				<AvatarFallback>CN</AvatarFallback>
+				<AvatarFallback>
+					{getInitialsName(userInfo.name)}
+				</AvatarFallback>
 			</Avatar>
 
 			{/* Popup box */}
@@ -82,11 +86,13 @@ const ProfileWithPopup: React.FC<ProfileWithPopupProps> = ({ userInfo }) => {
 						<div className="flex justify-between">
 							<Avatar className="cursor-pointer">
 								<AvatarImage src={userInfo.avator} />
-								<AvatarFallback>CN</AvatarFallback>
+								<AvatarFallback>
+									{getInitialsName(userInfo.name)}
+								</AvatarFallback>
 							</Avatar>
-							<Link href={"/updateProfile"}>
+							{/* <Link href={"/updateProfile"}>
 								<FaUserEdit className="cursor-pointer mt-2 size-6" />
-							</Link>
+							</Link> */}
 						</div>
 						<p className="font-semibold">{userInfo.name}</p>
 						<p className="text-sm text-gray-600">
@@ -94,9 +100,10 @@ const ProfileWithPopup: React.FC<ProfileWithPopupProps> = ({ userInfo }) => {
 						</p>
 						<Button
 							type="button"
+							variant={"destructive"}
 							onClick={handleLogout}
 							disabled={isLoggingOut}
-							className="mt-4 w-full py-2 px-4 border rounded  transition-colors 
+							className="mt-4 w-full  transition-colors
                   cursor-pointer"
 						>
 							{isLoggingOut ? "Logging out..." : "Logout"}

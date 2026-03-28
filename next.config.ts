@@ -1,36 +1,8 @@
 import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
-const securityHeaders = [
-	{
-		key: "Content-Security-Policy",
-		value: `
-      default-src 'self';
-      script-src 'self' 'unsafe-eval' 'unsafe-inline';
-      style-src 'self' 'unsafe-inline';
-      img-src 'self' data: https: http://localhost:3000;
-      font-src 'self';
-      object-src 'none';
-      base-uri 'self';
-      form-action 'self';
-      frame-ancestors 'none';
-    `
-			.replace(/\s{2,}/g, " ")
-			.trim(),
-	},
-];
-
 const nextConfig: NextConfig = {
 	reactStrictMode: false,
-
-	async headers() {
-		return [
-			{
-				source: "/:path*",
-				headers: securityHeaders,
-			},
-		];
-	},
 
 	async redirects() {
 		return [
