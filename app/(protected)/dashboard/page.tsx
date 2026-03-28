@@ -2,7 +2,7 @@
 
 import AdminDashboard from "./components/AdminDashboard";
 import HodDashboard from "./components/HodDashboard";
-import TeacherDashboard from "./components/TeacherDashboard";
+// import TeacherDashboard from "./components/TeacherDashboard";
 import Cookies from "js-cookie";
 
 export default function DashboardPage() {
@@ -10,6 +10,6 @@ export default function DashboardPage() {
 	console.log(role);
 
 	if (role === "admin") return <AdminDashboard />;
-	if (role === "department") return <HodDashboard />;
-	return <TeacherDashboard />;
+	// if (role === "department") return <HodDashboard />;
+	return <HodDashboard />;
 }
