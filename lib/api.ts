@@ -114,7 +114,7 @@ export const api = {
 			name: string;
 			semester: "first_semester" | "second_semester";
 			year: "FIRST" | "SECOND" | "THIRD" | "FOURTH" | "FIFTH" | "FINAL";
-			academicYearId?: string | null;
+			academicYearId: string;
 			departmentId?: string;
 			userId?: string | null;
 		}) =>
@@ -129,7 +129,7 @@ export const api = {
 				name: string;
 				semester: Semester;
 				year: Year;
-				academicYearId: string | null;
+				academicYearId: string;
 				departmentId: string;
 				userId: string | null;
 			}>,

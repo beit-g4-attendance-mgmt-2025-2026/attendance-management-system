@@ -130,19 +130,22 @@ export async function PUT(
       throw new Error("Department not found");
     }
 
-    if (data.academicYearId) {
-      const academicYear = await prisma.academicYear.findUnique({
-        where: { id: data.academicYearId },
-        select: { id: true },
-      });
-
-      if (!academicYear) {
-        throw new Error("Academic year not found");
-      }
-    }
-
     const nextYear = data.year ?? existingClass.year;
     const nextSemester = data.semester ?? existingClass.semester;
+    const nextAcademicYearId =
+      data.academicYearId ?? existingClass.academicYearId;
+
+    if (!nextAcademicYearId) {
+      throw new Error("Academic year is required");
+    }
+
+    const academicYear = await prisma.academicYear.findUnique({
+      where: { id: nextAcademicYearId },
+      select: { id: true },
+    });
+    if (!academicYear) {
+      throw new Error("Academic year not found");
+    }
 
     const duplicateClass = await prisma.class.findFirst({
       where: {
@@ -150,6 +153,7 @@ export async function PUT(
         departmentId: nextDepartmentId,
         year: nextYear,
         semester: nextSemester,
+        academicYearId: nextAcademicYearId,
       },
       select: { id: true },
     });
@@ -165,6 +169,7 @@ export async function PUT(
       data: {
         ...data,
         departmentId: nextDepartmentId,
+        academicYearId: nextAcademicYearId,
       },
       include: {
         department: true,

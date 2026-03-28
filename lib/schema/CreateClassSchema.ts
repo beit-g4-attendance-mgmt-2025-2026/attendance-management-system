@@ -13,11 +13,7 @@ export const CreateClassSchema = z.object({
     message: "Please select a valid year",
   }),
 
-  academicYearId: z
-    .string()
-    .uuid("Invalid Academic Year")
-    .optional()
-    .nullable(),
+  academicYearId: z.string().uuid("Please select a valid academic year"),
   departmentId: z.string().uuid("Invalid department").optional(),
   userId: z.string().uuid("Invalid class teacher").optional().nullable(),
 });

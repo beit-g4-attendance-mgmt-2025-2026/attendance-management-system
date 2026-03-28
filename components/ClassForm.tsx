@@ -98,7 +98,7 @@ const ClassForm = ({
 				name: values.name,
 				semester: values.semester,
 				year: values.year,
-				academicYearId: values.academicYearId || null,
+				academicYearId: values.academicYearId,
 				userId: values.userId || null,
 			};
 
@@ -168,7 +168,7 @@ const ClassForm = ({
 							placeholder={
 								isLoadingAcademicYears
 									? "Loading academic years..."
-									: "Select academic year (optional)"
+									: "Select academic year"
 							}
 							options={academicYearOptions}
 							id="form-rhf-select-academic-year"
