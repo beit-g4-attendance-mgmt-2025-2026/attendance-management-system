@@ -8,6 +8,7 @@ import {
 	GetMySubjects,
 	type MySubjectItem,
 } from "@/lib/actions/GetMySubjects.actions";
+import { Years, semesters } from "@/constants/index.constants";
 
 export interface Subject {
 	name: string;
@@ -23,13 +24,16 @@ const page = async ({
 		[key: string]: string;
 	}>;
 }) => {
-	const { page, pageSize, search, filter, sort } = await searchParams;
+	const { page, pageSize, search, filter, year, semester, sort } =
+		await searchParams;
 
 	const { data } = await GetMySubjects({
 		page: Number(page) || 1,
 		pageSize: Number(pageSize) || 9,
 		search: search || "",
 		filter: filter || "",
+		year: year || "",
+		semester: semester || "",
 		sort: sort || "",
 	});
 
@@ -49,7 +53,20 @@ const page = async ({
 	return (
 		<div>
 			<SubHeader
-				placeholder="Search for a subject by name or code"
+				placeholder="Search subject by name or code"
+				exportEndpoint="/api/my-subjects/export"
+				filters={[
+					{
+						label: "Year",
+						queryKey: "year",
+						options: Years,
+					},
+					{
+						label: "Semester",
+						queryKey: "semester",
+						options: semesters,
+					},
+				]}
 				dialogButton={
 					<DialogCardBtn
 						triggerName="Add Subject"

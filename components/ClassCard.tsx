@@ -27,9 +27,9 @@ const ClassCard = ({ classItem, variant }: CardProps) => {
 				</h3>
 				<p className="text-sm">
 					{classItem.familyTeacher === "Not assigned" ? (
-						<div className="text-amber-600">
+						<span className="text-amber-600">
 							{classItem.familyTeacher}
-						</div>
+						</span>
 					) : (
 						classItem.familyTeacher
 					)}

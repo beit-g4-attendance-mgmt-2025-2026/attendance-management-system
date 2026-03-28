@@ -5,6 +5,7 @@ import { GetSubjects } from "@/lib/actions/GetSubjects.actions";
 import SubHeader from "@/components/sub-header";
 import { DialogCardBtn } from "@/components/DialogCardBtn";
 import SubjectForm from "../components/SubjectForm";
+import { Years, semesters } from "@/constants/index.constants";
 
 const page = async ({
 	searchParams,
@@ -13,13 +14,16 @@ const page = async ({
 		[key: string]: string; //don't need to specify exact keys
 	}>;
 }) => {
-	const { page, pageSize, search, filter } = await searchParams;
+	const { page, pageSize, search, filter, year, semester } =
+		await searchParams;
 
 	const { data } = await GetSubjects({
 		page: Number(page) || 1,
 		pageSize: Number(pageSize) || 10,
 		search: search || "",
 		filter,
+		year,
+		semester,
 	});
 	const total = data?.total ?? 0;
 
@@ -30,8 +34,20 @@ const page = async ({
 	return (
 		<>
 			<SubHeader
-				placeholder="Search for a subject by name"
+				placeholder="Search subject by name or code"
 				exportEndpoint="/api/subjects/export"
+				filters={[
+					{
+						label: "Year",
+						queryKey: "year",
+						options: Years,
+					},
+					{
+						label: "Semester",
+						queryKey: "semester",
+						options: semesters,
+					},
+				]}
 				dialogButton={
 					<DialogCardBtn
 						triggerName="Add Subject"

@@ -24,6 +24,8 @@ export async function GetMySubjects(params: {
 	pageSize?: number;
 	search?: string;
 	filter?: string;
+	year?: string;
+	semester?: string;
 	sort?: string;
 }): Promise<{
 	success: boolean;
@@ -57,6 +59,8 @@ export async function GetMySubjects(params: {
 			pageSize = 10,
 			search,
 			filter,
+			year,
+			semester,
 			sort,
 		} = validated.data;
 
@@ -84,41 +88,30 @@ export async function GetMySubjects(params: {
 		}
 
 		if (filter?.trim()) {
-			const filterValue = filter.trim();
+			andFilters.push({
+				department: {
+					symbol: filter.trim(),
+				},
+			});
+		}
 
-			if ((Object.values(Year) as string[]).includes(filterValue)) {
-				andFilters.push({
-					class: {
-						year: filterValue as Year,
-					},
-				});
-			} else if (
-				(Object.values(Semester) as string[]).includes(filterValue)
-			) {
-				andFilters.push({
-					class: {
-						semester: filterValue as Semester,
-					},
-				});
-			} else {
-				andFilters.push({
-					OR: [
-						{
-							department: {
-								symbol: filterValue,
-							},
-						},
-						{
-							class: {
-								name: {
-									contains: filterValue,
-									mode: "insensitive",
-								},
-							},
-						},
-					],
-				});
-			}
+		if (year && (Object.values(Year) as string[]).includes(year)) {
+			andFilters.push({
+				class: {
+					year: year as Year,
+				},
+			});
+		}
+
+		if (
+			semester &&
+			(Object.values(Semester) as string[]).includes(semester)
+		) {
+			andFilters.push({
+				class: {
+					semester: semester as Semester,
+				},
+			});
 		}
 
 		const where: Prisma.SubjectWhereInput =

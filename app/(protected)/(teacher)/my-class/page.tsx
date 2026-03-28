@@ -22,7 +22,7 @@ const page = async ({
 		<>
 			<header className="flex justify-between items-center mb-6">
 				<SearchInput
-					placeholder="Search for a class by name"
+					placeholder="Search class by name"
 					className="bg-gray-200 rounded-2xl  dark:bg-[#172139]"
 				/>
 				<div className="flex gap-3">

@@ -1,6 +1,6 @@
 "use server";
 
-import { Prisma, Role, User } from "@/generated/prisma/client";
+import { Prisma, Role, Semester, User, Year } from "@/generated/prisma/client";
 import { getUserIdFromCookies } from "../jwt";
 import { prisma } from "../prisma";
 import { handleActionErrorResponse } from "../response";
@@ -13,6 +13,8 @@ export async function GetStudents(params: {
   pageSize?: number;
   search?: string;
   filter?: string;
+  year?: string;
+  semester?: string;
 }): Promise<GetStudentsResponse> {
   try {
     // Auth from cookies (Admin OR User)
@@ -34,7 +36,8 @@ export async function GetStudents(params: {
     }
 
     const validated = validateBody(params, PaginatedSearchParamsSchema);
-    const { page = 1, pageSize = 10, search, filter } = validated.data;
+    const { page = 1, pageSize = 10, search, filter, year, semester } =
+      validated.data;
 
     const skip = (Number(page) - 1) * Number(pageSize);
     const take = Number(pageSize);
@@ -52,6 +55,17 @@ export async function GetStudents(params: {
 
     if (filter) {
       where.department = { symbol: filter };
+    }
+
+    if (year && Object.values(Year).includes(year as Year)) {
+      where.year = year as Year;
+    }
+
+    if (
+      semester &&
+      Object.values(Semester).includes(semester as Semester)
+    ) {
+      where.semester = semester as Semester;
     }
 
     //  HOD restriction

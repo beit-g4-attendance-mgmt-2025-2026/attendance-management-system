@@ -2,12 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdminOrUserRoles } from "@/lib/guard";
 import { forbidden } from "@/lib/response";
-import {
-	Role,
-	Semester,
-	type Prisma,
-	Year,
-} from "@/generated/prisma/client";
+import { Role, Semester, type Prisma, Year } from "@/generated/prisma/client";
 
 function csvEscape(value: unknown) {
 	const s = value == null ? "" : String(value);
@@ -25,17 +20,14 @@ export async function GET(request: NextRequest) {
 	const year = searchParams.get("year") || "";
 	const semester = searchParams.get("semester") || "";
 
-	const where: Prisma.SubjectWhereInput = {};
+	const where: Prisma.StudentWhereInput = {};
 
 	if (search) {
 		where.OR = [
 			{ name: { contains: search, mode: "insensitive" } },
-			{ subCode: { contains: search, mode: "insensitive" } },
-			{
-				user: {
-					fullName: { contains: search, mode: "insensitive" },
-				},
-			},
+			{ rollNo: { contains: search, mode: "insensitive" } },
+			{ email: { contains: search, mode: "insensitive" } },
+			{ phoneNumber: { contains: search, mode: "insensitive" } },
 		];
 	}
 
@@ -43,19 +35,18 @@ export async function GET(request: NextRequest) {
 		where.department = { symbol: filter };
 	}
 
-	const classFilter: Prisma.ClassWhereInput = {};
 	if (year && Object.values(Year).includes(year as Year)) {
-		classFilter.year = year as Year;
-	}
-	if (semester && Object.values(Semester).includes(semester as Semester)) {
-		classFilter.semester = semester as Semester;
+		where.year = year as Year;
 	}
 
-	if (Object.keys(classFilter).length > 0) {
-		where.class = { is: classFilter };
+	if (
+		semester &&
+		Object.values(Semester).includes(semester as Semester)
+	) {
+		where.semester = semester as Semester;
 	}
 
-	// HOD can only export their department
+	// HOD can only export their department students
 	if ("user" in auth && auth.user.role === Role.HOD) {
 		if (!auth.user.departmentId) {
 			return forbidden("HOD has no department");
@@ -63,22 +54,19 @@ export async function GET(request: NextRequest) {
 		where.departmentId = auth.user.departmentId;
 	}
 
-	const subjects = await prisma.subject.findMany({
+	const students = await prisma.student.findMany({
 		where,
-		orderBy: { name: "asc" },
+		orderBy: [{ name: "asc" }],
 		select: {
 			name: true,
-			subCode: true,
+			rollNo: true,
+			email: true,
+			gender: true,
+			year: true,
+			semester: true,
+			phoneNumber: true,
 			class: {
-				select: {
-					year: true,
-					semester: true,
-				},
-			},
-			user: {
-				select: {
-					fullName: true,
-				},
+				select: { name: true },
 			},
 			department: {
 				select: {
@@ -90,21 +78,27 @@ export async function GET(request: NextRequest) {
 	});
 
 	const header = [
-		"Subject Name",
-		"Subject Code",
-		"Teacher Name",
+		"Name",
+		"Roll No",
+		"Email",
+		"Gender",
 		"Year",
 		"Semester",
+		"Class Name",
+		"Phone",
 		"Department Symbol",
 		"Department Name",
 	];
 
-	const rows = subjects.map((s) => [
+	const rows = students.map((s) => [
 		csvEscape(s.name),
-		csvEscape(s.subCode),
-		csvEscape(s.user?.fullName ?? ""),
-		csvEscape(s.class?.year ?? ""),
-		csvEscape(s.class?.semester ?? ""),
+		csvEscape(s.rollNo),
+		csvEscape(s.email),
+		csvEscape(s.gender),
+		csvEscape(s.year),
+		csvEscape(s.semester),
+		csvEscape(s.class?.name ?? ""),
+		csvEscape(s.phoneNumber),
 		csvEscape(s.department?.symbol ?? ""),
 		csvEscape(s.department?.name ?? ""),
 	]);
@@ -115,7 +109,8 @@ export async function GET(request: NextRequest) {
 		status: 200,
 		headers: {
 			"Content-Type": "text/csv; charset=utf-8",
-			"Content-Disposition": `attachment; filename="subjects.csv"`,
+			"Content-Disposition": `attachment; filename="students.csv"`,
 		},
 	});
 }
+

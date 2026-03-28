@@ -3,7 +3,13 @@
 import { prisma } from "@/lib/prisma";
 import validateBody from "@/lib/validateBody";
 import { handleActionErrorResponse } from "@/lib/response";
-import { Role, type Prisma, type User } from "@/generated/prisma/client";
+import {
+	Role,
+	Semester,
+	Year,
+	type Prisma,
+	type User,
+} from "@/generated/prisma/client";
 import PaginatedSearchParamsSchema from "../schema/PaginatedSearchParamsSchema";
 import { getUserIdFromCookies } from "../jwt";
 
@@ -29,6 +35,8 @@ export async function GetSubjects(params: {
 	pageSize?: number;
 	search?: string;
 	filter?: string;
+	year?: string;
+	semester?: string;
 }): Promise<{
 	success: boolean;
 	data?: {
@@ -59,7 +67,14 @@ export async function GetSubjects(params: {
 		}
 
 		const validated = validateBody(params, PaginatedSearchParamsSchema);
-		const { page = 1, pageSize = 10, search, filter } = validated.data;
+		const {
+			page = 1,
+			pageSize = 10,
+			search,
+			filter,
+			year,
+			semester,
+		} = validated.data;
 
 		const skip = (Number(page) - 1) * Number(pageSize);
 		const take = Number(pageSize);
@@ -80,6 +95,18 @@ export async function GetSubjects(params: {
 
 		if (filter) {
 			where.department = { symbol: filter };
+		}
+
+		const classFilter: Prisma.ClassWhereInput = {};
+		if (year && Object.values(Year).includes(year as Year)) {
+			classFilter.year = year as Year;
+		}
+		if (semester && Object.values(Semester).includes(semester as Semester)) {
+			classFilter.semester = semester as Semester;
+		}
+
+		if (Object.keys(classFilter).length > 0) {
+			where.class = { is: classFilter };
 		}
 
 		// HOD restriction - only see subjects in their department

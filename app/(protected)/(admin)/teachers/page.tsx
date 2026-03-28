@@ -46,7 +46,7 @@ const page = async ({
 	return (
 		<>
 			<SubHeader
-				placeholder="Search for a teacher by name or email"
+				placeholder="Search teacher by name or email"
 				exportEndpoint={`${URL}/api/teachers/export`}
 				dialogButton={
 					<DialogCardBtn

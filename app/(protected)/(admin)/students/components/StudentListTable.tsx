@@ -71,7 +71,7 @@ const StudentsListTable = ({ students }: StudentsListTableProps) => {
 							title={student.department.name}
 						>
 							{student.department.name}
-						</TableCell>{" "}
+						</TableCell>
 						<TableCell>{student.gender}</TableCell>
 						<TableCell>{student.email}</TableCell>
 						<TableCell>{student.phoneNumber}</TableCell>
