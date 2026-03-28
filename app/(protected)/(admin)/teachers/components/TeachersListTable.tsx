@@ -10,9 +10,9 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { Edit, TrashIcon } from "lucide-react";
+import { Edit, Loader2, Mail, TrashIcon } from "lucide-react";
 import TeacherForm from "./TeacherForm";
-import { TeacherWithDepartment } from "../page";
+import type { TeacherWithDepartment } from "../page";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -24,20 +24,39 @@ export interface TeachersListTableProps {
 
 const TeachersListTable = ({ teachers }: TeachersListTableProps) => {
 	const router = useRouter();
-	const [loading, setLoading] = useState(false);
+	const [deletingId, setDeletingId] = useState<string | null>(null);
+	const [sendingResetId, setSendingResetId] = useState<string | null>(null);
+
 	const handleDelete = async (id: string) => {
 		try {
-			setLoading(true);
+			setDeletingId(id);
 			const res = await api.users.delete(id);
 			if (res.success) toast.success(res.data.message);
 			router.refresh();
 		} catch (error: any) {
-			console.log(error);
 			toast.error(error.message);
 		} finally {
-			setLoading(false);
+			setDeletingId(null);
 		}
 	};
+
+	const handleSendResetEmail = async (id: string) => {
+		try {
+			setSendingResetId(id);
+			const res = await api.users.sendResetEmail(id);
+			if (res?.success) {
+				toast.success(
+					res?.data?.message ??
+						"Password reset email sent successfully",
+				);
+			}
+		} catch (error: any) {
+			toast.error(error.message);
+		} finally {
+			setSendingResetId(null);
+		}
+	};
+
 	return (
 		<>
 			<Table className="w-full">
@@ -81,6 +100,38 @@ const TeachersListTable = ({ teachers }: TeachersListTableProps) => {
 									/>
 								</DialogCardBtn>
 
+								{teacher.role === "TEACHER" && (
+									<ConfirmBtn
+										title="Send password reset email?"
+										description={`A reset link will be sent to ${teacher.email}.`}
+										confirmLabel="Send Email"
+										onConfirm={() =>
+											handleSendResetEmail(teacher.id)
+										}
+										disabled={
+											sendingResetId === teacher.id ||
+											deletingId === teacher.id
+										}
+									>
+										<Button
+											type="button"
+											variant="ghost"
+											title="Send forgot password email"
+											disabled={
+												sendingResetId === teacher.id ||
+												deletingId === teacher.id
+											}
+											className="text-amber-600 cursor-pointer hover:text-amber-700"
+										>
+											{sendingResetId === teacher.id ? (
+												<Loader2 className="size-4 animate-spin" />
+											) : (
+												<Mail className="size-4" />
+											)}
+										</Button>
+									</ConfirmBtn>
+								)}
+
 								<ConfirmBtn
 									title="Delete teacher?"
 									description="This action cannot be undone."
@@ -88,7 +139,10 @@ const TeachersListTable = ({ teachers }: TeachersListTableProps) => {
 									onConfirm={() => handleDelete(teacher.id)}
 								>
 									<Button
-										disabled={loading}
+										disabled={
+											deletingId === teacher.id ||
+											sendingResetId === teacher.id
+										}
 										variant={"ghost"}
 										className="text-red-500 cursor-pointer hover:text-red-700"
 									>

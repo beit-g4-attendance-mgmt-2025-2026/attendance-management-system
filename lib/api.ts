@@ -59,6 +59,12 @@ export const api = {
 			fetchHandler(API_URL + `/teachers/${id}`, {
 				method: "DELETE",
 			}),
+
+		// SEND forgot password email
+		sendResetEmail: (id: string) =>
+			fetchHandler(API_URL + `/teachers/${id}/forgot-password`, {
+				method: "POST",
+			}),
 	},
 
 	students: {

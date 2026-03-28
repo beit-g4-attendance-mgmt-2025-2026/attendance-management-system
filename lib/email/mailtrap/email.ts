@@ -3,6 +3,7 @@ import {
 	PASSWORD_RESET_REQUEST_TEMPLATE,
 	PASSWORD_RESET_SUCCESS_TEMPLATE,
 	WELCOME_TEMPLATE,
+	renderEmailTemplate,
 } from "../emailTemplates";
 
 export async function sendPasswordResetEmailMailtrap(
@@ -21,9 +22,11 @@ export async function sendPasswordResetEmailMailtrap(
 			from: `${sender.name} <${sender.email}>`,
 			to: email,
 			subject: "Reset Your Password",
-			html: PASSWORD_RESET_REQUEST_TEMPLATE.replace(
-				"{resetURL}",
-				resetURL,
+			html: renderEmailTemplate(
+				PASSWORD_RESET_REQUEST_TEMPLATE,
+				{
+					resetURL,
+				},
 			),
 		});
 
@@ -49,7 +52,12 @@ export async function sendResetSuccessEmailMailtrap(email: string) {
 			from: `${sender.name} <${sender.email}>`,
 			to: email,
 			subject: "Password Reset Successful",
-			html: PASSWORD_RESET_SUCCESS_TEMPLATE,
+			html: renderEmailTemplate(PASSWORD_RESET_SUCCESS_TEMPLATE, {
+				changedAt: new Date().toLocaleString("en-US", {
+					dateStyle: "medium",
+					timeStyle: "short",
+				}),
+			}),
 		});
 
 		console.log("Reset success email sent via Mailtrap", response);
@@ -69,7 +77,7 @@ export async function sendWelcomeEmailMailtrap(email: string, name: string) {
 		return;
 	}
 
-	const html = WELCOME_TEMPLATE.replace("{name}", name);
+	const html = renderEmailTemplate(WELCOME_TEMPLATE, { name });
 
 	try {
 		const response = await mailtrapTransporter.sendMail({

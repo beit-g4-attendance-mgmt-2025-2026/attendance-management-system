@@ -2,6 +2,7 @@ import {
 	PASSWORD_RESET_REQUEST_TEMPLATE,
 	PASSWORD_RESET_SUCCESS_TEMPLATE,
 	WELCOME_TEMPLATE,
+	renderEmailTemplate,
 } from "../emailTemplates";
 import { Resend } from "resend";
 
@@ -21,9 +22,11 @@ export async function sendPasswordResetEmail(email: string, resetURL: string) {
 			from,
 			to: email,
 			subject: "Reset Your Password",
-			html: PASSWORD_RESET_REQUEST_TEMPLATE.replace(
-				"{resetURL}",
-				resetURL,
+			html: renderEmailTemplate(
+				PASSWORD_RESET_REQUEST_TEMPLATE,
+				{
+					resetURL,
+				},
 			),
 		});
 		console.log("Password reset email sent via Resend");
@@ -47,7 +50,12 @@ export async function sendResetSuccessEmail(email: string) {
 			from,
 			to: email,
 			subject: "Password Reset Successful",
-			html: PASSWORD_RESET_SUCCESS_TEMPLATE,
+			html: renderEmailTemplate(PASSWORD_RESET_SUCCESS_TEMPLATE, {
+				changedAt: new Date().toLocaleString("en-US", {
+					dateStyle: "medium",
+					timeStyle: "short",
+				}),
+			}),
 		});
 		console.log("Reset success email sent via Resend");
 	} catch (error) {
@@ -66,7 +74,7 @@ export async function sendWelcomeEmail(email: string, name: string) {
 		return;
 	}
 
-	const html = WELCOME_TEMPLATE.replace("{name}", name);
+	const html = renderEmailTemplate(WELCOME_TEMPLATE, { name });
 
 	try {
 		const from = process.env.RESEND_SENDER_EMAIL!;
