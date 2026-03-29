@@ -95,9 +95,10 @@ export const TeacherSchema = z.object({
 		.min(7, { message: "Phone number is too short" })
 		.max(20, { message: "Phone number is too long" })
 		.regex(/^\+?[0-9\s-]+$/, { message: "Invalid phone number" }),
-	departmentName: z.enum(["CIVIL", "CEIT", "EC", "MP", "EP"], {
-		message: "Department must be a valid option",
-	}),
+	departmentName: z
+		.string()
+		.trim()
+		.min(1, { message: "Department is required" }),
 });
 
 export const ResetPasswordSchema = z

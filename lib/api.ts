@@ -17,7 +17,7 @@ export const api = {
 			phoneNumber: string;
 			gender: "MALE" | "FEMALE" | "OTHER";
 			role: "ADMIN" | "HOD" | "TEACHER";
-			departmentName: "CIVIL" | "CEIT" | "EC" | "MP" | "EP";
+			departmentName: string;
 			resetPasswordToken?: string | null;
 			resetPasswordExpireAt?: Date | null;
 		}) =>
@@ -65,6 +65,10 @@ export const api = {
 			fetchHandler(API_URL + `/teachers/${id}/forgot-password`, {
 				method: "POST",
 			}),
+	},
+
+	departments: {
+		getAll: () => fetchHandler(API_URL + "/departments"),
 	},
 
 	students: {
