@@ -138,12 +138,21 @@ export async function GetSubjectAttendanceForDate(input: {
 				day,
 				month,
 				totalTimes: existingAttendance[0]?.totalTimes ?? 1,
-				students: subject.class.students.map((student) => ({
-					id: student.id,
-					name: student.name,
-					rollNo: student.rollNo,
-					isPresent: attendanceByStudent.get(student.id)?.isPresent ?? false,
-				})),
+				students: [...subject.class.students]
+					.sort(
+						(left, right) =>
+							left.rollNo.localeCompare(right.rollNo, undefined, {
+								numeric: true,
+								sensitivity: "base",
+							}) || left.name.localeCompare(right.name),
+					)
+					.map((student) => ({
+						id: student.id,
+						name: student.name,
+						rollNo: student.rollNo,
+						isPresent:
+							attendanceByStudent.get(student.id)?.isPresent ?? false,
+					})),
 			},
 		};
 	} catch (error) {

@@ -28,7 +28,7 @@ export default function SubjectMonthlyReportTable({
 				</div>
 				<div className="rounded-xl border bg-card p-4">
 					<p className="text-sm text-muted-foreground">Monthly Total Times</p>
-					<p className="text-2xl font-semibold">{data.totalPossibleTimes}</p>
+					<p className="text-2xl font-semibold">{data.monthlyTotalTimes}</p>
 				</div>
 				<div className="rounded-xl border bg-card p-4">
 					<p className="text-sm text-muted-foreground">Overall Attendance</p>

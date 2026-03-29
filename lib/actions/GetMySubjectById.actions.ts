@@ -87,12 +87,20 @@ export async function GetMySubjectById(subjectId: string): Promise<{
 				className: subject.class.name,
 				academicYearId: subject.class.academicYearId,
 				academicYearName: subject.class.academicYear?.name ?? null,
-				students: subject.class.students.map((student) => ({
-					id: student.id,
-					name: student.name,
-					rollNo: student.rollNo,
-					isPresent: false,
-				})),
+				students: [...subject.class.students]
+					.sort(
+						(left, right) =>
+							left.rollNo.localeCompare(right.rollNo, undefined, {
+								numeric: true,
+								sensitivity: "base",
+							}) || left.name.localeCompare(right.name),
+					)
+					.map((student) => ({
+						id: student.id,
+						name: student.name,
+						rollNo: student.rollNo,
+						isPresent: false,
+					})),
 			},
 		};
 	} catch (error) {
