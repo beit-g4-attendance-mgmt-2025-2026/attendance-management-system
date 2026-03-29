@@ -23,6 +23,7 @@ export async function GetSubjectMonthlyReport(input: {
 		className: string;
 		month: Month;
 		takenDays: number[];
+		monthlyTotalTimes: number;
 		totalPresentTimes: number;
 		totalPossibleTimes: number;
 		overallPercentage: number;
@@ -99,6 +100,13 @@ export async function GetSubjectMonthlyReport(input: {
 			},
 		});
 
+		const totalTimesByDay = new Map<number, number>();
+		for (const item of attendance) {
+			if (!totalTimesByDay.has(item.day)) {
+				totalTimesByDay.set(item.day, item.totalTimes);
+			}
+		}
+
 		const totalsByStudent = new Map<
 			string,
 			{ presentTimes: number; totalTimes: number }
@@ -116,6 +124,10 @@ export async function GetSubjectMonthlyReport(input: {
 
 		const takenDays = [...new Set(attendance.map((item) => item.day))].sort(
 			(left, right) => left - right,
+		);
+		const monthlyTotalTimes = Array.from(totalTimesByDay.values()).reduce(
+			(sum, totalTimes) => sum + totalTimes,
+			0,
 		);
 
 		const rows = subject.class.students.map((student) => {
@@ -136,7 +148,13 @@ export async function GetSubjectMonthlyReport(input: {
 				totalTimes: totals.totalTimes,
 				percentage,
 			};
-		});
+		}).sort(
+			(left, right) =>
+				left.rollNo.localeCompare(right.rollNo, undefined, {
+					numeric: true,
+					sensitivity: "base",
+				}) || left.name.localeCompare(right.name),
+		);
 
 		const totalPresentTimes = rows.reduce(
 			(sum, row) => sum + row.presentTimes,
@@ -160,6 +178,7 @@ export async function GetSubjectMonthlyReport(input: {
 				className: subject.class.name,
 				month: validated.month,
 				takenDays,
+				monthlyTotalTimes,
 				totalPresentTimes,
 				totalPossibleTimes,
 				overallPercentage,

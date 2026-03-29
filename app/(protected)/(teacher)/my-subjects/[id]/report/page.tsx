@@ -1,4 +1,5 @@
 import BackBtn from "@/components/BackBtn";
+import { ExportCsvBtn } from "@/components/ExportCsvBtn";
 import SubjectAttendanceCalendar from "@/components/SubjectAttendanceCalendar";
 import MonthlyReportMonthSelect from "@/components/MonthlyReportMonthSelect";
 import SubjectMonthlyReportTable from "@/components/SubjectMonthlyReportTable";
@@ -54,6 +55,11 @@ const Page = async ({
 				</div>
 				<div className="flex flex-wrap items-center gap-3">
 					<MonthlyReportMonthSelect value={selectedMonth} />
+					<ExportCsvBtn
+						endpoint={`/api/monthly-subject-report/${id}/export`}
+						allowedParams={["month"]}
+						className="rounded-md px-0 font-medium text-sky-700"
+					/>
 				</div>
 			</nav>
 

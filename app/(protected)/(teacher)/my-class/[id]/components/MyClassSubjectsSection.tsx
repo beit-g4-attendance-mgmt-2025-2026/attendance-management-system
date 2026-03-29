@@ -16,7 +16,12 @@ type Props = {
 	total: number;
 };
 
-const MyClassSubjectsSection = ({ subjects, page, pageSize, total }: Props) => {
+const MyClassSubjectsSection = ({
+	subjects,
+	page,
+	pageSize,
+	total,
+}: Props) => {
 	return (
 		<section className="space-y-3">
 			<h2 className="text-lg font-semibold">Subjects</h2>
@@ -27,33 +32,35 @@ const MyClassSubjectsSection = ({ subjects, page, pageSize, total }: Props) => {
 				</div>
 			) : (
 				<>
-					<Table className="border rounded-xl">
-						<TableHeader>
-							<TableRow>
-								<TableHead>No</TableHead>
-								<TableHead>Code</TableHead>
-								<TableHead>Name</TableHead>
-								<TableHead>Teacher</TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{subjects.map((subject, index) => (
-								<TableRow
-									key={subject.id}
-									className={`cursor-pointer transition-colors border-none  ${
-										index % 2 === 0
-											? ""
-											: "bg-gray-200 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-800 "
-									}`}
-								>
-										<TableCell>{index + 1}</TableCell>
-									<TableCell>{subject.subCode}</TableCell>
-									<TableCell>{subject.name}</TableCell>
-									<TableCell>{subject.teacherName}</TableCell>
+					<div className="max-h-[420px] overflow-auto rounded-xl border">
+						<Table>
+							<TableHeader className="sticky top-0 z-10 bg-background">
+								<TableRow>
+									<TableHead>No</TableHead>
+									<TableHead>Code</TableHead>
+									<TableHead>Name</TableHead>
+									<TableHead>Teacher</TableHead>
 								</TableRow>
-							))}
-						</TableBody>
-					</Table>
+							</TableHeader>
+							<TableBody>
+								{subjects.map((subject, index) => (
+									<TableRow
+										key={subject.id}
+										className={`cursor-pointer transition-colors border-none  ${
+											index % 2 === 0
+												? ""
+												: "bg-gray-200 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-800 "
+										}`}
+									>
+										<TableCell>{index + 1}</TableCell>
+										<TableCell>{subject.subCode}</TableCell>
+										<TableCell>{subject.name}</TableCell>
+										<TableCell>{subject.teacherName}</TableCell>
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+					</div>
 
 					<QueryPagination
 						page={page}
