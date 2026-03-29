@@ -8,6 +8,7 @@ import TeacherForm from "./components/TeacherForm";
 import TeachersListTable from "./components/TeachersListTable";
 import { Paginationn } from "@/components/Pagination";
 import { GetTeachers } from "@/lib/actions/GetTeachers";
+import { GetCurrentUserRole } from "@/lib/actions/GetCurrentUserRole.actions";
 
 export type TeacherWithDepartment = PublicUser & {
 	department: Department;
@@ -21,6 +22,8 @@ const page = async ({
 }) => {
 	const URL = "http://localhost:3000";
 	const { page, pageSize, search, filter } = await searchParams;
+	const currentUser = await GetCurrentUserRole();
+	const showDepartmentFilter = currentUser.data?.role !== "HOD";
 
 	const { success, data, message } = await GetTeachers({
 		page: Number(page) || 1,
@@ -48,6 +51,7 @@ const page = async ({
 			<SubHeader
 				placeholder="Search teacher by name or email"
 				exportEndpoint={`${URL}/api/teachers/export`}
+				showDepartmentFilter={showDepartmentFilter}
 				dialogButton={
 					<DialogCardBtn
 						triggerName="Add Teacher"

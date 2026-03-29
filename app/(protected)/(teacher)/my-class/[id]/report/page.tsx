@@ -1,32 +1,87 @@
 import BackBtn from "@/components/BackBtn";
-import ClassAttendanceTable from "@/components/ClassAttendanceTable";
-import { Button } from "@/components/ui/button";
-import { IoChevronBackSharp } from "react-icons/io5";
+import { ExportCsvBtn } from "@/components/ExportCsvBtn";
+import MonthlyClassReportTable from "@/components/MonthlyClassReportTable";
+import MonthlyReportMonthSelect from "@/components/MonthlyReportMonthSelect";
+import { GetMonthlyClassReport } from "@/lib/actions/GetMonthlyClassReport.actions";
+import { GetMyClassDetails } from "@/lib/actions/GetMyClassDetails.actions";
+import { Month } from "@/generated/prisma/client";
 
-const page = async ({ params }: { params: Promise<{ id: string }> }) => {
+const monthValues = Object.values(Month);
+
+function getSelectedMonth(rawMonth?: string) {
+	if (rawMonth && monthValues.includes(rawMonth as Month)) {
+		return rawMonth as Month;
+	}
+
+	return monthValues[new Date().getMonth()];
+}
+
+const page = async ({
+	params,
+	searchParams,
+}: {
+	params: Promise<{ id: string }>;
+	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) => {
 	const { id } = await params;
-	const decodedCode = decodeURIComponent(id);
-	return (
-		<div>
-			<nav className="flex justify-between items-center">
-				<div className="flex items-center gap-5">
-					<BackBtn />
+	const query = await searchParams;
 
-					<span className="text-xl font-semibold">{decodedCode}</span>
+	const classDetails = await GetMyClassDetails({ classId: id });
+
+	if (!classDetails.success || !classDetails.data) {
+		return (
+			<div className="space-y-4">
+				<div className="flex items-center gap-3">
+					<BackBtn />
+					<h1 className="text-xl font-semibold">Monthly Report</h1>
 				</div>
-				<div className="flex gap-3">
-					<Button
-						variant={"link"}
-						className="cursor-pointer text-sky-600"
-					>
-						Export CSV
-					</Button>
-					<Button className="cursor-pointer text-white bg-sky-600 hover:bg-sky-700 hover:text-white">
-						Submit
-					</Button>
+				<div className="flex min-h-[40vh] items-center justify-center">
+					<p className="text-gray-500">
+						{classDetails.message ?? "Class not found."}
+					</p>
+				</div>
+			</div>
+		);
+	}
+
+	const selectedMonth = getSelectedMonth(
+		typeof query.month === "string" ? query.month : undefined,
+	);
+
+	const report = await GetMonthlyClassReport({
+		classId: id,
+		month: selectedMonth,
+	});
+
+	return (
+		<div className="space-y-6">
+			<nav className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+				<div className="flex items-center gap-3">
+					<BackBtn />
+					<div>
+						<h1 className="text-xl font-semibold text-slate-900">
+							{classDetails.data.myClass.name}
+						</h1>
+						<p className="text-sm text-slate-500">Monthly class report</p>
+					</div>
+				</div>
+				<div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+					<MonthlyReportMonthSelect value={selectedMonth} />
+					<ExportCsvBtn
+						endpoint={`/api/monthly-class-report/${id}/export`}
+						allowedParams={["month"]}
+						className="rounded-md px-0 font-medium text-sky-700"
+					/>
 				</div>
 			</nav>
-			<ClassAttendanceTable />
+
+			{report.success && report.data ? (
+				<MonthlyClassReportTable data={report.data} />
+			) : (
+				<div className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">
+					{report.message ?? "Unable to load the monthly report."}
+				</div>
+			)}
 		</div>
 	);
 };

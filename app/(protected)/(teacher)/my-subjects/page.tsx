@@ -1,9 +1,7 @@
-import { DialogCardBtn } from "@/components/DialogCardBtn";
 import { Paginationn } from "@/components/Pagination";
 import SubHeader from "@/components/sub-header";
 import SubjectCard from "@/components/SubjectCard";
 import React from "react";
-import SubjectForm from "../../(HOD)/(subject)/components/SubjectForm";
 import {
 	GetMySubjects,
 	type MySubjectItem,
@@ -11,6 +9,7 @@ import {
 import { Years, semesters } from "@/constants/index.constants";
 
 export interface Subject {
+	id: string;
 	name: string;
 	code: string;
 	roomName: string | null;
@@ -43,6 +42,7 @@ const page = async ({
 	const currentPageSize = Number(pageSize) || 9;
 
 	const subjects: Subject[] = mySubjects.map((subject) => ({
+		id: subject.id,
 		name: subject.name,
 		code: subject.code,
 		roomName: subject.roomName,
@@ -55,6 +55,7 @@ const page = async ({
 			<SubHeader
 				placeholder="Search subject by name or code"
 				exportEndpoint="/api/my-subjects/export"
+				showDepartmentFilter={false}
 				filters={[
 					{
 						label: "Year",
@@ -67,15 +68,7 @@ const page = async ({
 						options: semesters,
 					},
 				]}
-				dialogButton={
-					<DialogCardBtn
-						triggerName="Add Subject"
-						title="Add Subject"
-						description="Enter subject details"
-					>
-						<SubjectForm isEdit={false} />
-					</DialogCardBtn>
-				}
+				dialogButton={null}
 			/>
 			{subjects.length > 0 ? (
 				<main className="space-y-6">

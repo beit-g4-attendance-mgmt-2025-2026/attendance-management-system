@@ -36,6 +36,7 @@ const page = async ({
 			<SubHeader
 				placeholder="Search subject by name or code"
 				exportEndpoint="/api/subjects/export"
+				showDepartmentFilter={false}
 				filters={[
 					{
 						label: "Year",

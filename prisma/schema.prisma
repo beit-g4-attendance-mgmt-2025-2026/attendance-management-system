@@ -40,6 +40,11 @@ enum Year {
   FINAL
 }
 
+enum SubjectType {
+  MAJOR
+  MINOR
+}
+
 
 enum Month {
   JANUARY
@@ -126,6 +131,8 @@ model Class {
   students Student[]
   subjects Subject[]
   monthlyClassAttendance  MonthlyClassAttendance[]
+
+  dailyAttendances DailyAttendance[]
 }
 
 
@@ -137,6 +144,8 @@ model AcademicYear {
   isActive  Boolean
 
   classes Class[]
+  monthlySubAttendances MonthlySubAttendance[]
+  monthlyClassAttendances MonthlyClassAttendance[]
 }
 
 
@@ -160,12 +169,14 @@ model Student {
 
   dailyAttendance   DailyAttendance[]
   monthlySubAttendance    MonthlySubAttendance[]
+  monthlyClassAttendance  MonthlyClassAttendance[]
 }
 
 model Subject {
   id      String @id @default(uuid()) @db.Uuid
   name    String
   subCode String
+  type    SubjectType @default(MAJOR)
   roomName  String?
 
   departmentId String @db.Uuid
@@ -174,8 +185,7 @@ model Subject {
   userId       String @db.Uuid
   user       User       @relation(fields: [userId], references: [id])
 
-  classId      String @db.Uuid
-  class      Class      @relation(fields: [classId], references: [id])
+  classes    Class[]
 
   dailyAttendance   DailyAttendance[]
   monthlySubAttendance MonthlySubAttendance[]
@@ -195,7 +205,10 @@ model DailyAttendance {
   subjectId String @db.Uuid
   subject Subject @relation(fields: [subjectId], references: [id])
 
-  @@unique([studentId, subjectId, day, month])
+  classId   String @db.Uuid
+  class     Class  @relation(fields: [classId], references: [id])
+
+  @@unique([studentId, subjectId, classId, day, month])
 }
 
 model MonthlySubAttendance {
@@ -203,15 +216,19 @@ model MonthlySubAttendance {
   times              Int
   totalTimes        Int
   status            Boolean
+  month             Month
 
   student   Student? @relation(fields: [studentId], references: [id])
   studentId   String @db.Uuid
   subject    Subject @relation(fields: [subjectId], references: [id])
   subjectId   String @db.Uuid
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+  academicYearId String @db.Uuid
 
   monthlyClassAttendance MonthlyClassAttendance? @relation(fields: [monthlyClassAttendanceId], references: [id])
   monthlyClassAttendanceId  String @db.Uuid
 
+  @@unique([studentId, subjectId, month, academicYearId])
 }
 
 model MonthlyClassAttendance {
@@ -219,9 +236,16 @@ model MonthlyClassAttendance {
   monthlySubAttendanceId String[] @db.Uuid
   totalTimes             Int
   status                 Boolean
+  month                  Month
 
   class Class? @relation(fields: [classId], references: [id])
   classId   String @db.Uuid
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String @db.Uuid
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+  academicYearId String @db.Uuid
   
   monthlySubAttendance  MonthlySubAttendance[]
+
+  @@unique([studentId, classId, month, academicYearId])
 }

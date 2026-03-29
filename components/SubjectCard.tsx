@@ -34,12 +34,12 @@ const SubjectCard = ({ subject }: CardProps) => {
 				</div>
 			</div>
 			<div className="flex justify-center space-x-3 px-1 mt-5">
-				<Link href={`/my-subjects/${subject.code}/report`}>
+				<Link href={`/my-subjects/${subject.id}/report`}>
 					<Button className="cursor-pointer w-34 text-white rounded-full bg-sky-600 hover:bg-sky-700 hover:text-white">
 						View Report
 					</Button>
 				</Link>
-				<Link href={`/my-subjects/${subject.code}`}>
+				<Link href={`/my-subjects/${subject.id}`}>
 					<Button className="cursor-pointer w-34 text-white rounded-full bg-sky-600 hover:bg-sky-700 hover:text-white">
 						Take Attendance
 					</Button>

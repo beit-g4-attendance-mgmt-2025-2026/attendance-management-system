@@ -24,6 +24,11 @@ export async function GetMyClassDetails(params: Params): Promise<{
 	success: boolean;
 	data?: {
 		myClass: MyClassItem;
+		classMeta: {
+			id: string;
+			name: string;
+			userId: string | null;
+		};
 		students: MyClassStudentItem[];
 		studentsTotal: number;
 		studentsIsNext: boolean;
@@ -72,6 +77,7 @@ export async function GetMyClassDetails(params: Params): Promise<{
 			select: {
 				id: true,
 				name: true,
+				userId: true,
 			},
 		});
 
@@ -232,6 +238,11 @@ export async function GetMyClassDetails(params: Params): Promise<{
 			success: true,
 			data: {
 				myClass,
+				classMeta: {
+					id: classRecord.id,
+					name: classRecord.name,
+					userId: classRecord.userId,
+				},
 				students,
 				studentsTotal,
 				studentsIsNext: studentsTotal > studentsSkip + students.length,

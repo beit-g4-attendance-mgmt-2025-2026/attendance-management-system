@@ -1,82 +1,32 @@
-"use client";
+import SubjectAttendanceEditor from "@/components/SubjectAttendanceEditor";
+import { GetSubjectAttendanceForDate } from "@/lib/actions/GetSubjectAttendanceForDate.actions";
 
-import React from "react";
-import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form } from "@/components/ui/form";
-import { months, STUDENTS } from "@/constants/index.constants";
-import { TakeAttendanceSchema } from "@/schema/index.schema";
-import type { TakeAttendanceFormValues } from "./components/types";
+const today = new Date();
+const defaultDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
 
-const SubjectDetailHeader = dynamic(
-	() => import("./components/SubjectDetailHeader"),
-	{
-		ssr: false,
-		loading: () => (
-			<div className="h-[72px] rounded-lg border bg-muted/20 animate-pulse" />
-		),
-	},
-);
+const Page = async ({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ date?: string }>;
+}) => {
+  const { id } = await params;
+  const query = await searchParams;
+  const attendance = await GetSubjectAttendanceForDate({
+    subjectId: id,
+    date: query.date ?? defaultDate,
+  });
 
-const SubjectAttendanceTableSection = dynamic(
-	() => import("./components/SubjectAttendanceTableSection"),
-	{
-		ssr: false,
-		loading: () => (
-			<div className="h-[420px] rounded-lg border bg-muted/20 animate-pulse" />
-		),
-	},
-);
+  if (!attendance.success || !attendance.data) {
+    return (
+      <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-sm text-red-700">
+        {attendance.message ?? "Unable to load subject attendance."}
+      </div>
+    );
+  }
 
-interface PageProps {
-	params: Promise<{ id: string }>;
-}
-
-const Page = ({ params }: PageProps) => {
-	const { id } = React.use(params);
-	const router = useRouter();
-	const today = new Date();
-
-	const form = useForm<TakeAttendanceFormValues>({
-		resolver: zodResolver(TakeAttendanceSchema),
-		defaultValues: {
-			SubjectId: "",
-			Day: today.getDate().toString(),
-			Month: months[today.getMonth()].value,
-			TotalTimes: "",
-			Times: {},
-		},
-	});
-
-	React.useEffect(() => {
-		form.setValue("SubjectId", id);
-	}, [id, form]);
-
-	const totalTimesValue = form.watch("TotalTimes");
-	React.useEffect(() => {
-		if (!totalTimesValue) return;
-
-		const nextTimes: Record<string, string> = {};
-		STUDENTS.forEach((student) => {
-			nextTimes[student.student_id] = totalTimesValue;
-		});
-		form.setValue("Times", nextTimes);
-	}, [totalTimesValue, form]);
-
-	function onSubmit(values: TakeAttendanceFormValues) {}
-
-	return (
-		<Form {...form}>
-			<SubjectDetailHeader
-				subjectCode={id}
-				form={form}
-				onBack={() => router.back()}
-			/>
-			<SubjectAttendanceTableSection form={form} onSubmit={onSubmit} />
-		</Form>
-	);
+  return <SubjectAttendanceEditor initialData={attendance.data} />;
 };
 
 export default Page;
