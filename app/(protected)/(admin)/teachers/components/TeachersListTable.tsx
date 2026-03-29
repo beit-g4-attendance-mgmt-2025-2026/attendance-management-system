@@ -100,37 +100,35 @@ const TeachersListTable = ({ teachers }: TeachersListTableProps) => {
 									/>
 								</DialogCardBtn>
 
-								{teacher.role === "TEACHER" && (
-									<ConfirmBtn
-										title="Send password reset email?"
-										description={`A reset link will be sent to ${teacher.email}.`}
-										confirmLabel="Send Email"
-										onConfirm={() =>
-											handleSendResetEmail(teacher.id)
-										}
+								<ConfirmBtn
+									title="Send password reset email?"
+									description={`A reset link will be sent to ${teacher.email}.`}
+									confirmLabel="Send Email"
+									onConfirm={() =>
+										handleSendResetEmail(teacher.id)
+									}
+									disabled={
+										sendingResetId === teacher.id ||
+										deletingId === teacher.id
+									}
+								>
+									<Button
+										type="button"
+										variant="ghost"
+										title="Send forgot password email"
 										disabled={
 											sendingResetId === teacher.id ||
 											deletingId === teacher.id
 										}
+										className="text-amber-600 cursor-pointer hover:text-amber-700"
 									>
-										<Button
-											type="button"
-											variant="ghost"
-											title="Send forgot password email"
-											disabled={
-												sendingResetId === teacher.id ||
-												deletingId === teacher.id
-											}
-											className="text-amber-600 cursor-pointer hover:text-amber-700"
-										>
-											{sendingResetId === teacher.id ? (
-												<Loader2 className="size-4 animate-spin" />
-											) : (
-												<Mail className="size-4" />
-											)}
-										</Button>
-									</ConfirmBtn>
-								)}
+										{sendingResetId === teacher.id ? (
+											<Loader2 className="size-4 animate-spin" />
+										) : (
+											<Mail className="size-4" />
+										)}
+									</Button>
+								</ConfirmBtn>
 
 								<ConfirmBtn
 									title="Delete teacher?"
