@@ -1,4 +1,5 @@
 import BackBtn from "@/components/BackBtn";
+import { ExportCsvBtn } from "@/components/ExportCsvBtn";
 import { GetMyClassDetails } from "@/lib/actions/GetMyClassDetails.actions";
 import MyClassStudentsSection from "./components/MyClassStudentsSection";
 import MyClassSubjectsSection from "./components/MyClassSubjectsSection";
@@ -49,9 +50,12 @@ const page = async ({
 
 	return (
 		<div className="space-y-8">
-			<nav className="flex items-center gap-3">
-				<BackBtn />
-				<h1 className="text-xl font-semibold">{data.myClass.name}</h1>
+			<nav className="flex items-center justify-between gap-3">
+				<div className="flex items-center gap-3">
+					<BackBtn />
+					<h1 className="text-xl font-semibold">{data.myClass.name}</h1>
+				</div>
+				<ExportCsvBtn endpoint={`/api/my-class/${id}/export`} label="Export CSV" />
 			</nav>
 
 			<MyClassSummaryCard classInfo={data.myClass} />

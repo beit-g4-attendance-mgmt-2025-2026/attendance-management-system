@@ -9,8 +9,8 @@ interface CardProps {
 const ClassCard = ({ classItem, variant }: CardProps) => {
 	const reportHref =
 		variant === "classes"
-			? `/classes/${classItem.name}/report`
-			: `/my-class/${classItem.name}/report`;
+			? `/classes/${classItem.id}/report`
+			: `/my-class/${classItem.id}/report`;
 
 	const studentsHref =
 		variant === "classes"

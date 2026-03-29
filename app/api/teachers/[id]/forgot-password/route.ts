@@ -36,9 +36,6 @@ export async function POST(
 		});
 
 		if (!targetTeacher) throw new Error("Teacher not found");
-		if (targetTeacher.role !== Role.TEACHER) {
-			return forbidden("Reset email can only be sent to teacher accounts");
-		}
 
 		if ("user" in auth && auth.user.role === Role.HOD) {
 			if (!auth.user.departmentId) {

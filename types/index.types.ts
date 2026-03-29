@@ -83,6 +83,7 @@ export interface DepartmentTableItem {
   name: string;
   symbol: string;
   logo: string | null;
+  hodId: string | null;
   email: string | null;
   phone: string | null;
   head_of_department: string | null;
