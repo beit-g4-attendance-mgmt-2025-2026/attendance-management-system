@@ -5,7 +5,7 @@ import { DialogCardBtn } from "@/components/DialogCardBtn";
 import SearchInput from "@/components/inputs/SearchInput";
 import { useSelectedLayoutSegment } from "next/navigation";
 
-const layout = ({ children }: { children: React.ReactNode }) => {
+const Layout = ({ children }: { children: React.ReactNode }) => {
 	const segment = useSelectedLayoutSegment();
 	const isDetailPage = Boolean(segment);
 
@@ -32,4 +32,4 @@ const layout = ({ children }: { children: React.ReactNode }) => {
 	);
 };
 
-export default layout;
+export default Layout;

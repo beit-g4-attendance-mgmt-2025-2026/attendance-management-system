@@ -97,7 +97,7 @@ export async function PUT(
     const validatedData = validateBody(body, CreateClassSchema, true);
     const data = validatedData.data;
 
-    let nextDepartmentId = isAdmin
+    const nextDepartmentId = isAdmin
       ? (data.departmentId ?? existingClass.departmentId)
       : authUser!.departmentId;
 

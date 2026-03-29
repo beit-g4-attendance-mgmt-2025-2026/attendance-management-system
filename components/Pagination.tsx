@@ -20,12 +20,12 @@ export function Paginationn({
 	pageSize: number;
 	total: number;
 }) {
-	const totalPages = Math.max(1, Math.ceil(total / pageSize));
-	if (totalPages <= 1) return null;
-
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 	const currentQuery = queryString.parse(searchParams.toString());
+
+	const totalPages = Math.max(1, Math.ceil(total / pageSize));
+	if (totalPages <= 1) return null;
 
 	const buildUrl = (p: number) =>
 		queryString.stringifyUrl(
@@ -35,7 +35,7 @@ export function Paginationn({
 
 	// Always show 3 pages (or less if totalPages < 3)
 	let start = Math.max(1, page - 1);
-	let end = Math.min(totalPages, start + 2);
+	const end = Math.min(totalPages, start + 2);
 	start = Math.max(1, end - 2);
 
 	const pages = [];

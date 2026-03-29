@@ -4,7 +4,7 @@ import TeacherForm from "../../teachers/components/TeacherForm";
 import { IoChevronBackSharp } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 
-const page = () => {
+const Page = () => {
 	const router = useRouter();
 	return (
 		<div>
@@ -27,4 +27,4 @@ const page = () => {
 	);
 };
 
-export default page;
+export default Page;

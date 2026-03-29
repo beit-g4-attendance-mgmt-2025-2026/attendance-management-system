@@ -7,7 +7,7 @@ import Link from "next/link";
 import { DepartmentTableItem } from "@/types/index.types";
 import fetchHandler from "@/lib/fetchHandler";
 
-const page = () => {
+const Page = () => {
 	const [departments, setDepartments] = useState<DepartmentTableItem[]>([]);
 	const [loading, setLoading] = useState(true);
 
@@ -69,4 +69,4 @@ const page = () => {
 	);
 };
 
-export default page;
+export default Page;
