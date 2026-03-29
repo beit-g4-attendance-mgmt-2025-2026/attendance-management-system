@@ -21,7 +21,7 @@ const Page = () => {
 				</Button>
 			</header>
 			<main className="mt-6 max-w-3xl mx-auto">
-				<TeacherForm isEdit={false} />
+				<TeacherForm isEdit={false} redirectTo="/dashboard" />
 			</main>
 		</div>
 	);

@@ -21,7 +21,7 @@ const Page = () => {
         </Button>
       </header>
       <main className="mt-6">
-        <DepartmentForm />
+        <DepartmentForm redirectTo="/dashboard" />
       </main>
     </div>
   );

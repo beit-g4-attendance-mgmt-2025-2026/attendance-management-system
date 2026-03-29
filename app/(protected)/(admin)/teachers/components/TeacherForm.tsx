@@ -8,26 +8,34 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import z from "zod";
 import FormSelect from "@/components/inputs/FormSelect";
-import { departments, genders, roles } from "@/constants/index.constants";
+import { genders, roles } from "@/constants/index.constants";
 import { TeacherSchema } from "@/schema/index.schema";
 import { api } from "@/lib/api";
+import fetchHandler from "@/lib/fetchHandler";
 
 import { toast } from "sonner";
-import { Gender, Role, User } from "@/generated/prisma/client";
-import { useEffect } from "react";
+import { Gender, Role } from "@/generated/prisma/client";
+import { useEffect, useState } from "react";
 import { PublicUser } from "@/lib/user";
+import { DepartmentTableItem } from "@/types/index.types";
 
 const TeacherForm = ({
 	isEdit = false,
 	teacher,
 	onClose,
+	redirectTo,
 }: {
 	isEdit: boolean;
 	teacher?: PublicUser | null;
 	onClose?: () => void;
+	redirectTo?: string;
 }) => {
 	const router = useRouter();
 	const schema = teacher && isEdit ? TeacherSchema.partial() : TeacherSchema;
+	const [departmentOptions, setDepartmentOptions] = useState<
+		{ label: string; value: string }[]
+	>([]);
+	const [isLoadingDepartments, setIsLoadingDepartments] = useState(false);
 
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
@@ -56,6 +64,43 @@ const TeacherForm = ({
 	const {
 		formState: { isSubmitting },
 	} = form;
+
+	useEffect(() => {
+		if (isEdit) return;
+
+		let isMounted = true;
+
+		const loadDepartments = async () => {
+			try {
+				setIsLoadingDepartments(true);
+				const res = await fetchHandler("/api/departments");
+				const departments =
+					(res?.data?.formattedDepartment as DepartmentTableItem[] | undefined) ?? [];
+
+				if (!isMounted) return;
+
+				setDepartmentOptions(
+					departments.map((department) => ({
+						label: department.symbol,
+						value: department.symbol,
+					})),
+				);
+			} catch (error: any) {
+				if (!isMounted) return;
+				toast.error(error?.message || "Failed to load departments");
+			} finally {
+				if (isMounted) {
+					setIsLoadingDepartments(false);
+				}
+			}
+		};
+
+		loadDepartments();
+
+		return () => {
+			isMounted = false;
+		};
+	}, [isEdit]);
 
 	async function onSubmit(values: z.infer<typeof schema>) {
 		try {
@@ -99,6 +144,11 @@ const TeacherForm = ({
 				const res = await api.users.create(data);
 
 				if (res?.success) {
+					if (redirectTo) {
+						router.push(redirectTo);
+						return;
+					}
+
 					router.refresh();
 					onClose?.();
 					return;
@@ -192,11 +242,13 @@ const TeacherForm = ({
 						</div>
 						<div className="rounded-md w-4/12 mt-5">
 							<FormSelect
-								disabled={isSubmitting || isEdit}
+								disabled={isSubmitting || isEdit || isLoadingDepartments}
 								form={form}
 								name="departmentName"
-								placeholder="Department"
-								options={departments as any}
+								placeholder={
+									isLoadingDepartments ? "Loading departments..." : "Department"
+								}
+								options={departmentOptions}
 								id="form-rhf-select-department"
 								triggerClassName="min-w-[120px] cursor-pointer"
 							/>

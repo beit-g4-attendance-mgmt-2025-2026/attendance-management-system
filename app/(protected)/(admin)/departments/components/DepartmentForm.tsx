@@ -16,9 +16,10 @@ type DepartmentFormValues = z.infer<typeof DepartmentSchema>;
 type Props = {
 	departmentId?: string;
 	isEdit?: boolean;
+	redirectTo?: string;
 };
 
-const DepartmentForm = ({ departmentId, isEdit }: Props) => {
+const DepartmentForm = ({ departmentId, isEdit, redirectTo }: Props) => {
 	const router = useRouter();
 	const [submitting, setSubmitting] = useState(false);
 	const [initialData, setInitialData] = useState<DepartmentFormValues | null>(
@@ -84,6 +85,11 @@ const DepartmentForm = ({ departmentId, isEdit }: Props) => {
 				toast.success(
 					`Department ${isEdit ? "updated" : "added"} successfully`,
 				);
+				if (!isEdit && redirectTo) {
+					router.push(redirectTo);
+					return;
+				}
+
 				router.back();
 			} else {
 				toast.error(data?.message || "Failed to save department");

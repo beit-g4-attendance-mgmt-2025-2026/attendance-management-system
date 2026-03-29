@@ -17,6 +17,7 @@ import {
 	type CreateAcademicYearInput,
 } from "@/lib/schema/CreateAcademicYearSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -30,6 +31,7 @@ type AcademicYearItem = {
 };
 
 const AcademicYearManager = () => {
+	const router = useRouter();
 	const [academicYears, setAcademicYears] = useState<AcademicYearItem[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -78,13 +80,7 @@ const AcademicYearManager = () => {
 			});
 			if (res?.success) {
 				toast.success("Academic year created successfully");
-				form.reset({
-					name: "",
-					startDate: "",
-					endDate: "",
-					isActive: false,
-				});
-				await loadAcademicYears();
+				router.push("/dashboard");
 			}
 		} catch (error: any) {
 			toast.error(error.message ?? "Failed to create academic year");

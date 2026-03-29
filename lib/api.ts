@@ -17,7 +17,7 @@ export const api = {
 			phoneNumber: string;
 			gender: "MALE" | "FEMALE" | "OTHER";
 			role: "ADMIN" | "HOD" | "TEACHER";
-			departmentName: "CIVIL" | "CEIT" | "EC" | "MP" | "EP";
+			departmentName: string;
 			resetPasswordToken?: string | null;
 			resetPasswordExpireAt?: Date | null;
 		}) =>

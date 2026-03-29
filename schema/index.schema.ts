@@ -54,8 +54,8 @@ export const TeacherSchema = z.object({
 		.min(1, { message: "Full name is required" })
 		.min(2, { message: "Full name must be at least 2 characters" })
 		.max(50, { message: "Full name must be less than 50 characters" })
-		.regex(/^[a-zA-Z\s]+$/, {
-			message: "Full name can only contain letters and spaces",
+		.regex(/^[a-zA-Z.\s]+$/, {
+			message: "Full name can only contain letters, spaces, and periods",
 		}),
 
 	username: z
@@ -94,9 +94,10 @@ export const TeacherSchema = z.object({
 		message:
 			"Invalid phone number. It should start with '09' and be followed by 7 to 9 digits.",
 	}),
-	departmentName: z.enum(["CIVIL", "CEIT", "EC", "MP", "EP"], {
-		message: "Department must be a valid option",
-	}),
+	departmentName: z
+		.string()
+		.trim()
+		.min(1, { message: "Department must be a valid option" }),
 });
 
 export const ResetPasswordSchema = z
@@ -158,8 +159,8 @@ export const DepartmentSchema = z.object({
 	name: z.string().min(2, {
 		message: "Please enter department name",
 	}),
-	symbol: z.string().min(2, {
-		message: "Please enter department short term",
+	symbol: z.string().min(1, {
+		message: "Department symbol must be at least 1 character",
 	}),
 	logo: z
 		.instanceof(File)

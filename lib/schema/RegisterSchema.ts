@@ -7,8 +7,8 @@ const RegisterSchema = z.object({
 		.min(1, { message: "Full name is required" })
 		.min(2, { message: "Full name must be at least 2 characters" })
 		.max(50, { message: "Full name must be less than 50 characters" })
-		.regex(/^[a-zA-Z\s]+$/, {
-			message: "Full name can only contain letters and spaces",
+		.regex(/^[a-zA-Z.\s]+$/, {
+			message: "Full name can only contain letters, spaces, and periods",
 		}),
 
 	username: z
@@ -44,9 +44,10 @@ const RegisterSchema = z.object({
 		.min(7, { message: "Phone number is too short" })
 		.max(20, { message: "Phone number is too long" })
 		.regex(/^\+?[0-9\s-]+$/, { message: "Invalid phone number" }),
-	departmentName: z.enum(["CIVIL", "CEIT", "EC", "MP", "EP"], {
-		message: "Department must be a valid option",
-	}),
+	departmentName: z
+		.string()
+		.trim()
+		.min(1, { message: "Department must be a valid option" }),
 	resetPasswordToken: z.string().nullable().optional(),
 	resetPasswordExpireAt: z.coerce.date().nullable().optional(),
 });
