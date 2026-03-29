@@ -16,7 +16,12 @@ type Props = {
 	total: number;
 };
 
-const ClassStudentsSection = ({ students, page, pageSize, total }: Props) => {
+const ClassStudentsSection = ({
+	students,
+	page,
+	pageSize,
+	total,
+}: Props) => {
 	return (
 		<section className="space-y-3">
 			<h2 className="text-lg font-semibold">Students</h2>

@@ -1,5 +1,6 @@
 import BackBtn from "@/components/BackBtn";
 import { DialogCardBtn } from "@/components/DialogCardBtn";
+import { ExportCsvBtn } from "@/components/ExportCsvBtn";
 import ClassForm from "@/components/ClassForm";
 import { GetClassById } from "@/lib/actions/GetClassById";
 import ClassStudentsSection from "./components/ClassStudentsSection";
@@ -58,20 +59,23 @@ const page = async ({
 					</h1>
 				</div>
 
-				<DialogCardBtn triggerName="Edit Class" title="Edit Class">
-					<ClassForm
-						isEdit={true}
-						classData={{
-							id: data.classMeta.id,
-							name: data.classMeta.name,
-							year: data.classMeta.year,
-							semester: data.classMeta.semester,
-							academicYearId:
-								data.classMeta.academicYearId ?? undefined,
-							userId: data.classMeta.userId,
-						}}
-					/>
-				</DialogCardBtn>
+				<div className="flex items-center gap-3">
+					<ExportCsvBtn endpoint={`/api/classes/${id}/export`} label="Export CSV" />
+					<DialogCardBtn triggerName="Edit Class" title="Edit Class">
+						<ClassForm
+							isEdit={true}
+							classData={{
+								id: data.classMeta.id,
+								name: data.classMeta.name,
+								year: data.classMeta.year,
+								semester: data.classMeta.semester,
+								academicYearId:
+									data.classMeta.academicYearId ?? undefined,
+								userId: data.classMeta.userId,
+							}}
+						/>
+					</DialogCardBtn>
+				</div>
 			</nav>
 
 			<ClassSummaryCard classInfo={data.classInfo} />

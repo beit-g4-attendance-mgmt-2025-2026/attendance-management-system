@@ -11,6 +11,7 @@ type ExportCsvButtonProps = {
 	exportingLabel?: string;
 	className?: string;
 	allowedParams?: string[]; // optional: only include these params
+	fixedQuery?: Record<string, string | number | boolean>;
 	disabled?: boolean;
 };
 
@@ -20,6 +21,7 @@ export function ExportCsvBtn({
 	exportingLabel = "Exporting...",
 	className,
 	allowedParams,
+	fixedQuery,
 	disabled = false,
 }: ExportCsvButtonProps) {
 	const [isExporting, setIsExporting] = useState(false);
@@ -35,7 +37,13 @@ export function ExportCsvBtn({
 		: currentQuery;
 
 	const url = queryString.stringifyUrl(
-		{ url: endpoint, query },
+		{
+			url: endpoint,
+			query: {
+				...query,
+				...fixedQuery,
+			},
+		},
 		{ skipNull: true, skipEmptyString: true },
 	);
 	const isDisabled = disabled || isExporting;
