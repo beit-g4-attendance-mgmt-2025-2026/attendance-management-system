@@ -13,7 +13,7 @@ const paramsSchema = z.object({
 
 export async function GET(
 	request: NextRequest,
-	{ params }: { params: { id: string } },
+	{ params }: { params: Promise<{ id: string }> },
 ) {
 	try {
 		const auth = await requireAdminOrUserRoles(request, [
@@ -60,7 +60,7 @@ export async function GET(
 
 export async function DELETE(
 	request: NextRequest,
-	{ params }: { params: { id: string } },
+	{ params }: { params: Promise<{ id: string }> },
 ) {
 	try {
 		const auth = await requireAdminOrUserRoles(request, [Role.HOD]);
@@ -105,7 +105,7 @@ export async function DELETE(
 
 export async function PUT(
 	request: NextRequest,
-	{ params }: { params: { id: string } },
+	{ params }: { params: Promise<{ id: string }> },
 ) {
 	try {
 		const auth = await requireAdminOrUserRoles(request, [Role.HOD]);

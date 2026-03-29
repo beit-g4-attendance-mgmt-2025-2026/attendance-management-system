@@ -78,7 +78,7 @@ const TeacherForm = ({
 				};
 
 				const res = await api.users.update(teacher.id, updateData);
-				console.log("updated User: ", res);
+
 				if (res?.success) {
 					router.refresh();
 					onClose?.();
@@ -97,7 +97,7 @@ const TeacherForm = ({
 				};
 
 				const res = await api.users.create(data);
-				console.log("create user: ", res);
+
 				if (res?.success) {
 					router.refresh();
 					onClose?.();

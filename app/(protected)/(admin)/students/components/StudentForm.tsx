@@ -120,7 +120,7 @@ const StudentForm = ({
 				};
 
 				const res = await api.students.update(student.id, updateData);
-				console.log("updated Student: ", res);
+
 				if (res?.success) {
 					router.refresh();
 					onClose?.();
@@ -140,7 +140,7 @@ const StudentForm = ({
 				};
 
 				const res = await api.students.create(data);
-				console.log("create student: ", res);
+
 				if (res?.success) {
 					router.refresh();
 					onClose?.();
@@ -167,9 +167,7 @@ const StudentForm = ({
 		<div className="flex items-center justify-center">
 			<Form {...form}>
 				<form
-					onSubmit={form.handleSubmit(onSubmit, (errors) =>
-						console.log("Zod Errors:", errors),
-					)}
+					onSubmit={form.handleSubmit(onSubmit)}
 					className="space-y-5 w-full"
 				>
 					<FormInput

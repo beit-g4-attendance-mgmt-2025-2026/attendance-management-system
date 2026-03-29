@@ -46,7 +46,6 @@ export function ResetPasswordForm({
 	});
 
 	async function onSubmit(values: z.infer<typeof ResetPasswordSchema>) {
-		console.log(values);
 		const token = new URLSearchParams(window.location.search).get("token");
 		if (!token) {
 			setError("Missing reset token");
@@ -58,7 +57,6 @@ export function ResetPasswordForm({
 			if (res.success) {
 				router.push("/");
 				toast.success("Update password successful!");
-				console.log("Update password successful", res.data);
 			} else {
 				setError(res.message);
 			}

@@ -30,7 +30,7 @@ const page = async ({
 	// const user = await auth();
 
 	const { subjects = [] } = data || {};
-	console.log("server subjects : ", subjects);
+
 	return (
 		<>
 			<SubHeader

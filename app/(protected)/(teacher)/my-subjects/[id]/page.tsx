@@ -65,9 +65,7 @@ const Page = ({ params }: PageProps) => {
 		form.setValue("Times", nextTimes);
 	}, [totalTimesValue, form]);
 
-	function onSubmit(values: TakeAttendanceFormValues) {
-		console.log("Submitted values", values);
-	}
+	function onSubmit(values: TakeAttendanceFormValues) {}
 
 	return (
 		<Form {...form}>

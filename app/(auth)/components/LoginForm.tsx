@@ -59,7 +59,6 @@ export function LoginForm({ url, className, ...props }: LoginFormProps) {
 			if (res.success) {
 				router.push("/dashboard");
 				toast.success("Login successful!");
-				console.log("Login successful", res.data);
 			}
 		} catch (error: any) {
 			setError(error?.message);

@@ -95,7 +95,7 @@ const SubjectForm = ({
 				};
 
 				const res = await api.subjects.update(subject.id, updateData);
-				console.log("updated subject: ", res);
+
 				if (res?.success) {
 					router.refresh();
 					onClose?.();
@@ -113,7 +113,7 @@ const SubjectForm = ({
 				};
 
 				const res = await api.subjects.create(data);
-				console.log("create user: ", res);
+
 				if (res?.success) {
 					router.refresh();
 					onClose?.();

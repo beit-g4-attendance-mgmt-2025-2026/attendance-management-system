@@ -66,7 +66,8 @@ const page = async ({
 							name: data.classMeta.name,
 							year: data.classMeta.year,
 							semester: data.classMeta.semester,
-							academicYearId: data.classMeta.academicYearId,
+							academicYearId:
+								data.classMeta.academicYearId ?? undefined,
 							userId: data.classMeta.userId,
 						}}
 					/>

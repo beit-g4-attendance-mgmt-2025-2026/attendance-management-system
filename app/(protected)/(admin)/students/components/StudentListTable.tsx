@@ -32,7 +32,6 @@ const StudentsListTable = ({ students }: StudentsListTableProps) => {
 			if (res.success) toast.success(res.data.message);
 			router.refresh();
 		} catch (error: any) {
-			console.log(error);
 			toast.error(error.message);
 		} finally {
 			setLoading(false);

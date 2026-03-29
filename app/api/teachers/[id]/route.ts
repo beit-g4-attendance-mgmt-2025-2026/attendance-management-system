@@ -10,7 +10,7 @@ import { NextRequest } from "next/server";
 
 export async function GET(
 	request: NextRequest,
-	{ params }: { params: { id: string } },
+	{ params }: { params: Promise<{ id: string }> },
 ) {
 	// const auth = await requireAuth(request);
 	// if ("response" in auth) return auth.response;
@@ -19,9 +19,10 @@ export async function GET(
 	// const isSelf = authUser.id === params.id;
 	// if (!isAdmin && !isSelf)
 	// 	return handleErrorResponse("Access denied! Please contact admin.");
+	const { id } = await params;
 
 	const user = await prisma.user.findUnique({
-		where: { id: params.id },
+		where: { id: id },
 		include: { department: true, classes: true, subjects: true },
 	});
 	if (!user) return handleErrorResponse("User not found");
