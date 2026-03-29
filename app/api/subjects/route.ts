@@ -126,13 +126,15 @@ export async function POST(request: NextRequest) {
 		const teacher = await prisma.user.findFirst({
 			where: {
 				id: userId,
-				role: Role.TEACHER,
+				role: {
+					in: [Role.TEACHER, Role.HOD],
+				},
 			},
 			select: { id: true, fullName: true, departmentId: true },
 		});
 
 		if (!teacher) {
-			throw new Error("Teacher not found");
+			throw new Error("Teacher/HOD not found");
 		}
 
 		if (!isAdmin) {
