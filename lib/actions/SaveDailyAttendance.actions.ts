@@ -99,15 +99,11 @@ export async function SaveDailyAttendance(
 
 			const [classId] = classIds;
 
-			// Narrow `any` bridges the period before `prisma generate` is run for
-			// the new Subject<->Class and DailyAttendance.classId schema changes.
-			const subject = await (tx.subject.findFirst as any)({
+			const subject = await tx.subject.findFirst({
 				where: {
 					id: validated.subjectId,
 					userId: user.id,
-					classes: {
-						some: { id: classId },
-					},
+					classId,
 				},
 				select: { id: true },
 			});
@@ -116,21 +112,19 @@ export async function SaveDailyAttendance(
 				throw new Error("Subject not found for this teacher and class");
 			}
 
-			await (tx.dailyAttendance.deleteMany as any)({
+			await tx.dailyAttendance.deleteMany({
 				where: {
 					studentId: { in: uniqueStudentIds },
 					subjectId: validated.subjectId,
-					classId,
 					day,
 					month,
 				},
 			});
 
-			const created = await (tx.dailyAttendance.createMany as any)({
+			const created = await tx.dailyAttendance.createMany({
 				data: validated.attendance.map(({ studentId, status }) => ({
 					studentId,
 					subjectId: validated.subjectId,
-					classId,
 					day,
 					month,
 					totalTimes: validated.totalTimes,

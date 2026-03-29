@@ -1,33 +1,66 @@
 import BackBtn from "@/components/BackBtn";
-import SubjectAttendanceTable from "@/components/SubjectAttendanceTable";
-import { Button } from "@/components/ui/button";
-import { attendanceReportData } from "@/constants/index.constants";
+import SubjectAttendanceCalendar from "@/components/SubjectAttendanceCalendar";
+import MonthlyReportMonthSelect from "@/components/MonthlyReportMonthSelect";
+import SubjectMonthlyReportTable from "@/components/SubjectMonthlyReportTable";
+import { Month } from "@/generated/prisma/enums";
+import { GetSubjectMonthlyReport } from "@/lib/actions/GetSubjectMonthlyReport.actions";
 
-const page = async ({ params }: { params: Promise<{ id: string }> }) => {
+const monthValues = Object.values(Month);
+
+function resolveMonth(rawMonth?: string) {
+	if (rawMonth && monthValues.includes(rawMonth as Month)) {
+		return rawMonth as Month;
+	}
+
+	return monthValues[new Date().getMonth()];
+}
+
+const Page = async ({
+	params,
+	searchParams,
+}: {
+	params: Promise<{ id: string }>;
+	searchParams: Promise<{ month?: string }>;
+}) => {
 	const { id } = await params;
-	const decodedCode = decodeURIComponent(id);
+	const query = await searchParams;
+	const selectedMonth = resolveMonth(query.month);
+	const report = await GetSubjectMonthlyReport({
+		subjectId: id,
+		month: selectedMonth,
+	});
+
+	if (!report.success || !report.data) {
+		return (
+			<div className="rounded-xl border border-red-200 bg-red-50 p-6 text-sm text-red-700">
+				{report.message ?? "Unable to load the subject report."}
+			</div>
+		);
+	}
+
 	return (
-		<main>
-			<nav className="flex justify-between items-center">
-				<div className="flex items-center gap-5">
+		<main className="space-y-6">
+			<nav className="flex flex-wrap items-center justify-between gap-4">
+				<div className="flex items-center gap-4">
 					<BackBtn />
-					<span className="text-xl font-semibold">{decodedCode}</span>
+					<div>
+						<h1 className="text-xl font-semibold">
+							{report.data.subjectName}
+						</h1>
+						<p className="text-sm text-muted-foreground">
+							{report.data.subjectCode} - {report.data.className}
+						</p>
+					</div>
 				</div>
-				<div className="flex gap-3">
-					<Button
-						variant={"link"}
-						className="cursor-pointer text-sky-600"
-					>
-						Export CSV
-					</Button>
-					<Button className="cursor-pointer text-white bg-sky-600 hover:bg-sky-700 hover:text-white">
-						Submit
-					</Button>
+				<div className="flex flex-wrap items-center gap-3">
+					<MonthlyReportMonthSelect value={selectedMonth} />
 				</div>
 			</nav>
-			<SubjectAttendanceTable data={attendanceReportData} />
+
+			<SubjectAttendanceCalendar data={report.data} />
+			<SubjectMonthlyReportTable data={report.data} />
 		</main>
 	);
 };
 
-export default page;
+export default Page;

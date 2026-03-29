@@ -5,6 +5,7 @@ import { DialogCardBtn } from "@/components/DialogCardBtn";
 import StudentForm from "./components/StudentForm";
 import { GetStudents } from "@/lib/actions/GetStudents";
 import { Years, semesters } from "@/constants/index.constants";
+import { GetCurrentUserRole } from "@/lib/actions/GetCurrentUserRole.actions";
 
 const page = async ({
 	searchParams,
@@ -15,6 +16,8 @@ const page = async ({
 }) => {
 	const { page, pageSize, search, filter, year, semester } =
 		await searchParams;
+	const currentUser = await GetCurrentUserRole();
+	const showDepartmentFilter = currentUser.data?.role !== "HOD";
 
 	const { data } = await GetStudents({
 		page: Number(page) || 1,
@@ -34,6 +37,7 @@ const page = async ({
 			<SubHeader
 				placeholder="Search student by name or email"
 				exportEndpoint="/api/students/export"
+				showDepartmentFilter={showDepartmentFilter}
 				filters={[
 					{
 						label: "Year",
