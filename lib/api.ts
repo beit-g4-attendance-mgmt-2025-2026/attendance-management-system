@@ -67,6 +67,24 @@ export const api = {
 			}),
 	},
 
+	departments: {
+		getAll: () => fetchHandler(API_URL + "/departments"),
+
+		getHodCandidates: (departmentId: string) =>
+			fetchHandler(API_URL + `/departments/${departmentId}/hod`),
+
+		assignHod: (departmentId: string, userId: string) =>
+			fetchHandler(API_URL + `/departments/${departmentId}/hod`, {
+				method: "PATCH",
+				body: JSON.stringify({ userId }),
+			}),
+
+		removeHod: (departmentId: string) =>
+			fetchHandler(API_URL + `/departments/${departmentId}/hod`, {
+				method: "DELETE",
+			}),
+	},
+
 	students: {
 		// Get All Students
 		getAll: () => fetchHandler(API_URL + `/students`),

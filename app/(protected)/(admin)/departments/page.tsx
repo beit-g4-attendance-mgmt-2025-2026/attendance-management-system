@@ -5,27 +5,32 @@ import React, { useEffect, useState } from "react";
 import DepartmentsListTable from "./components/DepartmentsListTable";
 import Link from "next/link";
 import { DepartmentTableItem } from "@/types/index.types";
-import fetchHandler from "@/lib/fetchHandler";
+import { api } from "@/lib/api";
+import { toast } from "sonner";
 
 const Page = () => {
 	const [departments, setDepartments] = useState<DepartmentTableItem[]>([]);
 	const [loading, setLoading] = useState(true);
 
 	const loadDepartments = async () => {
-		const res = await fetchHandler(
-			"http://localhost:3000/api/departments/",
-			{
-				method: "GET",
-			},
-		);
+		try {
+			setLoading(true);
+			const res = await api.departments.getAll();
 
-		if (res?.success) {
-			setDepartments(
-				res.data.formattedDepartment as DepartmentTableItem[],
+			if (res?.success) {
+				setDepartments(
+					res.data.formattedDepartment as DepartmentTableItem[],
+				);
+			}
+		} catch (error: unknown) {
+			toast.error(
+				error instanceof Error
+					? error.message
+					: "Failed to load departments",
 			);
+		} finally {
+			setLoading(false);
 		}
-
-		setLoading(false);
 	};
 
 	useEffect(() => {
@@ -55,6 +60,7 @@ const Page = () => {
 				) : departments.length > 0 ? (
 					<DepartmentsListTable
 						departments={departments}
+						onChanged={loadDepartments}
 						onDeleted={(id) =>
 							setDepartments((prev) =>
 								prev.filter((d) => d.id !== id),

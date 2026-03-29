@@ -1,14 +1,15 @@
 import { uploadImageToCloudinary } from "@/lib/cloudinaryUpload";
-import { requireAuth } from "@/lib/guard";
+import { requireAdminOrUserRoles } from "@/lib/guard";
 import { prisma } from "@/lib/prisma";
 import { handleErrorResponse, handleSuccessResponse } from "@/lib/response";
 import validateBody from "@/lib/validateBody";
 import { DepartmentSchema } from "@/schema/index.schema";
+import { Role } from "@/generated/prisma/client";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
-  //   const auth = await requireAuth(request);
-  //     if ("response" in auth) return auth.response;
+  const auth = await requireAdminOrUserRoles(request, [Role.ADMIN, Role.HOD]);
+  if ("response" in auth) return auth.response;
 
   try {
     const departments = await prisma.department.findMany({
@@ -26,6 +27,7 @@ export async function GET(request: NextRequest) {
       name: d.name,
       symbol: d.symbol,
       logo: d.logo ?? null,
+      hodId: d.hodId ?? null,
       head_of_department: d.hod?.fullName ?? null,
       email: d.hod?.email ?? null,
       phone: d.hod?.phoneNumber ?? null,
@@ -40,8 +42,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  //   const auth = await requireAuth(request);
-  //     if ("response" in auth) return auth.response
+  const auth = await requireAdminOrUserRoles(request, [Role.ADMIN]);
+  if ("response" in auth) return auth.response;
+
   try {
     const form = await request.formData();
 
@@ -72,10 +75,10 @@ export async function POST(request: NextRequest) {
     let imageUrl: string | null = null;
 
     if (validatedLogo instanceof File) {
-      const uploadResult: any = await uploadImageToCloudinary(
+      const uploadResult = (await uploadImageToCloudinary(
         validatedLogo,
         "departments",
-      );
+      )) as { secure_url: string };
       imageUrl = uploadResult.secure_url;
     }
 

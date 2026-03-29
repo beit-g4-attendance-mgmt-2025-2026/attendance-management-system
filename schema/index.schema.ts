@@ -90,11 +90,10 @@ export const TeacherSchema = z.object({
 		message: "Role must be a valid option",
 	}),
 
-	phoneNumber: z
-		.string()
-		.min(7, { message: "Phone number is too short" })
-		.max(20, { message: "Phone number is too long" })
-		.regex(/^\+?[0-9\s-]+$/, { message: "Invalid phone number" }),
+	phoneNumber: z.string().regex(/^09\d{7,9}$/, {
+		message:
+			"Invalid phone number. It should start with '09' and be followed by 7 to 9 digits.",
+	}),
 	departmentName: z.enum(["CIVIL", "CEIT", "EC", "MP", "EP"], {
 		message: "Department must be a valid option",
 	}),
