@@ -8,13 +8,13 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import z from "zod";
 import FormSelect from "@/components/inputs/FormSelect";
-import { departments, genders, roles } from "@/constants/index.constants";
+import { genders, roles } from "@/constants/index.constants";
 import { TeacherSchema } from "@/schema/index.schema";
 import { api } from "@/lib/api";
 
 import { toast } from "sonner";
-import { Gender, Role, User } from "@/generated/prisma/client";
-import { useEffect } from "react";
+import { Gender, Role } from "@/generated/prisma/client";
+import { useEffect, useState } from "react";
 import { PublicUser } from "@/lib/user";
 
 const TeacherForm = ({
@@ -28,6 +28,10 @@ const TeacherForm = ({
 }) => {
 	const router = useRouter();
 	const schema = teacher && isEdit ? TeacherSchema.partial() : TeacherSchema;
+	const [departmentOptions, setDepartmentOptions] = useState<
+		{ label: string; value: string }[]
+	>([]);
+	const [departmentLoading, setDepartmentLoading] = useState(false);
 
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
@@ -38,20 +42,47 @@ const TeacherForm = ({
 			phoneNumber: teacher?.phoneNumber || "",
 			gender: teacher?.gender || genders[0].value,
 			role: teacher?.role || roles[2].value,
-			departmentName: undefined as any,
+			departmentName: "",
 		},
 	});
-	// useEffect(() => {
-	// 	if (!teacher) return;
 
-	// 	form.reset({
-	// 		fullName: teacher.fullName,
-	// 		username: teacher.username,
-	// 		email: teacher.email,
-	// 		phoneNumber: teacher.phoneNumber,
-	// 		gender: teacher.gender,
-	// 	});
-	// }, [teacher, form]);
+	useEffect(() => {
+		if (isEdit) return;
+
+		const loadDepartments = async () => {
+			try {
+				setDepartmentLoading(true);
+				const res = await api.departments.getAll();
+				const items = (res?.data?.formattedDepartment ?? []) as Array<{
+					name: string;
+					symbol: string;
+				}>;
+
+				const options = items.map((d) => ({
+					label: `${d.name} (${d.symbol})`,
+					value: d.symbol,
+				}));
+
+				setDepartmentOptions(options);
+
+				if (!form.getValues("departmentName") && options.length > 0) {
+					form.setValue("departmentName", options[0].value, {
+						shouldDirty: false,
+					});
+				}
+			} catch (error: unknown) {
+				toast.error(
+					error instanceof Error
+						? error.message
+						: "Failed to load departments",
+				);
+			} finally {
+				setDepartmentLoading(false);
+			}
+		};
+
+		loadDepartments();
+	}, [form, isEdit]);
 
 	const {
 		formState: { isSubmitting },
@@ -192,11 +223,20 @@ const TeacherForm = ({
 						</div>
 						<div className="rounded-md w-4/12 mt-5">
 							<FormSelect
-								disabled={isSubmitting || isEdit}
+								disabled={
+									isSubmitting ||
+									isEdit ||
+									departmentLoading ||
+									departmentOptions.length === 0
+								}
 								form={form}
 								name="departmentName"
-								placeholder="Department"
-								options={departments as any}
+								placeholder={
+									departmentLoading
+										? "Loading..."
+										: "Department"
+								}
+								options={departmentOptions}
 								id="form-rhf-select-department"
 								triggerClassName="min-w-[120px] cursor-pointer"
 							/>

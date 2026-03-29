@@ -17,7 +17,7 @@ export const api = {
 			phoneNumber: string;
 			gender: "MALE" | "FEMALE" | "OTHER";
 			role: "ADMIN" | "HOD" | "TEACHER";
-			departmentName: "CIVIL" | "CEIT" | "EC" | "MP" | "EP";
+			departmentName: string;
 			resetPasswordToken?: string | null;
 			resetPasswordExpireAt?: Date | null;
 		}) =>
@@ -69,6 +69,7 @@ export const api = {
 
 	departments: {
 		getAll: () => fetchHandler(API_URL + "/departments"),
+<<<<<<< HEAD
 
 		getHodCandidates: (departmentId: string) =>
 			fetchHandler(API_URL + `/departments/${departmentId}/hod`),
@@ -83,6 +84,8 @@ export const api = {
 			fetchHandler(API_URL + `/departments/${departmentId}/hod`, {
 				method: "DELETE",
 			}),
+=======
+>>>>>>> 9d40edd (:sparkles: feat(add teacher): when adding teacher, departments from db)
 	},
 
 	students: {
