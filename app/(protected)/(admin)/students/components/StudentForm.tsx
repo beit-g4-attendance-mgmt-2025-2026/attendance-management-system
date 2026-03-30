@@ -161,7 +161,12 @@ const StudentForm = ({
 	}
 
 	const handleCancel = () => {
-		onClose?.();
+		if (onClose) {
+			onClose();
+			return;
+		}
+
+		router.back();
 	};
 	return (
 		<div className="flex items-center justify-center">

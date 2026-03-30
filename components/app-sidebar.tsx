@@ -4,7 +4,6 @@ import { MdOutlineDashboard } from "react-icons/md";
 import { PiChalkboardTeacherFill } from "react-icons/pi";
 import { PiStudentFill } from "react-icons/pi";
 import { FaWarehouse } from "react-icons/fa";
-import { IoMdSettings } from "react-icons/io";
 import { BsBook } from "react-icons/bs";
 import { SiGoogleclassroom } from "react-icons/si";
 import { LuBook } from "react-icons/lu";
@@ -64,11 +63,6 @@ export function AppSidebar() {
 				title: "Academic Years",
 				url: "/academic-years",
 				icon: MdDateRange,
-			},
-			{
-				title: "Settings",
-				url: "/settings",
-				icon: IoMdSettings,
 			},
 		],
 		department: [
