@@ -58,7 +58,13 @@ const page = async ({
 						title="Add Teacher"
 						description="Enter teacher details"
 					>
-						<TeacherForm isEdit={false} />
+						<TeacherForm
+							isEdit={false}
+							creatorRole={currentUser.data?.role}
+							fixedDepartmentSymbol={
+								currentUser.data?.departmentSymbol ?? undefined
+							}
+						/>
 					</DialogCardBtn>
 				}
 			/>

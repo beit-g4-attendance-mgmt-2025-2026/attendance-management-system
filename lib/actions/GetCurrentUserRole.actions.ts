@@ -8,6 +8,7 @@ export async function GetCurrentUserRole(): Promise<{
 	success: boolean;
 	data?: {
 		role: Role | "ADMIN";
+		departmentSymbol?: string | null;
 	};
 	message?: string;
 }> {
@@ -21,18 +22,28 @@ export async function GetCurrentUserRole(): Promise<{
 	if (admin) {
 		return {
 			success: true,
-			data: { role: "ADMIN" },
+			data: { role: "ADMIN", departmentSymbol: null },
 		};
 	}
 
 	const user = await prisma.user.findUnique({
 		where: { id: authId },
-		select: { role: true },
+		select: {
+			role: true,
+			department: {
+				select: {
+					symbol: true,
+				},
+			},
+		},
 	});
 	if (!user) return { success: false, message: "Unauthorized" };
 
 	return {
 		success: true,
-		data: { role: user.role },
+		data: {
+			role: user.role,
+			departmentSymbol: user.department?.symbol ?? null,
+		},
 	};
 }

@@ -30,11 +30,15 @@ const TeacherForm = ({
   teacher,
   onClose,
   redirectTo,
+  creatorRole,
+  fixedDepartmentSymbol,
 }: {
   isEdit: boolean;
   teacher?: TeacherFormTeacher | null;
   onClose?: () => void;
   redirectTo?: string;
+  creatorRole?: Role | "ADMIN";
+  fixedDepartmentSymbol?: string;
 }) => {
   const router = useRouter();
   const schema = teacher && isEdit ? TeacherSchema.partial() : TeacherSchema;
@@ -42,6 +46,7 @@ const TeacherForm = ({
     { label: string; value: string }[]
   >([]);
   const [departmentLoading, setDepartmentLoading] = useState(false);
+  const hideDepartmentField = !isEdit && creatorRole === "HOD";
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -52,11 +57,25 @@ const TeacherForm = ({
       phoneNumber: teacher?.phoneNumber || "",
       gender: teacher?.gender || genders[0].value,
       role: teacher?.role || roles[2].value,
-      departmentName: teacher?.department?.symbol || "",
+      departmentName:
+        teacher?.department?.symbol || fixedDepartmentSymbol || "",
     },
   });
 
   useEffect(() => {
+    if (hideDepartmentField) {
+      setDepartmentOptions([]);
+      setDepartmentLoading(false);
+
+      if (fixedDepartmentSymbol) {
+        form.setValue("departmentName", fixedDepartmentSymbol, {
+          shouldDirty: false,
+        });
+      }
+
+      return;
+    }
+
     let isMounted = true;
 
     const loadDepartments = async () => {
@@ -107,7 +126,7 @@ const TeacherForm = ({
     return () => {
       isMounted = false;
     };
-  }, [form, teacher]);
+  }, [fixedDepartmentSymbol, form, hideDepartmentField, teacher]);
 
   const {
     formState: { isSubmitting },
@@ -149,7 +168,11 @@ const TeacherForm = ({
           phoneNumber: values.phoneNumber as string,
           gender: values.gender as Gender,
           role: values.role as Role,
-          departmentName: values.departmentName as any,
+          departmentName: (
+            hideDepartmentField
+              ? fixedDepartmentSymbol
+              : values.departmentName
+          ) as string,
         };
 
         const res = await api.users.create(data);
@@ -179,6 +202,16 @@ const TeacherForm = ({
   }
 
   const handleCancel = () => {
+    if (onClose) {
+      onClose();
+      return;
+    }
+
+    if (redirectTo) {
+      router.push(redirectTo);
+      return;
+    }
+
     router.back();
   };
   return (
@@ -249,22 +282,24 @@ const TeacherForm = ({
                 disabled={isSubmitting}
               />
             </div>
-            <div className="rounded-md w-4/12 mt-5">
-              <FormSelect
-                disabled={
-                  isSubmitting ||
-                  departmentLoading ||
-                  departmentOptions.length === 0 ||
-                  teacher?.role === "HOD"
-                }
-                form={form}
-                name="departmentName"
-                placeholder={departmentLoading ? "Loading..." : "Department"}
-                options={departmentOptions}
-                id="form-rhf-select-department"
-                triggerClassName="min-w-[120px] cursor-pointer"
-              />
-            </div>
+            {!hideDepartmentField ? (
+              <div className="rounded-md w-4/12 mt-5">
+                <FormSelect
+                  disabled={
+                    isSubmitting ||
+                    departmentLoading ||
+                    departmentOptions.length === 0 ||
+                    teacher?.role === "HOD"
+                  }
+                  form={form}
+                  name="departmentName"
+                  placeholder={departmentLoading ? "Loading..." : "Department"}
+                  options={departmentOptions}
+                  id="form-rhf-select-department"
+                  triggerClassName="min-w-[120px] cursor-pointer"
+                />
+              </div>
+            ) : null}
           </div>
 
           <div className="flex gap-3 items-center justify-end mt-10">
