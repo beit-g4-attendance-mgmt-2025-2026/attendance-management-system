@@ -11,13 +11,19 @@ import FormSelect from "@/components/inputs/FormSelect";
 import { genders, roles } from "@/constants/index.constants";
 import { TeacherSchema } from "@/schema/index.schema";
 import { api } from "@/lib/api";
-import fetchHandler from "@/lib/fetchHandler";
 
 import { toast } from "sonner";
 import { Gender, Role } from "@/generated/prisma/client";
 import { useEffect, useState } from "react";
 import { PublicUser } from "@/lib/user";
 import { DepartmentTableItem } from "@/types/index.types";
+
+type TeacherFormTeacher = PublicUser & {
+  department?: {
+    symbol: string;
+    name?: string;
+  } | null;
+};
 
 const TeacherForm = ({
   isEdit = false,
@@ -26,7 +32,7 @@ const TeacherForm = ({
   redirectTo,
 }: {
   isEdit: boolean;
-  teacher?: PublicUser | null;
+  teacher?: TeacherFormTeacher | null;
   onClose?: () => void;
   redirectTo?: string;
 }) => {
@@ -46,21 +52,21 @@ const TeacherForm = ({
       phoneNumber: teacher?.phoneNumber || "",
       gender: teacher?.gender || genders[0].value,
       role: teacher?.role || roles[2].value,
-      departmentName: "",
+      departmentName: teacher?.department?.symbol || "",
     },
   });
 
   useEffect(() => {
-    if (isEdit) return;
+    let isMounted = true;
 
     const loadDepartments = async () => {
       try {
         setDepartmentLoading(true);
         const res = await api.departments.getAll();
-        const items = (res?.data?.formattedDepartment ?? []) as Array<{
-          name: string;
-          symbol: string;
-        }>;
+        const items = (res?.data?.formattedDepartment ??
+          []) as DepartmentTableItem[];
+
+        if (!isMounted) return;
 
         const options = items.map((d) => ({
           label: `${d.name} (${d.symbol})`,
@@ -69,52 +75,26 @@ const TeacherForm = ({
 
         setDepartmentOptions(options);
 
-        if (!form.getValues("departmentName") && options.length > 0) {
+        const currentDepartment =
+          teacher?.department?.symbol || form.getValues("departmentName");
+
+        if (currentDepartment) {
+          form.setValue("departmentName", currentDepartment, {
+            shouldDirty: false,
+          });
+          return;
+        }
+
+        if (options.length > 0) {
           form.setValue("departmentName", options[0].value, {
             shouldDirty: false,
           });
         }
       } catch (error: unknown) {
+        if (!isMounted) return;
         toast.error(
           error instanceof Error ? error.message : "Failed to load departments",
         );
-      } finally {
-        setDepartmentLoading(false);
-      }
-    };
-
-    loadDepartments();
-  }, [form, isEdit]);
-
-  const {
-    formState: { isSubmitting },
-  } = form;
-
-  useEffect(() => {
-    if (isEdit) return;
-
-    let isMounted = true;
-
-    const loadDepartments = async () => {
-      try {
-        setDepartmentLoading(true);
-        const res = await fetchHandler("/api/departments");
-        const departments =
-          (res?.data?.formattedDepartment as
-            | DepartmentTableItem[]
-            | undefined) ?? [];
-
-        if (!isMounted) return;
-
-        setDepartmentOptions(
-          departments.map((department) => ({
-            label: department.symbol,
-            value: department.symbol,
-          })),
-        );
-      } catch (error: any) {
-        if (!isMounted) return;
-        toast.error(error?.message || "Failed to load departments");
       } finally {
         if (isMounted) {
           setDepartmentLoading(false);
@@ -127,7 +107,11 @@ const TeacherForm = ({
     return () => {
       isMounted = false;
     };
-  }, [isEdit]);
+  }, [form, teacher]);
+
+  const {
+    formState: { isSubmitting },
+  } = form;
 
   async function onSubmit(values: z.infer<typeof schema>) {
     try {
@@ -139,14 +123,14 @@ const TeacherForm = ({
           email: string;
           phoneNumber: string;
           gender: Gender;
-          // role: Role;
+          departmentName: string;
         }> = {
           fullName: values.fullName as string,
           username: values.username as string,
           email: values.email as string,
           phoneNumber: values.phoneNumber as string,
           gender: values.gender as Gender,
-          // role: values.role as Role,
+          departmentName: values.departmentName as string,
         };
 
         const res = await api.users.update(teacher.id, updateData);
@@ -269,9 +253,9 @@ const TeacherForm = ({
               <FormSelect
                 disabled={
                   isSubmitting ||
-                  isEdit ||
                   departmentLoading ||
-                  departmentOptions.length === 0
+                  departmentOptions.length === 0 ||
+                  teacher?.role === "HOD"
                 }
                 form={form}
                 name="departmentName"

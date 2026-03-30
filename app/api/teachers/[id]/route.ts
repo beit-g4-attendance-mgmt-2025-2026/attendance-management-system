@@ -48,6 +48,7 @@ export async function PUT(
 		const body = await request.json();
 		const validatedData = validateBody(body, TeacherSchema.partial());
 		const data = validatedData.data as any;
+		let nextDepartmentId: string | undefined;
 
 		if (data.username) {
 			const existing = await prisma.user.findFirst({
@@ -62,9 +63,32 @@ export async function PUT(
 			if (existing) throw new Error("Email already exists");
 		}
 
-		// Remove department-related fields - department cannot be edited
 		const updateData: any = { ...data };
+
+		if (data.departmentName) {
+			const department = await prisma.department.findFirst({
+				where: { symbol: data.departmentName },
+				select: { id: true },
+			});
+			if (!department) throw new Error("Department not found");
+
+			if (
+				existingUser.role === Role.HOD &&
+				existingUser.departmentId !== department.id
+			) {
+				throw new Error(
+					"Head of Department department cannot be changed from teacher edit",
+				);
+			}
+
+			nextDepartmentId = department.id;
+		}
+
 		delete updateData.departmentName;
+
+		if (nextDepartmentId) {
+			updateData.departmentId = nextDepartmentId;
+		}
 
 		const user = await prisma.user.update({
 			where: { id },
