@@ -1,5 +1,10 @@
 import { Gender, Role, Semester, Year } from "@/generated/prisma/enums";
 import fetchHandler from "./fetchHandler";
+import type {
+	DepartmentHodCandidatesResponse,
+	DepartmentHodMutationResponse,
+	DepartmentsResponse,
+} from "@/types/index.types";
 
 const API_URL = "http://localhost:3000/api";
 
@@ -46,7 +51,7 @@ export const api = {
 				phoneNumber: string;
 				gender: Gender;
 				role: Role;
-				// departmentName: "Civil" | "CEIT" | "EC" | "MP" | "EP";
+				departmentName: string;
 			}>,
 		) =>
 			fetchHandler(API_URL + `/teachers/${id}`, {
@@ -68,7 +73,21 @@ export const api = {
 	},
 
 	departments: {
-		getAll: () => fetchHandler(API_URL + "/departments"),
+		getAll: () =>
+			fetchHandler(API_URL + "/departments") as Promise<DepartmentsResponse>,
+		getHodCandidates: (id: string) =>
+			fetchHandler(
+				API_URL + `/departments/${id}/hod`,
+			) as Promise<DepartmentHodCandidatesResponse>,
+		assignHod: (id: string, userId: string) =>
+			fetchHandler(API_URL + `/departments/${id}/hod`, {
+				method: "PATCH",
+				body: JSON.stringify({ userId }),
+			}) as Promise<DepartmentHodMutationResponse>,
+		removeHod: (id: string) =>
+			fetchHandler(API_URL + `/departments/${id}/hod`, {
+				method: "DELETE",
+			}) as Promise<DepartmentHodMutationResponse>,
 	},
 
 	students: {

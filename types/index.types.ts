@@ -91,6 +91,48 @@ export interface DepartmentTableItem {
   students: number;
 }
 
+export interface HodCandidate {
+  id: string;
+  fullName: string;
+  username: string;
+  email: string;
+  role: "TEACHER" | "HOD";
+}
+
+export type ApiResponse<T> = {
+  success: boolean;
+  data: T;
+  message?: string;
+};
+
+export type DepartmentsResponse = ApiResponse<{
+  formattedDepartment: DepartmentTableItem[];
+}>;
+
+export type DepartmentHodCandidatesResponse = ApiResponse<{
+  departmentId: string;
+  departmentName: string;
+  departmentSymbol: string;
+  currentHodId: string | null;
+  candidates: HodCandidate[];
+}>;
+
+export type DepartmentHodMutationResponse = ApiResponse<{
+  message: string;
+  department: {
+    id: string;
+    name: string;
+    symbol: string;
+    hodId: string | null;
+    hod: {
+      id: string;
+      fullName: string;
+      email: string;
+      phoneNumber: string;
+    } | null;
+  } | null;
+}>;
+
 export interface TeacherProfileCardProps {
   teacher: Teacher | null;
 }

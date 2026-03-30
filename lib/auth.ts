@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
-import type { User } from "@/app/generated/prisma/client";
+import type { User } from "@/generated/prisma/client";
 import { getUserIdFromRequest } from "@/lib/jwt";
-import prisma from "./prisma";
+import { prisma } from "./prisma";
 
 export async function getAuthUser(request: NextRequest): Promise<User | null> {
 	const userId = getUserIdFromRequest(request);
