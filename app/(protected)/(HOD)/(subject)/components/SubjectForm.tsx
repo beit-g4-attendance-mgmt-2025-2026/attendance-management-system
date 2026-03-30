@@ -3,38 +3,135 @@
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FormInput } from "@/components/inputs/FormInput";
-import { StudentSchema, SubjectSchema } from "@/schema/index.schema";
+import { SubjectSchema } from "@/schema/index.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import z from "zod";
 import FormSelect from "@/components/inputs/FormSelect";
-import {
-	acedamicYears,
-	departments,
-	genders,
-	semesters,
-	teacher_name_for_form_select,
-} from "@/constants/index.constants";
+import { Years, semesters } from "@/constants/index.constants";
+import { useEffect, useState } from "react";
+import { api } from "@/lib/api";
+import { toast } from "sonner";
+import { SubjectWithDetails } from "@/lib/actions/GetSubjects.actions";
+import { Semester, Year } from "@/generated/prisma/enums";
 
-const SubjectForm = ({ isEdit = false }: { isEdit: boolean }) => {
+const SubjectForm = ({
+	isEdit = false,
+	subject,
+	onClose,
+}: {
+	isEdit: boolean;
+	subject?: SubjectWithDetails | null;
+	onClose?: () => void;
+}) => {
 	const router = useRouter();
+	const [teacherOptions, setTeacherOptions] = useState<
+		{ label: string; value: string }[]
+	>([]);
+	const [isLoadingTeachers, setIsLoadingTeachers] = useState(false);
+	const schema = (
+		subject && isEdit ? SubjectSchema.partial() : SubjectSchema
+	).extend({
+		year: z.nativeEnum(Year),
+		semester: z.nativeEnum(Semester),
+	});
 
-	const form = useForm<z.infer<typeof SubjectSchema>>({
-		resolver: zodResolver(SubjectSchema),
+	const form = useForm<z.infer<typeof schema>>({
+		resolver: zodResolver(schema),
 		defaultValues: {
-			name: "",
-			code: "",
-			teacher_name: "",
-			acedamic_year: undefined as any,
-			semester: undefined as any,
+			name: subject?.name || "",
+			subCode: subject?.subCode || "",
+			userId: subject?.user?.id ?? "",
+			roomName: subject?.roomName ?? "",
+			year: subject?.class?.year as Year,
+			semester: subject?.class?.semester as Semester,
 		},
 	});
 
-	function onSubmit(values: z.infer<typeof SubjectSchema>) {
-		// Do something with the form values.
-		console.log("Form submitted:");
-		console.log(values);
+	useEffect(() => {
+		let mounted = true;
+		const loadTeachers = async () => {
+			setIsLoadingTeachers(true);
+			try {
+				const res = await api.users.getAll();
+				const users = res?.data?.users ?? [];
+				const options = users.map((user: any) => ({
+					value: user.id,
+					label: user.department?.symbol
+						? `${user.fullName}`
+						: user.fullName,
+				}));
+
+				if (mounted) setTeacherOptions(options);
+			} catch (error: any) {
+				toast.error(error.message ?? "Failed to load teachers");
+			} finally {
+				if (mounted) setIsLoadingTeachers(false);
+			}
+		};
+
+		loadTeachers();
+		return () => {
+			mounted = false;
+		};
+	}, []);
+
+	const {
+		formState: { isSubmitting },
+	} = form;
+
+	async function onSubmit(values: z.infer<typeof schema>) {
+		try {
+			if (isEdit && subject) {
+				// update payload (remove empty strings)
+				const updateData = {
+					name: values.name,
+					subCode: values.subCode,
+					userId: values.userId,
+					roomName: values.roomName?.trim() ?? "",
+					year: values.year,
+					semester: values.semester,
+				};
+
+				const res = await api.subjects.update(subject.id, updateData);
+
+				if (res?.success) {
+					router.refresh();
+					onClose?.();
+					toast.success("Subject updated successfully!");
+					return;
+				}
+			} else {
+				const data = {
+					name: values.name as string,
+					subCode: values.subCode as string,
+					userId: values.userId as string,
+					roomName: values.roomName?.trim() || undefined,
+					year: values.year,
+					semester: values.semester,
+				};
+
+				const res = await api.subjects.create(data);
+
+				if (res?.success) {
+					router.refresh();
+					onClose?.();
+					toast.success("Subject Created Successfully!");
+					return;
+				}
+			}
+		} catch (error: any) {
+			const message = error.message;
+
+			// if (message.includes("Email")) {
+			// 	form.setError("email", { message });
+			// } else if (message.includes("Username")) {
+			// 	form.setError("username", { message });
+			// } else {
+			toast.error(message);
+			// }
+		}
 	}
 
 	const handleCancel = () => {
@@ -56,33 +153,45 @@ const SubjectForm = ({ isEdit = false }: { isEdit: boolean }) => {
 					/>
 					<FormInput
 						form={form}
-						name="code"
+						name="subCode"
 						label="Code"
 						placeholder="Enter subject code"
 						className="w-full"
+					/>
+					<FormInput
+						form={form}
+						name="roomName"
+						label="Room Number (Optional)"
+						placeholder="Enter room number"
+						className="w-full"
+					/>
+					<FormSelect
+						form={form}
+						name="userId"
+						placeholder={
+							isLoadingTeachers
+								? "Loading teachers..."
+								: "Select teacher"
+						}
+						options={teacherOptions}
+						id="form-rhf-select-teacher"
+						disabled={isSubmitting || isLoadingTeachers}
+						triggerClassName="w-full cursor-pointer"
 					/>
 					<FormSelect
 						form={form}
 						name="semester"
 						placeholder="Semester"
-						options={semesters as any}
+						options={semesters}
 						id="form-rhf-select-semester"
 						triggerClassName="min-w-[120px] cursor-pointer"
 					/>
 					<FormSelect
 						form={form}
-						name="acedamic_year"
+						name="year"
 						placeholder="Year"
-						options={acedamicYears as any}
-						id="form-rhf-select-acedamic-year"
-						triggerClassName="min-w-[120px] cursor-pointer"
-					/>
-					<FormSelect
-						form={form}
-						name="teacher_name"
-						placeholder="Teacher"
-						options={teacher_name_for_form_select as any}
-						id="form-rhf-select-semester"
+						options={Years}
+						id="form-rhf-select-year"
 						triggerClassName="min-w-[120px] cursor-pointer"
 					/>
 
@@ -98,6 +207,7 @@ const SubjectForm = ({ isEdit = false }: { isEdit: boolean }) => {
 						</Button>
 						<Button
 							type="submit"
+							disabled={isSubmitting}
 							className="cursor-pointer min-w-36 text-white bg-sky-600 hover:bg-sky-700 hover:text-white"
 						>
 							{isEdit ? "Update" : "Submit"}

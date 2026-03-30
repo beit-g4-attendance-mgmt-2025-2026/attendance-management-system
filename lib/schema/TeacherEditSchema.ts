@@ -1,0 +1,49 @@
+import { z } from "zod";
+import { Role, Gender } from "../../generated/prisma/enums";
+
+const UserEditSchema = z.object({
+	fullName: z
+		.string()
+		.min(1, { message: "Full name is required" })
+		.min(2, { message: "Full name must be at least 2 characters" })
+		.max(50, { message: "Full name must be less than 50 characters" })
+		.regex(/^[a-zA-Z\s]+$/, {
+			message: "Full name can only contain letters and spaces",
+		})
+		.optional(),
+
+	username: z
+		.string()
+		.min(3, { message: "Username must be at least 3 characters" })
+		.max(30, { message: "Username must be less than 30 characters" })
+		.regex(/^[a-zA-Z0-9_]+$/, {
+			message:
+				"Username can only contain letters, numbers, and underscores",
+		})
+		.toLowerCase()
+		.optional(),
+
+	email: z
+		.string()
+		.min(1, { message: "Email is required" })
+		.email({ message: "Please provide a valid email address" })
+		.toLowerCase()
+		.optional(),
+
+	role: z.nativeEnum(Role).optional(),
+	gender: z.nativeEnum(Gender).optional(),
+
+	phoneNumber: z
+		.string()
+		.min(7, { message: "Phone number is too short" })
+		.max(20, { message: "Phone number is too long" })
+		.regex(/^\+?[0-9\s-]+$/, { message: "Invalid phone number" })
+		.optional(),
+
+	resetPasswordToken: z.string().nullable().optional(),
+	resetPasswordExpireAt: z.date().nullable().optional(),
+});
+
+export type TeacherEditInput = z.infer<typeof UserEditSchema>;
+
+export default UserEditSchema;

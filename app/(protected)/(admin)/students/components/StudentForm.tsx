@@ -3,45 +3,165 @@
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FormInput } from "@/components/inputs/FormInput";
-import { StudentSchema } from "@/schema/index.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import z from "zod";
 import FormSelect from "@/components/inputs/FormSelect";
-import {
-	acedamicYears,
-	departments,
-	genders,
-	semesters,
-} from "@/constants/index.constants";
-import { is } from "zod/v4/locales";
+import { genders } from "@/constants/index.constants";
+import { StudentWithDetails } from "@/types/index.types";
+import { CreateStudentSchema } from "@/lib/schema/CreateStudentSchema";
+import { useEffect, useState } from "react";
+import { Gender } from "@/generated/prisma/enums";
+import { api } from "@/lib/api";
+import { toast } from "sonner";
 
-const StudentForm = ({ isEdit = false }: { isEdit: boolean }) => {
+const StudentForm = ({
+	isEdit = false,
+	student,
+	onClose,
+}: {
+	isEdit: boolean;
+	student?: StudentWithDetails | null;
+	onClose?: () => void;
+}) => {
 	const router = useRouter();
+	const [classOptions, setClassOptions] = useState<
+		{ label: string; value: string }[]
+	>([]);
+	const [isLoadingClasses, setIsLoadingClasses] = useState(false);
 
-	const form = useForm<z.infer<typeof StudentSchema>>({
-		resolver: zodResolver(StudentSchema),
+	const form = useForm<z.infer<typeof CreateStudentSchema>>({
+		resolver: zodResolver(CreateStudentSchema),
 		defaultValues: {
-			name: "",
-			phone: "",
-			email: "",
-			role_no: "",
-			gender: undefined as any,
-			department: undefined as any,
-			acedamic_year: undefined as any,
-			semester: undefined as any,
+			name: student?.name ?? "",
+			rollNo: student?.rollNo ?? "",
+			dateOfBirth: student?.dateOfBirth
+				? new Date(student.dateOfBirth).toISOString().split("T")[0]
+				: "",
+			gender: (student?.gender as Gender | undefined) ?? undefined,
+			email: student?.email ?? "",
+			phoneNumber: student?.phoneNumber ?? "",
+			classId: student?.classId ?? "",
 		},
 	});
 
-	function onSubmit(values: z.infer<typeof StudentSchema>) {
-		// Do something with the form values.
-		console.log("Form submitted:");
-		console.log(values);
+	// useEffect(() => {
+	// 	if (!student) return;
+
+	// 	form.reset({
+	// 		name: student.name,
+	// 		rollNo: student.rollNo,
+	// 		dateOfBirth: student.dateOfBirth
+	// 			? new Date(student.dateOfBirth).toISOString().split("T")[0]
+	// 			: "",
+	// 		gender: student.gender as Gender,
+	// 		email: student.email,
+	// 		phoneNumber: student.phoneNumber,
+	// 		classId: student.classId,
+	// 	});
+	// }, [student, form]);
+
+	useEffect(() => {
+		let mounted = true;
+
+		const loadClasses = async () => {
+			setIsLoadingClasses(true);
+			try {
+				const res = await api.classes.getAll();
+				const classes = res?.data?.classes ?? [];
+				const options = classes.map((classItem: any) => ({
+					value: classItem.id,
+					label: classItem.department?.symbol
+						? `${classItem.name}`
+						: `${classItem.name}`,
+				}));
+
+				if (mounted) setClassOptions(options);
+			} catch (error: any) {
+				toast.error(error.message ?? "Failed to load classes");
+			} finally {
+				if (mounted) setIsLoadingClasses(false);
+			}
+		};
+
+		loadClasses();
+		return () => {
+			mounted = false;
+		};
+	}, []);
+
+	const {
+		formState: { isSubmitting },
+	} = form;
+
+	async function onSubmit(values: z.infer<typeof CreateStudentSchema>) {
+		try {
+			if (isEdit && student) {
+				// update payload (remove empty strings)
+				const updateData: Partial<{
+					name: string;
+					rollNo: string;
+					dateOfBirth: string | null;
+					email: string;
+					phoneNumber: string;
+					gender: Gender;
+					classId: string;
+				}> = {
+					name: values.name as string,
+					rollNo: values.rollNo as string,
+					dateOfBirth: values.dateOfBirth
+						? (values.dateOfBirth as string)
+						: null,
+					email: values.email as string,
+					phoneNumber: values.phoneNumber as string,
+					gender: values.gender as Gender,
+					classId: values.classId as string,
+				};
+
+				const res = await api.students.update(student.id, updateData);
+
+				if (res?.success) {
+					router.refresh();
+					onClose?.();
+					return;
+				}
+			} else {
+				const data = {
+					name: values.name as string,
+					rollNo: values.rollNo as string,
+					dateOfBirth: values.dateOfBirth
+						? (values.dateOfBirth as string)
+						: null,
+					email: values.email as string,
+					phoneNumber: values.phoneNumber as string,
+					gender: values.gender as Gender,
+					classId: values.classId as string,
+				};
+
+				const res = await api.students.create(data);
+
+				if (res?.success) {
+					router.refresh();
+					onClose?.();
+					return;
+				}
+			}
+		} catch (error: any) {
+			const message = error.message;
+
+			if (message.includes("Email")) {
+				form.setError("email", { message });
+			} else if (message.includes("Name")) {
+				form.setError("name", { message });
+			} else {
+				toast.error(message);
+			}
+		}
 	}
 
 	const handleCancel = () => {
-		router.back();
+		onClose?.();
 	};
 	return (
 		<div className="flex items-center justify-center">
@@ -54,36 +174,46 @@ const StudentForm = ({ isEdit = false }: { isEdit: boolean }) => {
 						form={form}
 						name="name"
 						label="Name"
-						placeholder="Enter student name"
-						className="w-full"
-					/>
-					<FormInput
-						form={form}
-						name="email"
-						label="Email address"
-						placeholder="Enter email address"
-						className="w-full"
+						placeholder="Enter name"
+						disabled={isSubmitting}
 					/>
 
 					<FormInput
 						form={form}
-						name="phone"
-						label="Phone number"
-						placeholder="Enter phone number"
-						className="w-full"
+						name="rollNo"
+						label="Roll Number"
+						placeholder="Enter roll number"
+						disabled={isSubmitting}
 					/>
 
 					<FormInput
 						form={form}
-						name="role_no"
-						label="Role No."
-						placeholder="Enter role number"
-						className="w-full min-w-[140px]"
+						name="dateOfBirth"
+						label="Date of birth"
+						type="date"
+						disabled={isSubmitting}
 					/>
 
-					<div className="flex gap-2">
-						<div className="rounded-md w-6/12 mt-5">
+					<div className="flex gap-6">
+						<div className="rounded-md w-8/12 mt-5">
 							<FormSelect
+								disabled={isSubmitting || isLoadingClasses}
+								form={form}
+								name="classId"
+								placeholder={
+									isLoadingClasses
+										? "Loading classes..."
+										: "Select class"
+								}
+								options={classOptions}
+								id="form-rhf-select-class"
+								triggerClassName="w-full cursor-pointer"
+							/>
+						</div>
+
+						<div className="rounded-md w-4/12 mt-5">
+							<FormSelect
+								disabled={isSubmitting}
 								form={form}
 								name="gender"
 								placeholder="Gender"
@@ -92,40 +222,24 @@ const StudentForm = ({ isEdit = false }: { isEdit: boolean }) => {
 								triggerClassName="min-w-[120px] cursor-pointer"
 							/>
 						</div>
-						<div className="rounded-md w-6/12 mt-5">
-							<FormSelect
-								form={form}
-								name="department"
-								placeholder="Department"
-								options={departments as any}
-								id="form-rhf-select-department"
-								triggerClassName="min-w-[120px] cursor-pointer"
-							/>
-						</div>
 					</div>
-					<div className="flex gap-6">
-						<div className="rounded-md w-6/12 mt-5">
-							<FormSelect
-								form={form}
-								name="acedamic_year"
-								placeholder="Acedamic"
-								options={acedamicYears as any}
-								id="form-rhf-select-acedamic"
-								triggerClassName="min-w-[120px] cursor-pointer"
-							/>
-						</div>
-						<div className="rounded-md w-6/12 mt-5">
-							<FormSelect
-								form={form}
-								name="semester"
-								placeholder="Semester"
-								options={semesters as any}
-								id="form-rhf-select-semester"
-								triggerClassName="min-w-[120px] cursor-pointer"
-							/>
-						</div>
-					</div>
-					{/* btn */}
+					<FormInput
+						form={form}
+						name="email"
+						label="Email address"
+						placeholder="Enter email address"
+						className="w-full"
+						disabled={isSubmitting}
+					/>
+					<FormInput
+						form={form}
+						name="phoneNumber"
+						label="Phone number"
+						placeholder="Enter phone number"
+						className="w-full"
+						disabled={isSubmitting}
+					/>
+
 					<div className="flex gap-3 items-center justify-end mt-10">
 						<Button
 							type="button"
@@ -134,8 +248,9 @@ const StudentForm = ({ isEdit = false }: { isEdit: boolean }) => {
 							onClick={handleCancel}
 						>
 							Cancel
-						</Button>
+						</Button>{" "}
 						<Button
+							disabled={isSubmitting}
 							type="submit"
 							className="cursor-pointer min-w-36 text-white bg-sky-600 hover:bg-sky-700 hover:text-white"
 						>

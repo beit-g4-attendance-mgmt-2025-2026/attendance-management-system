@@ -1,11 +1,42 @@
+"use client";
 import SearchInput from "@/components/inputs/SearchInput";
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DepartmentsListTable from "./components/DepartmentsListTable";
-import { DEPARTMENTS } from "@/constants/index.constants";
 import Link from "next/link";
+import { DepartmentTableItem } from "@/types/index.types";
+import { api } from "@/lib/api";
+import { toast } from "sonner";
 
-const page = () => {
+const Page = () => {
+	const [departments, setDepartments] = useState<DepartmentTableItem[]>([]);
+	const [loading, setLoading] = useState(true);
+
+	const loadDepartments = async () => {
+		try {
+			setLoading(true);
+			const res = await api.departments.getAll();
+
+			if (res?.success) {
+				setDepartments(
+					res.data.formattedDepartment as DepartmentTableItem[],
+				);
+			}
+		} catch (error: unknown) {
+			toast.error(
+				error instanceof Error
+					? error.message
+					: "Failed to load departments",
+			);
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	useEffect(() => {
+		loadDepartments();
+	}, []);
+
 	return (
 		<div>
 			<header className="flex justify-between items-center mb-6">
@@ -24,10 +55,24 @@ const page = () => {
 			</header>
 
 			<main className="flex items-center justify-center max-w-5xl mx-auto">
-				<DepartmentsListTable departments={DEPARTMENTS} />
+				{loading ? (
+					<div className="text-gray-500">Loading departments...</div>
+				) : departments.length > 0 ? (
+					<DepartmentsListTable
+						departments={departments}
+						onChanged={loadDepartments}
+						onDeleted={(id) =>
+							setDepartments((prev) =>
+								prev.filter((d) => d.id !== id),
+							)
+						}
+					/>
+				) : (
+					<div className="text-gray-500">No departments found.</div>
+				)}
 			</main>
 		</div>
 	);
 };
 
-export default page;
+export default Page;

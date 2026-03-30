@@ -1,66 +1,67 @@
 "use client";
 
+import { AuthStoreSync } from "@/components/auth-store-sync";
+import type { UiRole } from "@/lib/auth-ui";
+import { useAuthStore } from "@/lib/stores/auth-store";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import Cookies from "js-cookie";
 
-type Role = "admin" | "department" | "teacher";
-
-const ROLE_ACCESS: Record<Role, string[]> = {
-  admin: [
-    "dashboard",
-    "departments",
-    "teachers",
-    "students",
-    "head-of-department",
-    "settings",
-  ],
-  department: [
-    "dashboard",
-    "teachers",
-    "students",
-    "classes",
-    "subjects",
-    "my-class",
-    "my-subjects",
-  ],
-  teacher: ["dashboard", "my-class", "my-subjects"],
+const ROLE_ACCESS: Record<UiRole, string[]> = {
+	admin: [
+		"dashboard",
+		"departments",
+		"teachers",
+		"students",
+		"academic-years",
+		"head-of-department",
+		"settings",
+	],
+	department: [
+		"dashboard",
+		"teachers",
+		"students",
+		"classes",
+		"subjects",
+		"my-class",
+		"my-subjects",
+	],
+	teacher: ["dashboard", "my-class", "my-subjects"],
 };
 
 export default function ClientProtected({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const router = useRouter();
+	const pathname = usePathname();
+	const router = useRouter();
+	const status = useAuthStore((s) => s.status);
+	const uiRole = useAuthStore((s) => s.uiRole);
 
-  const role: Role = Cookies.get("role") as Role;
+	useEffect(() => {
+		if (status === "idle" || status === "loading") return;
 
-  useEffect(() => {
-    if (!role) {
-      router.replace("/login");
-      return;
-    }
+		if (status === "error" || !uiRole) {
+			router.replace("/login");
+			return;
+		}
 
-    // Remove leading/trailing slashes and split
-    const pathSegments = pathname.split("/").filter(Boolean);
-    // Get everything after "protected" in the path
-    const protectedIndex = pathSegments.indexOf("protected");
-    const routePath =
-      protectedIndex !== -1
-        ? pathSegments.slice(protectedIndex + 1).join("/")
-        : pathSegments.join("/");
+		const pathSegments = pathname.split("/").filter(Boolean);
+		const routePath = pathSegments.join("/");
 
-    const allowed = ROLE_ACCESS[role].some((r) => {
-      // Exact match or starts with the route followed by /
-      return routePath === r || routePath.startsWith(r + "/");
-    });
+		const allowed = ROLE_ACCESS[uiRole].some(
+			(r) => routePath === r || routePath.startsWith(r + "/"),
+		);
 
-    if (!allowed) {
-      router.replace("/unauthorized");
-    }
-  }, [pathname, role, router]);
+		if (!allowed) {
+			router.replace("/unauthorized");
+		}
+	}, [pathname, router, status, uiRole]);
 
-  return children;
+	return (
+		<>
+			<AuthStoreSync />
+			{children}
+		</>
+	);
 }

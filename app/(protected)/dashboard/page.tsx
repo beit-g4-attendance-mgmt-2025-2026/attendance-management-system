@@ -2,14 +2,16 @@
 
 import AdminDashboard from "./components/AdminDashboard";
 import HodDashboard from "./components/HodDashboard";
-import TeacherDashboard from "./components/TeacherDashboard";
-import Cookies from "js-cookie";
+import { useAuthStore } from "@/lib/stores/auth-store";
 
 export default function DashboardPage() {
-	const role = Cookies.get("role");
-	console.log(role);
+	const uiRole = useAuthStore((s) => s.uiRole);
+	const status = useAuthStore((s) => s.status);
 
-	if (role === "admin") return <AdminDashboard />;
-	if (role === "department") return <HodDashboard />;
-	return <TeacherDashboard />;
+	if (status !== "ready" || !uiRole) {
+		return null;
+	}
+
+	if (uiRole === "admin") return <AdminDashboard />;
+	return <HodDashboard />;
 }

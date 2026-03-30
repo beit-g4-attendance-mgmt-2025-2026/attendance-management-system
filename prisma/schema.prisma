@@ -6,26 +6,246 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+}
+
+// ENUM
+enum Role {
+  ADMIN
+  HOD
+  TEACHER
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum Semester {
+  first_semester
+  second_semester
+}
+
+enum Year {
+  FIRST
+  SECOND
+  THIRD
+  FOURTH
+  FIFTH
+  FINAL
+}
+
+enum SubjectType {
+  MAJOR
+  MINOR
+}
+
+
+enum Month {
+  JANUARY
+  FEBRUARY
+  MARCH
+  APRIL
+  MAY
+  JUNE
+  JULY
+  AUGUST
+  SEPTEMBER
+  OCTOBER
+  NOVEMBER
+  DECEMBER
+}
+
+model Admin {
+  id       String @id @default(uuid()) @db.Uuid
+  username String @unique
+  password String
+  role     Role
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+  id           String   @id @default(uuid()) @db.Uuid
+  username     String   @unique
+  password     String
+  resetPasswordToken    String?
+  resetPasswordExpireAt DateTime?
+  fullName     String
+  role         Role
+  gender       Gender
+  email        String   @unique
+  phoneNumber  String
+
+  // Belongs to one department
+  departmentId String   @db.Uuid
+  department   Department @relation("DepartmentUsers", fields: [departmentId], references: [id])
+
+  // If this user is a HOD, this will point to that department
+  hod        Department? @relation("DepartmentHod")
+
+  classes      Class[]
+  subjects     Subject[]
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+model Department {
+  id       String @id @default(uuid()) @db.Uuid
+  name     String
+  symbol   String
+  logo     String?
+
+  // One HOD per department
+  hod      User?  @relation("DepartmentHod", fields: [hodId], references: [id])
+  hodId    String? @unique @db.Uuid
+
+  // Many users per department
+  users    User[] @relation("DepartmentUsers")
+
+  classes   Class[]
+  students  Student[]
+  subjects  Subject[]
+
+  createdAt DateTime @default(now())
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  authorId  Int
-  author    User    @relation(fields: [authorId], references: [id])
+model Class {
+  id       String   @id @default(uuid()) @db.Uuid
+  name     String
+  semester Semester
+  year     Year
+
+  userId  String? @db.Uuid
+  user    User?   @relation(fields: [userId], references: [id])
+  
+  departmentId   String @db.Uuid
+  department   Department   @relation(fields: [departmentId], references: [id])
+
+  academicYearId String? @db.Uuid
+  academicYear AcademicYear? @relation(fields: [academicYearId], references: [id])
+
+  students Student[]
+  subjects Subject[]
+  monthlyClassAttendance  MonthlyClassAttendance[]
+
+  dailyAttendances DailyAttendance[]
+}
+
+
+model AcademicYear {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  startDate DateTime @db.Date
+  endDate   DateTime @db.Date
+  isActive  Boolean
+
+  classes Class[]
+  monthlySubAttendances MonthlySubAttendance[]
+  monthlyClassAttendances MonthlyClassAttendance[]
+}
+
+
+
+model Student {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  rollNo      String  @unique
+  dateOfBirth DateTime? @db.Date
+  phoneNumber String
+  gender      Gender
+  email       String  @unique
+  year        Year
+  semester    Semester
+
+  departmentId String @db.Uuid
+  department Department @relation(fields: [departmentId], references: [id])
+
+  classId      String @db.Uuid
+  class      Class      @relation(fields: [classId], references: [id])
+
+  dailyAttendance   DailyAttendance[]
+  monthlySubAttendance    MonthlySubAttendance[]
+  monthlyClassAttendance  MonthlyClassAttendance[]
+}
+
+model Subject {
+  id      String @id @default(uuid()) @db.Uuid
+  name    String
+  subCode String
+  type    SubjectType @default(MAJOR)
+  roomName  String?
+
+  departmentId String @db.Uuid
+  department Department @relation(fields: [departmentId], references: [id])
+
+  userId       String @db.Uuid
+  user       User       @relation(fields: [userId], references: [id])
+
+  classes    Class[]
+
+  dailyAttendance   DailyAttendance[]
+  monthlySubAttendance MonthlySubAttendance[]
+}
+
+model DailyAttendance {
+  id        String @id @default(uuid()) @db.Uuid
+
+  day        Int
+  month      Month
+  times      Int
+  totalTimes Int  
+
+  studentId String @db.Uuid
+  student Student @relation(fields: [studentId], references: [id])
+
+  subjectId String @db.Uuid
+  subject Subject @relation(fields: [subjectId], references: [id])
+
+  classId   String @db.Uuid
+  class     Class  @relation(fields: [classId], references: [id])
+
+  @@unique([studentId, subjectId, classId, day, month])
+}
+
+model MonthlySubAttendance {
+  id                String  @id @default(uuid()) @db.Uuid
+  times              Int
+  totalTimes        Int
+  status            Boolean
+  month             Month
+
+  student   Student? @relation(fields: [studentId], references: [id])
+  studentId   String @db.Uuid
+  subject    Subject @relation(fields: [subjectId], references: [id])
+  subjectId   String @db.Uuid
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+  academicYearId String @db.Uuid
+
+  monthlyClassAttendance MonthlyClassAttendance? @relation(fields: [monthlyClassAttendanceId], references: [id])
+  monthlyClassAttendanceId  String @db.Uuid
+
+  @@unique([studentId, subjectId, month, academicYearId])
+}
+
+model MonthlyClassAttendance {
+  id                     String  @id @default(uuid()) @db.Uuid
+  monthlySubAttendanceId String[] @db.Uuid
+  totalTimes             Int
+  status                 Boolean
+  month                  Month
+
+  class Class? @relation(fields: [classId], references: [id])
+  classId   String @db.Uuid
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String @db.Uuid
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+  academicYearId String @db.Uuid
+  
+  monthlySubAttendance  MonthlySubAttendance[]
+
+  @@unique([studentId, classId, month, academicYearId])
 }

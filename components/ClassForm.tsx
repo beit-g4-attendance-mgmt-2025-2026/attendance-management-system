@@ -3,95 +3,207 @@
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FormInput } from "@/components/inputs/FormInput";
-import { ClassSchema } from "@/schema/index.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import z from "zod";
 import FormSelect from "@/components/inputs/FormSelect";
-import {
-	acedamicYears,
-	semesters,
-	teacher_name_for_form_select,
-} from "@/constants/index.constants";
+import { semesters, Years } from "@/constants/index.constants";
+import { Semester, Year } from "@/generated/prisma/enums";
+import { api } from "@/lib/api";
+import { CreateClassSchema } from "@/lib/schema/CreateClassSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import z from "zod";
 
-const ClassForm = ({ isEdit = false }: { isEdit: boolean }) => {
+type ClassFormValues = z.infer<typeof CreateClassSchema>;
+
+const ClassForm = ({
+	isEdit = false,
+	classData,
+	onClose,
+}: {
+	isEdit: boolean;
+	classData?: Partial<ClassFormValues> & { id?: string };
+	onClose?: () => void;
+}) => {
 	const router = useRouter();
+	const [teacherOptions, setTeacherOptions] = useState<
+		{ label: string; value: string }[]
+	>([]);
+	const [academicYearOptions, setAcademicYearOptions] = useState<
+		{ label: string; value: string }[]
+	>([]);
+	const [isLoadingAcademicYears, setIsLoadingAcademicYears] = useState(false);
 
-	const form = useForm<z.infer<typeof ClassSchema>>({
-		resolver: zodResolver(ClassSchema),
+	const form = useForm<ClassFormValues>({
+		resolver: zodResolver(CreateClassSchema),
 		defaultValues: {
-			name: "",
-			teacher_name: "",
-			acedamic_year: undefined as any,
-			semester: undefined as any,
+			name: classData?.name ?? "",
+			semester: classData?.semester as Semester | undefined,
+			year: classData?.year as Year | undefined,
+			academicYearId: classData?.academicYearId ?? undefined,
+			userId: classData?.userId ?? undefined,
 		},
 	});
 
-	function onSubmit(values: z.infer<typeof ClassSchema>) {
-		// Do something with the form values.
-		console.log("Form submitted:");
-		console.log(values);
+	useEffect(() => {
+		const loadTeachers = async () => {
+			try {
+				const res = await api.users.getAll();
+				const users = res?.data?.users ?? [];
+				const teachers = users.map((user: any) => ({
+					label: user.fullName,
+					value: user.id,
+				}));
+
+				setTeacherOptions(teachers);
+			} catch (error: any) {
+				toast.error(error.message ?? "Failed to load teachers");
+			}
+		};
+
+		loadTeachers();
+	}, []);
+
+	useEffect(() => {
+		const loadAcademicYears = async () => {
+			try {
+				setIsLoadingAcademicYears(true);
+				const res = await api.academicYears.getAll();
+				const years = res?.data?.academicYears ?? [];
+				const mapped = years.map((academicYear: any) => ({
+					label: academicYear.isActive
+						? `${academicYear.name} (Active)`
+						: academicYear.name,
+					value: academicYear.id,
+				}));
+				setAcademicYearOptions(mapped);
+			} catch (error: any) {
+				toast.error(error.message ?? "Failed to load academic years");
+			} finally {
+				setIsLoadingAcademicYears(false);
+			}
+		};
+
+		loadAcademicYears();
+	}, []);
+
+	const {
+		formState: { isSubmitting },
+	} = form;
+
+	async function onSubmit(values: ClassFormValues) {
+		try {
+			const payload = {
+				name: values.name,
+				semester: values.semester,
+				year: values.year,
+				academicYearId: values.academicYearId,
+				userId: values.userId || null,
+			};
+
+			const res =
+				isEdit && classData?.id
+					? await api.classes.update(classData.id, payload)
+					: await api.classes.create(payload);
+
+			if (res?.success) {
+				toast.success(
+					isEdit
+						? "Class updated successfully"
+						: "Class created successfully",
+				);
+				router.refresh();
+				onClose?.();
+			}
+		} catch (error: any) {
+			toast.error(error.message ?? "Something went wrong");
+		}
 	}
 
-	const handleCancel = () => {
-		router.back();
-	};
 	return (
 		<div className="flex items-center justify-center">
 			<Form {...form}>
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}
-					className="space-y-5 "
+					className="space-y-4 w-full"
 				>
 					<FormInput
 						form={form}
 						name="name"
-						label="Name"
+						label="Class Name"
 						placeholder="Enter class name"
 						className="w-full"
-					/>
-					<FormInput
-						form={form}
-						name="teacher_name"
-						label="Family teacher"
-						placeholder="Enter teacher's username"
-						className="w-full"
+						disabled={isSubmitting}
 					/>
 
-					<FormSelect
-						form={form}
-						name="acedamic_year"
-						placeholder="Year"
-						options={acedamicYears as any}
-						id="form-rhf-select-acedamic-year"
-						triggerClassName="min-w-[120px] cursor-pointer"
-					/>
+					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+						<FormSelect
+							disabled={isSubmitting}
+							form={form}
+							name="year"
+							placeholder="Year"
+							options={Years as any}
+							id="form-rhf-select-year"
+							triggerClassName="w-full cursor-pointer"
+						/>
 
-					<FormSelect
-						form={form}
-						name="semester"
-						placeholder="Semester"
-						options={semesters as any}
-						id="form-rhf-select-semester"
-						triggerClassName="min-w-[120px] cursor-pointer"
-					/>
+						<FormSelect
+							disabled={isSubmitting}
+							form={form}
+							name="semester"
+							placeholder="Semester"
+							options={semesters as any}
+							id="form-rhf-select-semester"
+							triggerClassName="w-full cursor-pointer"
+						/>
+					</div>
 
-					{/* btn */}
-					<div className="flex gap-3 items-center justify-end mt-10">
+					<div className="space-y-2">
+						<p className="text-sm font-medium">Academic Year</p>
+						<FormSelect
+							disabled={isSubmitting || isLoadingAcademicYears}
+							form={form}
+							name="academicYearId"
+							placeholder={
+								isLoadingAcademicYears
+									? "Loading academic years..."
+									: "Select academic year"
+							}
+							options={academicYearOptions}
+							id="form-rhf-select-academic-year"
+							triggerClassName="w-full cursor-pointer"
+						/>
+					</div>
+
+					<div className="space-y-2">
+						<p className="text-sm font-medium">Family Teacher</p>
+						<FormSelect
+							disabled={isSubmitting}
+							form={form}
+							name="userId"
+							placeholder="Select family teacher (optional)"
+							options={teacherOptions}
+							id="form-rhf-select-family-teacher"
+							triggerClassName="w-full cursor-pointer"
+						/>
+					</div>
+
+					<div className="flex justify-end gap-2 pt-4">
 						<Button
 							type="button"
-							variant="destructive"
-							className="cursor-pointer min-w-36"
-							onClick={handleCancel}
+							variant="outline"
+							className="cursor-pointer min-w-28"
+							onClick={() => onClose?.()}
 						>
 							Cancel
 						</Button>
 						<Button
+							disabled={isSubmitting}
 							type="submit"
-							className="cursor-pointer min-w-36 text-white bg-sky-600 hover:bg-sky-700 hover:text-white"
+							className="cursor-pointer min-w-28 text-white bg-sky-600 hover:bg-sky-700 hover:text-white"
 						>
-							{isEdit ? "Update" : "Submit"}
+							{isEdit ? "Save Changes" : "Add Class"}
 						</Button>
 					</div>
 				</form>

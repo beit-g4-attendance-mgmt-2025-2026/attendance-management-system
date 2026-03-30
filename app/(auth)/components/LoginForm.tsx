@@ -13,7 +13,6 @@ import {
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -26,12 +25,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
+import fetchHandler from "@/lib/fetchHandler";
+import { toast } from "sonner";
 
-export function LoginForm({
-	className,
-	...props
-}: React.ComponentProps<"div">) {
+type LoginFormProps = React.ComponentProps<"div"> & {
+	url: string;
+};
+
+export function LoginForm({ url, className, ...props }: LoginFormProps) {
+	const [error, setError] = useState<string | null>(null);
+	const router = useRouter();
 	const [showPassword, setShowPassword] = useState(false);
+
 	const form = useForm<z.infer<typeof LoginSchema>>({
 		resolver: zodResolver(LoginSchema),
 		defaultValues: {
@@ -40,8 +46,32 @@ export function LoginForm({
 		},
 	});
 
-	function onSubmit(values: z.infer<typeof LoginSchema>) {
-		console.log(values);
+	const {
+		formState: { isSubmitting },
+	} = form;
+
+	async function onSubmit(values: z.infer<typeof LoginSchema>) {
+		try {
+			const res = await fetchHandler(url, {
+				method: "POST",
+				body: JSON.stringify(values),
+			});
+			if (res.success) {
+				router.push("/dashboard");
+				toast.success("Login successful!");
+			}
+		} catch (error: any) {
+			setError(error?.message);
+		}
+		// if (res.success) {
+		// 	router.push("/dashboard");
+		// 	toast.success("Login successful!");
+		// 	console.log("Login successful", res.data);
+		// } else {
+		// 	console.log(res);
+		// 	setError(res.message);
+		// 	toast.error(res.message);
+		// }
 	}
 	return (
 		<div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -99,7 +129,7 @@ export function LoginForm({
 													className="absolute right-0 top-0 h-full px-3 py-2 dark:hover:bg-transparent cursor-pointer"
 													onClick={() =>
 														setShowPassword(
-															(prev) => !prev
+															(prev) => !prev,
 														)
 													}
 												>
@@ -113,14 +143,20 @@ export function LoginForm({
 										</FormControl>
 
 										<FormMessage />
+										{error && (
+											<FormMessage className="text-red-500">
+												{error}
+											</FormMessage>
+										)}
 									</FormItem>
 								)}
 							/>
 							<Button
+								disabled={isSubmitting}
 								type="submit"
 								className="cursor-pointer w-full bg-blue-400 hover:bg-blue-500"
 							>
-								Submit
+								{isSubmitting ? "Submitting" : "Submit"}
 							</Button>
 						</form>
 					</Form>

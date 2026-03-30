@@ -1,3 +1,5 @@
+"use client";
+
 import { MdOutlineDashboard } from "react-icons/md";
 import { PiChalkboardTeacherFill } from "react-icons/pi";
 import { PiStudentFill } from "react-icons/pi";
@@ -6,6 +8,7 @@ import { IoMdSettings } from "react-icons/io";
 import { BsBook } from "react-icons/bs";
 import { SiGoogleclassroom } from "react-icons/si";
 import { LuBook } from "react-icons/lu";
+import { MdDateRange } from "react-icons/md";
 
 import {
 	Sidebar,
@@ -19,8 +22,11 @@ import {
 import Header from "./side-header";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import NProgress from "nprogress";
+import { useEffect } from "react";
 
-import Cookies from "js-cookie";
+import type { UiRole } from "@/lib/auth-ui";
+import { useAuthStore } from "@/lib/stores/auth-store";
 
 type SidebarItem = {
 	title: string;
@@ -28,13 +34,11 @@ type SidebarItem = {
 	icon: React.ElementType;
 };
 
-type Role = "admin" | "department" | "teacher";
-
 export function AppSidebar() {
 	const pathname = usePathname();
-	const role: Role = Cookies.get("role") as Role;
+	const uiRole = useAuthStore((s) => s.uiRole);
 
-	const sidebarItemsByRole: Record<Role, SidebarItem[]> = {
+	const sidebarItemsByRole: Record<UiRole, SidebarItem[]> = {
 		admin: [
 			{
 				title: "Dashboard",
@@ -55,6 +59,11 @@ export function AppSidebar() {
 				title: "Students",
 				url: "/students",
 				icon: PiStudentFill,
+			},
+			{
+				title: "Academic Years",
+				url: "/academic-years",
+				icon: MdDateRange,
 			},
 			{
 				title: "Settings",
@@ -117,7 +126,10 @@ export function AppSidebar() {
 			},
 		],
 	};
-	const items = sidebarItemsByRole[role];
+	useEffect(() => {
+		NProgress.done();
+	}, [pathname]);
+	const items = uiRole ? sidebarItemsByRole[uiRole] : [];
 	return (
 		<Sidebar collapsible="icon">
 			<SidebarContent className="text-white">
@@ -140,7 +152,12 @@ export function AppSidebar() {
 											tooltip={item.title}
 											asChild
 										>
-											<Link href={item.url}>
+											<Link
+												href={item.url}
+												onClick={() =>
+													NProgress.start()
+												}
+											>
 												<item.icon className="size-4" />
 												<span>{item.title}</span>
 											</Link>

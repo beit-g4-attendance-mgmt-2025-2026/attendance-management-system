@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -9,57 +11,47 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import React from "react";
+import React, { useState } from "react";
 
 export function DialogCardBtn({
 	children,
 	triggerName,
+	triggerIcon,
 	title,
 	description,
+	contentClassName,
 }: {
 	children: React.ReactNode;
-	triggerName: string;
+	triggerName?: string;
+	triggerIcon?: React.ReactElement;
 	title: string;
 	description?: string;
+	contentClassName?: string;
 }) {
+	const [open, setOpen] = useState(false);
 	return (
-		<Dialog>
+		<Dialog open={open} onOpenChange={setOpen}>
 			<form>
 				<DialogTrigger asChild>
 					<Button className="cursor-pointer text-white bg-sky-600 hover:bg-sky-700 hover:text-white">
 						{triggerName}
+						{triggerIcon}
 					</Button>
 				</DialogTrigger>
-				<DialogContent className="sm:max-w-[425px]">
+				<DialogContent
+					className={
+						contentClassName ?? "sm:max-w-[425px] max-h-[80vh] overflow-y-auto"
+					}
+				>
 					<DialogHeader>
 						<DialogTitle>{title}</DialogTitle>
 						<DialogDescription>{description}</DialogDescription>
 					</DialogHeader>
-					{children}
-					{/* <div className="grid gap-4">
-						<div className="grid gap-3">
-							<Label htmlFor="name-1">Name</Label>
-							<Input
-								id="name-1"
-								name="name"
-								defaultValue="Pedro Duarte"
-							/>
-						</div>
-						<div className="grid gap-3">
-							<Label htmlFor="username-1">Username</Label>
-							<Input
-								id="username-1"
-								name="username"
-								defaultValue="@peduarte"
-							/>
-						</div>
-					</div> */}
-					{/* <DialogFooter>
-						<DialogClose asChild>
-							<Button variant="outline">Cancel</Button>
-						</DialogClose>
-						<Button type="submit">Save changes</Button>
-					</DialogFooter> */}
+					{React.isValidElement(children)
+						? React.cloneElement(children as any, {
+								onClose: () => setOpen(false),
+							})
+						: children}
 				</DialogContent>
 			</form>
 		</Dialog>
