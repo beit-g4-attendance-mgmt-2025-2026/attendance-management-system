@@ -20,12 +20,27 @@ const Attendance = dynamic(() => import("@/components/Attendance"), {
 	),
 });
 
-const StarStudents = dynamic(() => import("@/components/StarStudents"), {
-	ssr: false,
-	loading: () => (
-		<div className="bg-white rounded-xl w-full h-[260px] p-4 dark:bg-[#1E293B]" />
-	),
-});
+const HodRollCallStudents = dynamic(
+	() => import("@/components/HodRollCallStudents"),
+	{
+		ssr: false,
+		loading: () => (
+			<div className="bg-white rounded-xl w-full h-[260px] p-4 dark:bg-[#1E293B]" />
+		),
+	},
+);
+
+type RollCallStudent = {
+	id: string;
+	rollNo: string;
+	name: string;
+	year: string;
+	semester: string;
+	rollCallPercent: number;
+	class: {
+		name: string;
+	} | null;
+};
 
 const HodDashboard = () => {
 	const [counts, setCounts] = React.useState({
@@ -36,6 +51,12 @@ const HodDashboard = () => {
 		femaleStudents: 0,
 		otherStudents: 0,
 	});
+	const [monthlyAttendance, setMonthlyAttendance] = React.useState<
+		{ name: string; present: number; absent: number }[]
+	>([]);
+	const [rollCallStudents, setRollCallStudents] = React.useState<
+		RollCallStudent[]
+	>([]);
 	const [isLoading, setIsLoading] = React.useState(false);
 
 	React.useEffect(() => {
@@ -46,11 +67,19 @@ const HodDashboard = () => {
 				setIsLoading(true);
 				const res = await api.dashboard.getHodStats();
 				const stats = res?.data?.stats;
+				const attendance = res?.data?.monthlyAttendance ?? [];
+				const students = (res?.data?.rollCallStudents ?? []) as RollCallStudent[];
 				if (isMounted && res?.success && stats) {
 					setCounts(stats);
+					setMonthlyAttendance(attendance);
+					setRollCallStudents(students);
 				}
-			} catch (error: any) {
-				toast.error(error.message ?? "Failed to load dashboard stats");
+			} catch (error: unknown) {
+				toast.error(
+					error instanceof Error
+						? error.message
+						: "Failed to load dashboard stats",
+				);
 			} finally {
 				if (isMounted) setIsLoading(false);
 			}
@@ -89,11 +118,11 @@ const HodDashboard = () => {
 					/>
 				</div>
 				<div className="w-full lg:w-2/3 h-[450px]">
-					<Attendance />
+					<Attendance data={monthlyAttendance} />
 				</div>
 			</div>
 			<div className="mt-4">
-				<StarStudents />
+				<HodRollCallStudents students={rollCallStudents} />
 			</div>
 		</div>
 	);

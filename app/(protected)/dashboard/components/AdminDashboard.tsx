@@ -56,7 +56,7 @@ const AdminDashboard = () => {
 							<MdDateRange className="size-5 text-sidebar" />
 						</div>
 						<Link
-							href={"academic-year"}
+							href={"academic-years"}
 							className="font-medium text-lg cursor-pointer"
 						>
 							Add Academic Year

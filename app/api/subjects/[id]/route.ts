@@ -97,7 +97,9 @@ export async function DELETE(
 		if (!subject) {
 			throw new Error("Subject not found!");
 		}
-		return handleSuccessResponse(subject);
+		return handleSuccessResponse({
+			message: "Subject deleted successfully",
+		});
 	} catch (e) {
 		return handleErrorResponse(e);
 	}
@@ -188,13 +190,15 @@ export async function PUT(
 				where: {
 					departmentId: authUser.departmentId,
 					id: data.userId,
-					role: Role.TEACHER,
+					role: {
+						in: [Role.TEACHER, Role.HOD],
+					},
 				},
 				select: { id: true },
 			});
 
 			if (!teacher) {
-				throw new Error("Teacher not found in your department");
+				throw new Error("Teacher/HOD not found in your department");
 			}
 			updateData.userId = teacher.id;
 		}
@@ -231,7 +235,9 @@ export async function PUT(
 			},
 		});
 
-		return handleSuccessResponse(subject);
+		return handleSuccessResponse({
+			message: "Subject updated successfully",
+		});
 	} catch (e) {
 		return handleErrorResponse(e);
 	}
