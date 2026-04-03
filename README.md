@@ -1,195 +1,204 @@
 # Attendance Management System
 
-A multi-role attendance and academic management platform built with **Next.js (App Router)**, **TypeScript**, and **Prisma**.
+A role-based university attendance platform built with Next.js App Router, TypeScript, Prisma, PostgreSQL, and Tailwind CSS.
 
-This project supports workflows for:
-- **Admin**: manage departments, HOD users, and admin-level operations
-- **HOD (Head of Department)**: manage teachers, classes, subjects, and students in their department
-- **Teacher**: access teaching-focused views (`my-class`, `my-subjects`)
+The application supports three working roles:
 
----
+- `ADMIN` manages departments, teachers, students, and academic years.
+- `HOD` manages department teachers, classes, subjects, and class-level reporting.
+- `TEACHER` records subject attendance, reviews assigned classes, and exports reports.
 
-## 1. Tech Stack
+## Overview
 
-- **Framework**: Next.js `15.5.6` (App Router)
-- **Language**: TypeScript
-- **UI**: React 19, Tailwind CSS v4, Radix UI
-- **ORM**: Prisma v7
-- **Database**: PostgreSQL (using `@prisma/adapter-neon` in current config)
-- **Validation**: Zod
-- **Auth**: JWT in `httpOnly` cookie
-- **File Uploads**: Cloudinary
-- **Email**: Resend + Mailtrap/Nodemailer
+This project combines:
 
----
+- authentication with JWT stored in an `httpOnly` cookie
+- role-based page access for admin, department, and teacher interfaces
+- attendance capture at the daily subject level
+- monthly subject and class attendance summaries
+- CSV export for multiple resources and reports
+- password reset email flow
+- optional department logo upload with Cloudinary
 
-## 2. Core Architecture
+## Tech Stack
 
-### Backend
-- Route handlers are under `app/api/**/route.ts`
-- Prisma schema is in `prisma/schema.prisma`
-- Shared auth/guard helpers:
-  - `lib/jwt.ts`
-  - `lib/guard.ts`
-  - `lib/auth.ts`
+- Framework: Next.js `15.5.6` with App Router
+- Language: TypeScript
+- UI: React `19`, Tailwind CSS `4`, Radix UI, Sonner, Recharts
+- ORM: Prisma `7`
+- Database: PostgreSQL via `@prisma/adapter-neon`
+- Validation: Zod
+- State: Zustand
+- Auth: JWT + cookies
+- Email: Mailtrap and Resend helpers
+- Monitoring: Sentry
+- Package manager: pnpm
 
-### Frontend
-- Public auth pages: `app/(auth)/**`
-- Protected pages: `app/(protected)/**`
-- Shared components: `components/**`
+## Main Features
 
-### Important runtime behavior
-- Root path `/` redirects to `/dashboard` (see `next.config.ts`)
-- JWT token cookie name: `token`
-- Protected UI routing also checks a client-side cookie named `role` (`admin`, `department`, `teacher`)
+### Admin
 
----
+- View the dashboard
+- Manage departments
+- Add or update teachers and HODs
+- Manage students
+- Manage academic years
+- Assign or change HODs for departments
 
-## 3. Project Structure
+### HOD
 
-```txt
+- View dashboard stats
+- Manage teachers within the same department
+- Manage students within the same department
+- Create and edit classes
+- Create and edit subjects
+- Review class details and monthly class reports
+- Export teacher, student, class, subject, and report data to CSV
+
+### Teacher
+
+- View assigned class information
+- View assigned subject list
+- Record daily subject attendance
+- Move or clear attendance dates
+- Review monthly subject and class reports
+- Export class and subject report data to CSV
+
+### Authentication
+
+- Login for `Admin` and `User` accounts
+- Registration route for user creation
+- Logout
+- Password reset request for teachers
+- Password reset completion using a tokenized link
+
+## Project Structure
+
+```text
 app/
-  (auth)/
-    login/
-    register/
-    reset-password/
-  (protected)/
-    dashboard/
-    (admin)/
-      departments/
-      teachers/
-      students/
-      settings/
-    (HOD)/
-      classes/
-      (subject)/subjects/
-    (teacher)/
-      my-class/
-      my-subjects/
-  api/
-    auth/
-    admin/
-    teachers/
-    departments/
-    classes/
-    students/
-    subjects/
+  (auth)/                 login, register, reset-password pages
+  (protected)/            protected UI routes
+    (admin)/              admin-only pages
+    (HOD)/                department/HOD pages
+    (teacher)/            teacher pages
+    dashboard/            role-aware dashboard
+  api/                    route handlers
+components/               shared UI and feature components
 lib/
-  prisma.ts
-  jwt.ts
-  guard.ts
-  fetchHandler.ts
-  schema/
+  actions/                server-side data fetching and mutations
+  email/                  Mailtrap and Resend email helpers
+  schema/                 Zod request schemas
+  auth.ts / guard.ts      auth and role checks
+  jwt.ts                  JWT and auth cookie helpers
+  prisma.ts               Prisma client setup
 prisma/
-  schema.prisma
-components/
-constants/
+  schema.prisma           database schema
+  seed.ts                 seed script entry point
+generated/prisma/         generated Prisma client output
+public/                   static assets
 ```
 
----
+## Data Model
 
-## 4. Data Model Overview (Prisma)
+The Prisma schema is centered around these entities:
 
-Main entities:
 - `Admin`
-- `User` (roles: `ADMIN`, `HOD`, `TEACHER`)
+- `User`
 - `Department`
 - `Class`
-- `Student`
 - `Subject`
+- `Student`
+- `AcademicYear`
 - `DailyAttendance`
 - `MonthlySubAttendance`
 - `MonthlyClassAttendance`
-- `AcademicYear`
 
-Role and domain enums are defined in `prisma/schema.prisma`.
+Important enums include:
 
----
+- `Role`: `ADMIN`, `HOD`, `TEACHER`
+- `Gender`
+- `Semester`
+- `Year`
+- `SubjectType`
+- `Month`
 
-## 5. Authentication & Authorization
+## Routing and Access Model
 
-### Auth style
-This project uses **token-based auth (JWT)** stored in an **`httpOnly` cookie**.
+The root route redirects to `/dashboard`.
 
-### Flow
-1. `POST /api/auth/login`
-2. Server verifies credentials
-3. Server signs JWT payload `{ userId }`
-4. Cookie `token` is set with:
-   - `httpOnly: true`
-   - `sameSite: "strict"`
-   - `maxAge: 7d`
-   - `secure: true` in production
-5. Protected APIs resolve user/admin using `userId` from JWT
+UI access is role-based:
 
-### Guards
-- `requireAuth(request, { roles? })` for `User` table checks
-- `requireAdminOrUserRoles(request, roles)` for admin-or-user access checks
+- `admin`: `dashboard`, `departments`, `teachers`, `students`, `academic-years`, `head-of-department`, `settings`
+- `department`: `dashboard`, `teachers`, `students`, `classes`, `subjects`, `my-class`, `my-subjects`
+- `teacher`: `dashboard`, `my-class`, `my-subjects`
 
-### UI role cookie
-The protected frontend currently reads a separate client cookie `role` for route visibility and sidebar items.
+Role mapping in the frontend:
 
----
+- Prisma `ADMIN` -> UI `admin`
+- Prisma `HOD` -> UI `department`
+- Prisma `TEACHER` -> UI `teacher`
 
-## 6. API Surface
+## API Areas
 
-All routes are under `/api`.
+The app exposes route handlers under `app/api`.
 
-### Auth
-- `POST /api/auth/login`
-- `POST /api/auth/register`
-- `POST /api/auth/logout`
-- `POST /api/auth/reset-password?token=<token>`
+Key route groups:
 
-### Admin
-- `GET /api/admin`
-- `POST /api/admin`
-- `GET /api/admin/:id`
-- `DELETE /api/admin/:id`
+- `api/auth` for login, logout, register, and reset password
+- `api/me` for current authenticated account info
+- `api/admin`
+- `api/teachers`
+- `api/departments`
+- `api/classes`
+- `api/students`
+- `api/subjects`
+- `api/academic-years`
+- `api/dashboard/hod/stats`
+- CSV export endpoints for teachers, students, classes, subjects, my-class, my-subjects, monthly subject reports, and monthly class reports
 
-### Teachers
-- `GET /api/teachers`
-- `POST /api/teachers`
-- `GET /api/teachers/:id`
-- `PUT /api/teachers/:id`
-- `DELETE /api/teachers/:id`
-- `GET /api/teachers/export` (CSV)
+## Attendance Flow
 
-### Departments
-- `GET /api/departments`
-- `POST /api/departments` (multipart for logo upload)
-- `GET /api/departments/:id`
-- `PUT /api/departments/:id`
-- `DELETE /api/departments/:id`
+Attendance is tracked in two layers:
 
-### Classes
-- `GET /api/classes`
-- `POST /api/classes`
-- `GET /api/classes/:id`
-- `PUT /api/classes/:id`
-- `DELETE /api/classes/:id`
+1. Daily attendance per student, subject, class, day, and month.
+2. Monthly summaries for each subject and class, tied to an academic year.
 
-### Students
-- `GET /api/students`
-- `POST /api/students`
-- `GET /api/students/:id`
-- `PUT /api/students/:id`
-- `DELETE /api/students/:id`
+The codebase also includes server actions for:
 
-### Subjects
-- `GET /api/subjects`
-- `POST /api/subjects`
-- `GET /api/subjects/:id`
-- `PUT /api/subjects/:id`
-- `DELETE /api/subjects/:id`
+- loading teacher/HOD attendance views
+- saving daily attendance
+- syncing monthly attendance
+- moving attendance from one date to another
+- clearing attendance for a selected date
 
----
+## Environment Variables
 
-## 7. Local Development Setup
+The codebase expects at least these environment variables for a full setup:
+
+- `DATABASE_URL`
+- `JWT_SECRET`
+- `NODE_ENV`
+- `APP_BASE_URL`
+- `NEXT_PUBLIC_BASE_URL`
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
+- `MAILTRAP_USERNAME`
+- `MAILTRAP_PASSWORD`
+- `MAILTRAP_SENDER_NAME`
+- `MAILTRAP_SENDER_EMAIL`
+- `RESEND_API_KEY`
+- `RESEND_SENDER_EMAIL`
+- `APP_NAME`
+- `SUPPORT_EMAIL`
+- `EMAIL_LOGO_URL`
+
+## Local Development
 
 ### Prerequisites
+
 - Node.js 20+
-- pnpm 9+
+- pnpm
 - PostgreSQL database
 
 ### Install dependencies
@@ -199,50 +208,41 @@ pnpm install
 ```
 
 ### Configure environment
-Create `.env` (or copy from your existing `.env` conventions) and provide values for:
 
-- `DATABASE_URL`
-- `JWT_SECRET`
-- `NEXT_PUBLIC_BASE_URL`
-- `CLOUDINARY_CLOUD_NAME`
-- `CLOUDINARY_API_KEY`
-- `CLOUDINARY_API_SECRET`
-- `RESEND_API_KEY`
-- `RESEND_SENDER_EMAIL`
-- `MAILTRAP_USERNAME`
-- `MAILTRAP_PASSWORD`
-- `MAILTRAP_SENDER_NAME`
-- `MAILTRAP_SENDER_EMAIL`
-- `MAILTRAP_TOKEN` (if used in your environment)
-- `NODE_ENV`
+Create a `.env` file with the required variables listed above.
 
-### Prisma setup
+### Generate Prisma client
 
 ```bash
 pnpm prisma generate
-pnpm prisma migrate dev --name init
 ```
 
-### Run app
+### Run migrations
+
+```bash
+pnpm prisma migrate dev
+```
+
+### Start the development server
 
 ```bash
 pnpm dev
 ```
 
-Open: `http://localhost:3000`
+App URL:
 
----
+```text
+http://localhost:3000
+```
 
-## 8. Available Scripts
-
-From `package.json`:
+## Available Scripts
 
 ```bash
-pnpm dev      # run development server
-pnpm build    # production build
-pnpm start    # run production server
-pnpm lint     # run ESLint
-pnpm commit   # commitizen prompt
+pnpm dev
+pnpm build
+pnpm start
+pnpm lint
+pnpm commit
 ```
 
 Useful Prisma commands:
@@ -253,83 +253,27 @@ pnpm prisma migrate dev
 pnpm prisma studio
 ```
 
----
+## Notes for Deployment
 
-## 9. Example API Calls
+- Sentry is enabled through `withSentryConfig` in `next.config.ts`.
+- The Prisma client is configured with the Neon adapter in `lib/prisma.ts`.
+- Cloudinary support is present for uploads.
+- Email templates and transport helpers exist for both Mailtrap and Resend.
 
-### Login
+## Current Gaps and Caveats
 
-```bash
-curl -i -X POST http://localhost:3000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"Password123"}'
-```
+These are worth knowing before production use:
 
-### Authenticated request with cookie jar
+- `prisma/seed.ts` is still placeholder Prisma starter code and does not match the current schema.
+- `middleware.ts` contains API-branch logic, but the matcher excludes `/api`, so API protection depends on route-level guards instead of middleware.
+- Some client/API helpers use hardcoded `http://localhost:3000` URLs, which should be replaced with environment-based configuration before deployment.
+- No automated test suite is currently configured in `package.json`.
+- A few route files still contain commented authorization code, so the API surface should be audited before production rollout.
 
-```bash
-# 1) login and save cookies
-curl -c cookie.txt -X POST http://localhost:3000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"Password123"}'
+## Recommended Next Steps
 
-# 2) call protected endpoint
-curl -b cookie.txt http://localhost:3000/api/classes
-```
-
-### Create class (HOD)
-
-```bash
-curl -b cookie.txt -X POST http://localhost:3000/api/classes \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "IV CEIT",
-    "semester": "first_semester",
-    "year": "FOURTH",
-    "userId": null,
-    "academicYearId": null
-  }'
-```
-
----
-
-## 10. Frontend Role Access Matrix
-
-`ClientProtected` currently maps route access by role cookie:
-
-- `admin`: `dashboard`, `departments`, `teachers`, `students`, `head-of-department`, `settings`
-- `department`: `dashboard`, `teachers`, `students`, `classes`, `subjects`, `my-class`, `my-subjects`
-- `teacher`: `dashboard`, `my-class`, `my-subjects`
-
----
-
-## 11. Operational Notes / Caveats
-
-- `middleware.ts` currently uses matcher:
-  - `"/((?!api|_next|.*\\..*).*)"`
-  - This means middleware does **not** run on `/api/*`; API protection relies on route-level guards.
-- Some API files contain commented-out auth checks. Review and harden before production deployment.
-- `prisma/seed.ts` appears to be template/placeholder content and is not aligned with the current schema.
-- `tsconfig.json` uses `"ignoreDeprecations": "6.0"`; with some TypeScript versions this can fail `tsc --noEmit`.
-
----
-
-## 12. Deployment Checklist
-
-Before production rollout:
-- Enforce role guards on every write/read-sensitive API endpoint
-- Remove or replace placeholder/mock dashboard data from `constants/index.constants.ts`
-- Align frontend role cookie handling with server-issued auth context
-- Rotate and secure all secrets
-- Add CI checks for `lint`, `build`, and DB migration consistency
-- Add integration tests for auth + RBAC critical paths
-
----
-
-## 13. Contributing
-
-- Use feature branches
-- Keep API validation in `lib/schema/*`
-- Keep auth logic centralized in `lib/jwt.ts` and `lib/guard.ts`
-- Use `pnpm commit` for conventional commit prompts
-
+- Replace the placeholder seed script with real attendance-system seed data.
+- Centralize base URL handling for browser and server usage.
+- Add automated tests for auth, role access, attendance entry, and exports.
+- Review every API route for consistent authorization enforcement.
+- Add a setup section for creating the first admin account if this project will be handed to new developers.

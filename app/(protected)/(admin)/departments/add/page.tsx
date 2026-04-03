@@ -16,9 +16,6 @@ const Page = () => {
           />
           <span className="text-2xl">Add Department</span>
         </div>
-        <Button variant={"link"} className="text-sky-600">
-          Import CSV
-        </Button>
       </header>
       <main className="mt-6">
         <DepartmentForm redirectTo="/dashboard" />
