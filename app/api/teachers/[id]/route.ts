@@ -54,13 +54,17 @@ export async function PUT(
 			const existing = await prisma.user.findFirst({
 				where: { username: data.username, NOT: { id } },
 			});
-			if (existing) throw new Error("Username already exists");
+			if (existing) {
+				throw new Error(`Username "${data.username}" already exists`);
+			}
 		}
 		if (data.email) {
 			const existing = await prisma.user.findFirst({
 				where: { email: data.email, NOT: { id } },
 			});
-			if (existing) throw new Error("Email already exists");
+			if (existing) {
+				throw new Error(`Email "${data.email}" already exists`);
+			}
 		}
 
 		const updateData: any = { ...data };

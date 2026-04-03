@@ -92,10 +92,10 @@ export async function POST(request: NextRequest) {
 
 		if (existingUser) {
 			if (existingUser.username === username) {
-				throw new Error("Username already exists");
+				throw new Error(`Username "${username}" already exists`);
 			}
 			if (existingUser.email === email) {
-				throw new Error("Email already exists");
+				throw new Error(`Email "${email}" already exists`);
 			}
 			throw new Error("User already exists");
 		}
@@ -110,7 +110,9 @@ export async function POST(request: NextRequest) {
 			if (!department) throw new Error("Department not found");
 
 			if (assignedRole === Role.HOD && department.hodId) {
-				throw new Error("Department already has a Head of Department");
+				throw new Error(
+					`Department "${departmentName}" already has a Head of Department`,
+				);
 			}
 		} else {
 			// if hod do not have department, he can't add teacher

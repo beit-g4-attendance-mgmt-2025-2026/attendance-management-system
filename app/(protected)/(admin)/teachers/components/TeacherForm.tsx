@@ -13,10 +13,14 @@ import { TeacherSchema } from "@/schema/index.schema";
 import { api } from "@/lib/api";
 
 import { toast } from "sonner";
-import { Gender, Role } from "@/generated/prisma/client";
 import { useEffect, useState } from "react";
 import { PublicUser } from "@/lib/user";
 import { DepartmentTableItem } from "@/types/index.types";
+import CsvImportSection from "@/components/CsvImportSection";
+import { csvRowsToRecords, getCsvValue, parseCsv } from "@/lib/csv";
+
+type TeacherGender = "MALE" | "FEMALE" | "OTHER";
+type TeacherRole = "ADMIN" | "HOD" | "TEACHER";
 
 type TeacherFormTeacher = PublicUser & {
   department?: {
@@ -37,7 +41,7 @@ const TeacherForm = ({
   teacher?: TeacherFormTeacher | null;
   onClose?: () => void;
   redirectTo?: string;
-  creatorRole?: Role | "ADMIN";
+  creatorRole?: TeacherRole;
   fixedDepartmentSymbol?: string;
 }) => {
   const router = useRouter();
@@ -47,6 +51,7 @@ const TeacherForm = ({
   >([]);
   const [departmentLoading, setDepartmentLoading] = useState(false);
   const hideDepartmentField = !isEdit && creatorRole === "HOD";
+  const genderOptions: { label: string; value: string }[] = [...genders];
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -141,14 +146,14 @@ const TeacherForm = ({
           username: string;
           email: string;
           phoneNumber: string;
-          gender: Gender;
+          gender: TeacherGender;
           departmentName: string;
         }> = {
           fullName: values.fullName as string,
           username: values.username as string,
           email: values.email as string,
           phoneNumber: values.phoneNumber as string,
-          gender: values.gender as Gender,
+          gender: values.gender as TeacherGender,
           departmentName: values.departmentName as string,
         };
 
@@ -166,8 +171,8 @@ const TeacherForm = ({
           email: values.email as string,
           password: values.password as string,
           phoneNumber: values.phoneNumber as string,
-          gender: values.gender as Gender,
-          role: values.role as Role,
+          gender: values.gender as TeacherGender,
+          role: values.role as TeacherRole,
           departmentName: (
             hideDepartmentField
               ? fixedDepartmentSymbol
@@ -188,8 +193,9 @@ const TeacherForm = ({
           return;
         }
       }
-    } catch (error: any) {
-      const message = error.message;
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Failed to save teacher";
 
       if (message.includes("Email")) {
         form.setError("email", { message });
@@ -199,6 +205,92 @@ const TeacherForm = ({
         toast.error(message);
       }
     }
+  }
+
+  async function handleCsvImport(file: File) {
+    const rawText = await file.text();
+    const records = csvRowsToRecords(parseCsv(rawText));
+    const teacherImportSchema = hideDepartmentField
+      ? TeacherSchema.omit({ departmentName: true })
+      : TeacherSchema;
+
+    if (records.length === 0) {
+      throw new Error("The CSV file does not contain any data rows");
+    }
+
+    const importRows = records.map((record, index) => {
+      const fullName = getCsvValue(record, ["fullName", "full_name", "name"]);
+      const username = getCsvValue(record, ["username", "user_name"]);
+      const email = getCsvValue(record, ["email", "emailAddress"]);
+      const password = getCsvValue(record, ["password"]);
+      const phoneNumber = getCsvValue(record, ["phoneNumber", "phone", "phone_number"]);
+      const gender = getCsvValue(record, ["gender"]);
+      const departmentName =
+        fixedDepartmentSymbol ||
+        getCsvValue(record, [
+          "departmentName",
+          "department",
+          "departmentSymbol",
+          "department_symbol",
+        ]);
+
+      const parsed = teacherImportSchema.safeParse({
+        fullName,
+        username,
+        email,
+        password,
+        phoneNumber,
+        gender,
+        role: creatorRole === "HOD" ? "TEACHER" : "HOD",
+        ...(hideDepartmentField ? {} : { departmentName }),
+      });
+
+      if (!parsed.success) {
+        const message = parsed.error.issues[0]?.message ?? "Invalid row";
+        throw new Error(`Row ${index + 2}: ${message}`);
+      }
+
+      return parsed.data;
+    });
+
+    let successCount = 0;
+    const failures: string[] = [];
+
+    for (let index = 0; index < importRows.length; index += 1) {
+      const row = importRows[index];
+
+      try {
+        await api.users.create({
+          fullName: row.fullName,
+          username: row.username,
+          email: row.email,
+          password: row.password,
+          phoneNumber: row.phoneNumber,
+          gender: row.gender as TeacherGender,
+          role: row.role as TeacherRole,
+          departmentName: hideDepartmentField
+            ? (fixedDepartmentSymbol as string)
+            : row.departmentName,
+        });
+        successCount += 1;
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Failed to import row";
+        failures.push(`Row ${index + 2}: ${message}`);
+      }
+    }
+
+    router.refresh();
+
+    if (failures.length === 0) {
+      toast.success(`Imported ${successCount} teacher${successCount === 1 ? "" : "s"} successfully`);
+      onClose?.();
+      return;
+    }
+
+    toast.error(
+      `Imported ${successCount}/${importRows.length} teachers. ${failures[0]}`,
+    );
   }
 
   const handleCancel = () => {
@@ -221,6 +313,39 @@ const TeacherForm = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-5 w-full"
         >
+          {!isEdit ? (
+            <CsvImportSection
+              title="Import teachers from CSV"
+              description={
+                hideDepartmentField
+                  ? "Use headers fullName, username, email, password, phoneNumber, gender. Department is filled from your HOD account."
+                  : "Use headers fullName, username, email, password, phoneNumber, gender, departmentName."
+              }
+              headers={
+                hideDepartmentField
+                  ? [
+                      "fullName",
+                      "username",
+                      "email",
+                      "password",
+                      "phoneNumber",
+                      "gender",
+                    ]
+                  : [
+                      "fullName",
+                      "username",
+                      "email",
+                      "password",
+                      "phoneNumber",
+                      "gender",
+                      "departmentName",
+                    ]
+              }
+              disabled={isSubmitting}
+              onImport={handleCsvImport}
+            />
+          ) : null}
+
           <FormInput
             form={form}
             name="fullName"
@@ -265,7 +390,7 @@ const TeacherForm = ({
                 form={form}
                 name="gender"
                 placeholder="Gender"
-                options={genders as any}
+                options={genderOptions}
                 id="form-rhf-select-gender"
                 triggerClassName="min-w-[120px] cursor-pointer"
               />

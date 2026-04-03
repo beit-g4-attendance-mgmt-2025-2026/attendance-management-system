@@ -43,6 +43,8 @@ export async function GetSubjectAttendanceForDate(input: {
 		day: number;
 		month: Month;
 		totalTimes: number;
+		hasSavedAttendance: boolean;
+		savedCount: number;
 		students: {
 			id: string;
 			name: string;
@@ -138,6 +140,8 @@ export async function GetSubjectAttendanceForDate(input: {
 				day,
 				month,
 				totalTimes: existingAttendance[0]?.totalTimes ?? 1,
+				hasSavedAttendance: existingAttendance.length > 0,
+				savedCount: existingAttendance.length,
 				students: [...subject.class.students]
 					.sort(
 						(left, right) =>

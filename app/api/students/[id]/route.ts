@@ -138,6 +138,26 @@ export async function PUT(
 		const body = await request.json();
 		const validatedData = CreateStudentSchema.partial().parse(body);
 
+		if (validatedData.email) {
+			const existing = await prisma.student.findFirst({
+				where: { email: validatedData.email, NOT: { id } },
+				select: { id: true },
+			});
+			if (existing) {
+				throw new Error(`Email "${validatedData.email}" already exists`);
+			}
+		}
+
+		if (validatedData.rollNo) {
+			const existing = await prisma.student.findFirst({
+				where: { rollNo: validatedData.rollNo, NOT: { id } },
+				select: { id: true },
+			});
+			if (existing) {
+				throw new Error(`Roll number "${validatedData.rollNo}" already exists`);
+			}
+		}
+
 		let nextDepartmentId = existingStudent.departmentId;
 		let nextYear = existingStudent.year;
 		let nextSemester = existingStudent.semester;

@@ -31,10 +31,10 @@ export async function POST(request: NextRequest) {
 
     if (existingStudent) {
       if (existingStudent.email === data.email) {
-        throw new Error("Student email already exists");
+        throw new Error(`Email "${data.email}" already exists`);
       }
       if (existingStudent.rollNo === data.rollNo) {
-        throw new Error("Student roll number already exists");
+        throw new Error(`Roll number "${data.rollNo}" already exists`);
       }
       throw new Error("Student already exists");
     }

@@ -122,7 +122,11 @@ export default function DailyAttendance({
             Mark each student as present or absent for today.
           </CardDescription>
         </div>
-        <Button onClick={markAllPresent} disabled={isPending}>
+        <Button
+          className="bg-sky-600 hover:bg-sky-700"
+          onClick={markAllPresent}
+          disabled={isPending}
+        >
           Mark All Present
         </Button>
       </CardHeader>
@@ -178,7 +182,11 @@ export default function DailyAttendance({
       </CardContent>
 
       <CardFooter className="justify-end">
-        <Button onClick={saveAttendance} disabled={isPending || !canSave}>
+        <Button
+          className="bg-sky-600 hover:bg-sky-700"
+          onClick={saveAttendance}
+          disabled={isPending || !canSave}
+        >
           {isPending ? (
             <>
               <Loader2 className="animate-spin" />
